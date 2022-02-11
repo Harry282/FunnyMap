@@ -1,0 +1,14 @@
+[
+  {
+    "modid": "funnymap",
+    "name": "Funny Map",
+    "description": "Dungeon map mod for Hypixel Skyblock. Open settings with `/fmap`. Big thanks to IllegalMap by UnclaimedBloom6.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/Harry282/Funny-Map",
+    "updateUrl": "https://github.com/Harry282/Funny-Map/releases",
+    "authorList": [
+      "Harry282"
+    ]
+  }
+]
