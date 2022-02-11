@@ -10,7 +10,7 @@ import org.apache.http.util.EntityUtils
 object UpdateChecker {
     fun hasUpdate(): Int {
         HttpClients.createMinimal().use {
-            val httpGet = HttpGet("https://api.github.com/repos/Harry282/Skyblock-Client/releases")
+            val httpGet = HttpGet("https://api.github.com/repos/Harry282/FunnyMap/releases")
             val response = EntityUtils.toString(it.execute(httpGet).entity)
             val version = JsonParser().parse(response).asJsonArray[0].asJsonObject["tag_name"]
             val current = DefaultArtifactVersion(FunnyMap.MOD_VERSION.replace("pre", "beta"))

@@ -56,7 +56,7 @@ class FunnyMap {
                     "New release available on Github. Click to open download link.",
                     10f,
                     action = {
-                        Desktop.getDesktop().browse(URI("https://github.com/Harry282/Funny-Map/releases"))
+                        Desktop.getDesktop().browse(URI("https://github.com/Harry282/FunnyMap/releases"))
                     }
                 )
             } catch (e: Exception) {
