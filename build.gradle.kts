@@ -45,6 +45,7 @@ dependencies {
 
 mixin {
     defaultObfuscationEnv = searge
+    add(sourceSets.main.get(), "mixins.funnymap.refmap.json")
 }
 
 sourceSets {
