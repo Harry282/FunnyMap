@@ -40,7 +40,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     packageLib("gg.essential:loader-launchwrapper:1.1.3")
-    implementation("gg.essential:essential-1.8.9-forge:1852")
+    implementation("gg.essential:essential-1.8.9-forge:1864")
 }
 
 mixin {
