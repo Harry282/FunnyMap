@@ -61,6 +61,8 @@ object MapUpdate {
 
                 val mapX = startX + x * increment
                 val mapZ = startZ + z * increment
+                
+                if (mapX >= 128 || mapZ >= 128) continue
 
                 val room = Dungeon.dungeonList[z * 11 + x]
 
