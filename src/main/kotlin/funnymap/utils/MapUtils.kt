@@ -10,6 +10,7 @@ object MapUtils {
     var startCorner = Pair(5, 5)
     var roomSize = 16
     var calibrated = false
+    var multiplier = 1.6
 
     fun getMapData(): MapData? {
         val map = mc.thePlayer?.inventory?.getStackInSlot(8) ?: return null

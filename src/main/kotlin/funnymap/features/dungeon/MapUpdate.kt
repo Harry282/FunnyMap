@@ -27,6 +27,8 @@ object MapUpdate {
 
         MapUtils.roomSize = if (Utils.currentFloor in 1..3 || Dungeon.rooms.size == 24) 18 else 16
 
+        MapUtils.multiplier = 32 / (MapUtils.roomSize + 4.0)
+
         MapUtils.calibrated = true
     }
 
@@ -71,8 +73,8 @@ object MapUpdate {
                 it.yaw = it.player.rotationYawHead
             } else if (decor != null) {
                 decor.entries.find { (icon, _) -> icon == it.icon }?.let { (_, vec4b) ->
-                    it.x = (vec4b.mapX.toDouble() - MapUtils.startCorner.first) * 32 / (MapUtils.roomSize + 4)
-                    it.z = (vec4b.mapZ.toDouble() - MapUtils.startCorner.second) * 32 / (MapUtils.roomSize + 4)
+                    it.x = (vec4b.mapX.toDouble() - MapUtils.startCorner.first) * MapUtils.multiplier
+                    it.z = (vec4b.mapZ.toDouble() - MapUtils.startCorner.second) * MapUtils.multiplier
                     it.yaw = vec4b.yaw
                 }
             }
