@@ -30,16 +30,25 @@ class Dungeon {
                 }.start()
             }
         }
+        if (dungeonStarted && dungeonTeamates.isEmpty()) {
+            MapUpdate.getPlayers()
+        }
         if (hasScanned) {
-            MapUpdate.updateRooms()
+            Thread {
+                MapUpdate.updateRooms()
+                MapUpdate.updatePlayers()
+            }.start()
         }
     }
 
     @SubscribeEvent
     fun onChat(event: ClientChatReceivedEvent) {
         if (event.type.toInt() == 2 || inBoss) return
-        if (entryMessages.any { it == StringUtils.stripControlCodes(event.message.unformattedText) }) {
+        val message = StringUtils.stripControlCodes(event.message.unformattedText)
+        if (entryMessages.any { it == message }) {
             inBoss = true
+        } else if (message == "[NPC] Mort: Here, I found this map when I first entered the dungeon.") {
+            dungeonStarted = true
         }
     }
 
@@ -53,6 +62,8 @@ class Dungeon {
     companion object {
 
         fun reset() {
+            dungeonTeamates.clear()
+
             dungeonList.fill(Door(0, 0))
             uniqueRooms.clear()
             rooms.clear()
@@ -66,6 +77,13 @@ class Dungeon {
         const val roomSize = 32
         const val startX = 15
         const val startZ = 15
+
+        /**
+         * These variables aren't used yet but will probably be used later to determine the rendering size of the map
+         * Floor 1, 2, 3: endX = 158 endZ = 158
+         * Floor 4: endX = 190 endZ = 158
+         * Floor 5, 6, 7: endX = 190 endZ = 190
+         */
         private const val endX = 190
         private const val endZ = 190
 
@@ -74,6 +92,7 @@ class Dungeon {
         var hasScanned = false
 
         // 6 x 6 room grid, 11 x 11 with connections
+        var dungeonStarted = false
         var inBoss = false
         val dungeonList = Array<Tile>(121) { Door(0, 0) }
         val uniqueRooms = mutableListOf<Room>()

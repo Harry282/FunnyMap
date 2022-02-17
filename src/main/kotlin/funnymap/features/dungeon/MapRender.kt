@@ -6,7 +6,7 @@ import funnymap.FunnyMap.Companion.mc
 import funnymap.core.*
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.entity.player.EntityPlayer
+import net.minecraft.entity.player.EnumPlayerModelParts
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -162,8 +162,8 @@ object MapRender {
     }
 
     private fun renderPlayerHeads() {
-        if (mc.thePlayer != null) {
-            drawPlayerHead(mc.thePlayer)
+        for (player in Dungeon.dungeonTeamates) {
+            drawPlayerHead(player)
         }
     }
 
@@ -188,30 +188,26 @@ object MapRender {
         GlStateManager.popMatrix()
     }
 
-    private fun drawPlayerHead(player: EntityPlayer) {
+    private fun drawPlayerHead(player: DungeonPlayer) {
+        GlStateManager.pushMatrix()
         try {
-            GlStateManager.pushMatrix()
-
             GlStateManager.translate(
-                ((player.posX - Dungeon.startX) / Dungeon.roomSize * 26 + 8) * config.mapScale + config.mapX,
-                ((player.posZ - Dungeon.startZ) / Dungeon.roomSize * 26 + 8) * config.mapScale + config.mapY,
+                ((player.x - Dungeon.startX) / Dungeon.roomSize * 26 + 8) * config.mapScale + config.mapX,
+                ((player.z - Dungeon.startZ) / Dungeon.roomSize * 26 + 8) * config.mapScale + config.mapY,
                 0.0
             )
-            GlStateManager.rotate(player.rotationYawHead + 180f, 0f, 0f, 1f)
-            mc.textureManager.bindTexture(mc.netHandler.getPlayerInfo(player.uniqueID).locationSkin)
-            Gui.drawScaledCustomSizeModalRect(
-                (-6 * config.mapScale).toInt(),
-                (-6 * config.mapScale).toInt(),
-                8f, 8f, 8, 8,
-                (12 * config.mapScale).toInt(),
-                (12 * config.mapScale).toInt(),
-                64f, 64f
-            )
-
-            GlStateManager.popMatrix()
+            GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
+            mc.textureManager.bindTexture(mc.netHandler.getPlayerInfo(player.player.uniqueID).locationSkin)
+            val pos = (-6 * config.mapScale).toInt()
+            val size = (12 * config.mapScale).toInt()
+            Gui.drawScaledCustomSizeModalRect(pos, pos, 8f, 8f, 8, 8, size, size, 64f, 64f)
+            if (player.player.isWearing(EnumPlayerModelParts.HAT)) {
+                Gui.drawScaledCustomSizeModalRect(pos, pos, 40f, 8f, 8, 8, size, size, 64f, 64f)
+            }
         } catch (e: Exception) {
             e.printStackTrace()
         }
+        GlStateManager.popMatrix()
     }
 
     private fun drawRoomConnector(x: Int, y: Int, doorway: Boolean, vertical: Boolean, color: Int) {

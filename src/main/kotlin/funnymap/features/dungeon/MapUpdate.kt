@@ -6,6 +6,9 @@ import funnymap.core.Room
 import funnymap.core.RoomState
 import funnymap.core.RoomType
 import funnymap.utils.MapUtils
+import funnymap.utils.MapUtils.mapX
+import funnymap.utils.MapUtils.mapZ
+import funnymap.utils.MapUtils.yaw
 import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.client.network.NetworkPlayerInfo
@@ -41,6 +44,41 @@ object MapUpdate {
         }
     }
 
+    fun updatePlayers() {
+        if (Dungeon.dungeonTeamates.isEmpty()) return
+        val tabEntries = getDungeonTabList() ?: return
+
+        var iconNum = 0
+        for (i in listOf(5, 9, 13, 17, 1)) {
+            val tabText = StringUtils.stripControlCodes(tabEntries[i].second).trim()
+            val name = tabText.split(" ")[0]
+            if (name == "") continue
+            val player = Dungeon.dungeonTeamates.find { it.name == name } ?: continue
+            player.dead = tabText.contains("(DEAD)")
+            if (!player.dead) {
+                player.icon = "icon-${iconNum}"
+                iconNum++
+            } else {
+                player.icon = ""
+            }
+        }
+
+        val decor = MapUtils.getMapData()?.mapDecorations
+        Dungeon.dungeonTeamates.forEach {
+            if (it.player == mc.thePlayer || it.player.getDistanceSqToEntity(mc.thePlayer) < 200) {
+                it.x = it.player.posX
+                it.z = it.player.posZ
+                it.yaw = it.player.rotationYawHead
+            } else if (decor != null) {
+                decor.entries.find { (icon, _) -> icon == it.icon }?.let { (_, vec4b) ->
+                    it.x = (vec4b.mapX.toDouble() - MapUtils.startCorner.first) * 32 / (MapUtils.roomSize + 4)
+                    it.z = (vec4b.mapZ.toDouble() - MapUtils.startCorner.second) * 32 / (MapUtils.roomSize + 4)
+                    it.yaw = vec4b.yaw
+                }
+            }
+        }
+    }
+
     private fun getDungeonTabList(): List<Pair<NetworkPlayerInfo, String>>? {
         val tabEntries = Utils.tabList
         if (tabEntries.isEmpty() || !tabEntries[0].second.contains("§r§b§lParty §r§f(")) {
@@ -61,7 +99,7 @@ object MapUpdate {
 
                 val mapX = startX + x * increment
                 val mapZ = startZ + z * increment
-                
+
                 if (mapX >= 128 || mapZ >= 128) continue
 
                 val room = Dungeon.dungeonList[z * 11 + x]

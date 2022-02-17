@@ -6,7 +6,6 @@ import funnymap.features.dungeon.Dungeon
 import funnymap.features.dungeon.Dungeon.Companion.dungeonList
 import funnymap.features.dungeon.DungeonScan
 import funnymap.features.dungeon.MapUpdate
-import funnymap.utils.MapUtils
 import funnymap.utils.ScoreboardUtils
 import funnymap.utils.Utils
 import gg.essential.universal.UChat
@@ -64,17 +63,9 @@ class FunnyMapCommands : CommandBase() {
             }
             "teammates" -> {
                 MapUpdate.getPlayers()
-                UChat.chat(Dungeon.dungeonTeamates.joinToString { it.name })
-            }
-            "setmap" -> {
-                if (args.size == 3) {
-                    try {
-                        val x = args[1].toInt()
-                        val z = args[2].toInt()
-                        MapUtils.startCorner = Pair(x, z)
-                    } catch (_: NumberFormatException) {
-                    }
-                }
+                UChat.chat(Dungeon.dungeonTeamates.joinToString {
+                    "Player:${it.name}\nIcon name:${it.icon}\nX:${it.x} Z:${it.z} Yaw:${it.yaw}"
+                })
             }
         }
     }
