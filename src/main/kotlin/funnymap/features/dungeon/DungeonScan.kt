@@ -2,7 +2,7 @@ package funnymap.features.dungeon
 
 import com.google.gson.Gson
 import com.google.gson.JsonElement
-import funnymap.FunnyMap
+import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.*
 import funnymap.utils.Utils
@@ -15,6 +15,31 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 
 object DungeonScan {
+
+    private val roomList: List<RoomData> = try {
+        Gson().fromJson(
+            BufferedReader(
+                InputStreamReader(
+                    mc.resourceManager.getResource(
+                        ResourceLocation("funnymap", "rooms.json")
+                    ).inputStream
+                )
+            ).readText(),
+            JsonElement::class.java
+        ).asJsonObject["rooms"].asJsonArray.map { jsonElement ->
+            val room = jsonElement.asJsonObject
+            RoomData(
+                room["name"].asString,
+                RoomType.valueOf(room["type"].asString),
+                room["secrets"].asInt,
+                room["cores"].asJsonArray.map { it.asInt }
+            )
+        }
+    } catch (e: Throwable) {
+        e.printStackTrace()
+        listOf()
+    }
+
     fun scanDungeon() {
         Dungeon.reset()
         var allLoaded = true
@@ -42,9 +67,8 @@ object DungeonScan {
         if (allLoaded) {
             Dungeon.hasScanned = true
             MapUpdate.calibrate()
-            MapUpdate.getPlayers()
 
-            if (FunnyMap.config.scanChatInfo) {
+            if (config.scanChatInfo) {
                 Utils.modMessage(
                     "&aScan Finished! Took &b${System.currentTimeMillis() - startTime}&ams!\n" +
                             "&aPuzzles (&c${Dungeon.puzzles.size}&a):${
@@ -116,30 +140,6 @@ object DungeonScan {
                 }
             }
         }
-    }
-
-    private val roomList: List<RoomData> = try {
-        Gson().fromJson(
-            BufferedReader(
-                InputStreamReader(
-                    mc.resourceManager.getResource(
-                        ResourceLocation("funnymap", "rooms.json")
-                    ).inputStream
-                )
-            ).readText(),
-            JsonElement::class.java
-        ).asJsonObject["rooms"].asJsonArray.map { jsonElement ->
-            val room = jsonElement.asJsonObject
-            RoomData(
-                room["name"].asString,
-                RoomType.valueOf(room["type"].asString),
-                room["secrets"].asInt,
-                room["cores"].asJsonArray.map { it.asInt }
-            )
-        }
-    } catch (e: Throwable) {
-        e.printStackTrace()
-        listOf()
     }
 
     private fun getRoomData(x: Int, z: Int): RoomData? {
