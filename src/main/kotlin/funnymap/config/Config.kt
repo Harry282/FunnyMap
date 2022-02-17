@@ -175,6 +175,6 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     }
 
     private val configCategories = listOf(
-        "Map", "Rooms", "Score Calculator", "Discord", "World", "Debug"
+        "Map", "Rooms", "Debug"
     )
 }
