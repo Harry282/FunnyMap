@@ -83,7 +83,7 @@ object MapUpdate {
 
     private fun getDungeonTabList(): List<Pair<NetworkPlayerInfo, String>>? {
         val tabEntries = Utils.tabList
-        if (tabEntries.isEmpty() || !tabEntries[0].second.contains("§r§b§lParty §r§f(")) {
+        if (tabEntries.size < 18 || !tabEntries[0].second.contains("§r§b§lParty §r§f(")) {
             return null
         }
         return tabEntries
