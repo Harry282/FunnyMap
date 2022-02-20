@@ -6,7 +6,7 @@ import funnymap.core.Door
 import funnymap.core.DungeonPlayer
 import funnymap.core.Room
 import funnymap.core.Tile
-import funnymap.utils.Utils
+import funnymap.utils.Utils.currentFloor
 import net.minecraft.util.StringUtils
 import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.event.world.WorldEvent
@@ -19,16 +19,13 @@ class Dungeon {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || !inDungeons) return
-        // Auto Scan every 250ms
-        if (config.autoScan && System.currentTimeMillis() - lastScanTime >= 250) {
-            if (!isScanning && !hasScanned && Utils.currentFloor != null) {
-                lastScanTime = System.currentTimeMillis()
-                Thread {
-                    isScanning = true
-                    DungeonScan.scanDungeon()
-                    isScanning = false
-                }.start()
-            }
+        if (shouldScan()) {
+            lastScanTime = System.currentTimeMillis()
+            Thread {
+                isScanning = true
+                DungeonScan.scanDungeon()
+                isScanning = false
+            }.start()
         }
         if (dungeonStarted && dungeonTeamates.isEmpty()) {
             MapUpdate.getPlayers()
@@ -58,6 +55,9 @@ class Dungeon {
         hasScanned = false
         inBoss = false
     }
+
+    private fun shouldScan() =
+        config.autoScan && !isScanning && !hasScanned && System.currentTimeMillis() - lastScanTime >= 250 && currentFloor != null
 
     companion object {
 
@@ -96,7 +96,6 @@ class Dungeon {
         var trapType = ""
         var witherDoors = 0
         var secretCount = 0
-
 
         val entryMessages = listOf(
             "[BOSS] Bonzo: Gratz for making it this far, but I’m basically unbeatable.",

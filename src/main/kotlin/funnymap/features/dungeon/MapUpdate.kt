@@ -1,10 +1,7 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.mc
-import funnymap.core.DungeonPlayer
-import funnymap.core.Room
-import funnymap.core.RoomState
-import funnymap.core.RoomType
+import funnymap.core.*
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
@@ -106,19 +103,19 @@ object MapUpdate {
 
                 val room = Dungeon.dungeonList[z * 11 + x]
 
-                when (mapColors[(mapZ shl 7) + mapX].toInt()) {
-                    0, 85, 119 -> room.state = RoomState.UNDISCOVERED
+                room.state = when (mapColors[(mapZ shl 7) + mapX].toInt()) {
+                    0, 85, 119 -> RoomState.UNDISCOVERED
                     18 -> if (room is Room) when (room.data.type) {
-                        RoomType.BLOOD -> room.state = RoomState.DISCOVERED
-                        RoomType.PUZZLE -> room.state = RoomState.FAILED
-                        else -> {}
-                    }
+                        RoomType.BLOOD -> RoomState.DISCOVERED
+                        RoomType.PUZZLE -> RoomState.FAILED
+                        else -> room.state
+                    } else RoomState.DISCOVERED
                     30 -> if (room is Room) when (room.data.type) {
-                        RoomType.ENTRANCE -> room.state = RoomState.DISCOVERED
-                        else -> room.state = RoomState.GREEN
-                    }
-                    34 -> room.state = RoomState.CLEARED
-                    else -> room.state = RoomState.DISCOVERED
+                        RoomType.ENTRANCE -> RoomState.DISCOVERED
+                        else -> RoomState.GREEN
+                    } else room.state
+                    34 -> RoomState.CLEARED
+                    else -> RoomState.DISCOVERED
                 }
             }
         }
