@@ -15,7 +15,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 object MapRender {
 
-    private const val roomSize = 20
 
     private val neuGreen = ResourceLocation("funnymap", "neu/green_check.png")
     private val neuWhite = ResourceLocation("funnymap", "neu/white_check.png")
@@ -43,7 +42,7 @@ object MapRender {
     }
 
 
-    fun renderRooms() {
+    private fun renderRooms() {
         val connectorSize = roomSize shr 2
 
         for (y in 0..10) {
