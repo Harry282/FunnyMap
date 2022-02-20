@@ -142,7 +142,7 @@ object DungeonScan {
         }
     }
 
-    private fun getRoomData(x: Int, z: Int): RoomData? {
+    fun getRoomData(x: Int, z: Int): RoomData? {
         return getRoomData(getCore(x, z))
     }
 
@@ -177,7 +177,7 @@ object DungeonScan {
         return xPlus4 && xMinus4 && !zPlus4 && !zMinus4 || !xPlus4 && !xMinus4 && zPlus4 && zMinus4
     }
 
-    private fun getCore(x: Int, z: Int): Int {
+    fun getCore(x: Int, z: Int): Int {
         val blocks = arrayListOf<Int>()
         for (y in 140 downTo 12) {
             val id = Block.getIdFromBlock(mc.theWorld.getBlockState(BlockPos(x, y, z)).block)

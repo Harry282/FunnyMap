@@ -2,7 +2,11 @@ package funnymap.commands
 
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.display
+import funnymap.FunnyMap.Companion.mc
+import funnymap.core.RoomData
 import funnymap.features.dungeon.DungeonScan
+import gg.essential.universal.UChat
+import net.minecraft.client.gui.GuiScreen
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
 
@@ -32,6 +36,15 @@ class FunnyMapCommands : CommandBase() {
         }
         when (args[0]) {
             "scan" -> DungeonScan.scanDungeon()
+            "roomdata" -> DungeonScan.getRoomCentre(mc.thePlayer.posX.toInt(), mc.thePlayer.posZ.toInt()).let {
+                DungeonScan.getRoomData(it.first, it.second) ?: DungeonScan.getCore(it.first, it.second)
+            }.run {
+                GuiScreen.setClipboardString(this.toString())
+                UChat.chat(
+                    if (this is RoomData) "Copied room data to clipboard."
+                    else "Existing room data not found. Copied room core to clipboard."
+                )
+            }
         }
     }
 }
