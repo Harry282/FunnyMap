@@ -100,8 +100,9 @@ object MapRender {
                     val yOffset = (y shr 1) * 26
 
                     if (config.mapCheckmark != 0 && config.mapRoomSecrets != 2) {
-                        GlStateManager.color(255f, 255f, 255f)
                         getCheckmark(tile.state, config.mapCheckmark)?.let {
+                            GlStateManager.enableAlpha()
+                            GlStateManager.color(255f, 255f, 255f, 255f)
                             mc.textureManager.bindTexture(it)
                             when (config.mapCheckmark) {
                                 1 -> Gui.drawModalRectWithCustomSizedTexture(
@@ -114,6 +115,7 @@ object MapRender {
                                 )
                                 else -> {}
                             }
+                            GlStateManager.disableAlpha()
                         }
                     }
 
