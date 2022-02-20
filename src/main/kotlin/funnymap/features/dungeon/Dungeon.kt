@@ -78,15 +78,6 @@ class Dungeon {
         const val startX = 15
         const val startZ = 15
 
-        /**
-         * These variables aren't used yet but will probably be used later to determine the rendering size of the map
-         * Floor 1, 2, 3: endX = 158 endZ = 158
-         * Floor 4: endX = 190 endZ = 158
-         * Floor 5, 6, 7: endX = 190 endZ = 190
-         */
-        private const val endX = 190
-        private const val endZ = 190
-
         var lastScanTime: Long = 0
         var isScanning = false
         var hasScanned = false
