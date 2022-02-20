@@ -8,13 +8,20 @@ import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.roomSize
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.GlStateManager
+import net.minecraft.client.renderer.Tessellator
+import net.minecraft.client.renderer.WorldRenderer
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.entity.player.EnumPlayerModelParts
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import org.lwjgl.opengl.GL11
+import java.awt.Color
 
 object MapRender {
 
+    private val tessellator: Tessellator = Tessellator.getInstance()
+    private val worldRenderer: WorldRenderer = tessellator.worldRenderer
 
     private val neuGreen = ResourceLocation("funnymap", "neu/green_check.png")
     private val neuWhite = ResourceLocation("funnymap", "neu/white_check.png")
@@ -27,7 +34,15 @@ object MapRender {
     fun onOverlay(event: RenderGameOverlayEvent.Post) {
         if (event.type != RenderGameOverlayEvent.ElementType.ALL || !inDungeons || !config.mapEnabled) return
         if (config.mapHideInBoss && Dungeon.inBoss || !Dungeon.hasScanned) return
-        if (mc.currentScreen is MoveMapGui) return
+
+        val x = config.mapX.toDouble()
+        val y = config.mapY.toDouble()
+        val height = 128.0 * config.mapScale
+        val width = 128.0 * config.mapScale
+        val thickness = config.mapBorderWidth.toDouble()
+
+        renderMapBackground(x, y, height, width, config.mapBackground)
+        renderMapBorder(x, y, height, width, thickness, config.mapBorder)
 
         GlStateManager.pushMatrix()
         GlStateManager.translate(config.mapX.toFloat(), config.mapY.toFloat(), 0f)
@@ -35,10 +50,56 @@ object MapRender {
         GlStateManager.translate(MapUtils.startCorner.first.toFloat(), MapUtils.startCorner.second.toFloat(), 0f)
 
         renderRooms()
-        renderText()
-        renderPlayerHeads()
-
+        if (mc.currentScreen !is MoveMapGui) {
+            renderText()
+            renderPlayerHeads()
+        }
         GlStateManager.popMatrix()
+    }
+
+    private fun renderMapBorder(x: Double, y: Double, w: Double, h: Double, thickness: Double, color: Color) {
+        if (color.alpha == 0) return
+        GlStateManager.enableBlend()
+        GlStateManager.disableTexture2D()
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
+        GlStateManager.color(color.red / 255f, color.green / 255f, color.red / 255f, color.alpha / 255f)
+
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION)
+        GlStateManager.shadeModel(GL11.GL_FLAT)
+
+        addQuadVertices(x - thickness, y, thickness, h)
+        addQuadVertices(x - thickness, y - thickness, w + thickness * 2, thickness)
+        addQuadVertices(x + w, y, thickness, h)
+        addQuadVertices(x - thickness, y + h, w + thickness * 2, thickness)
+
+        tessellator.draw()
+
+        GlStateManager.enableTexture2D()
+        GlStateManager.disableBlend()
+        GlStateManager.shadeModel(GL11.GL_SMOOTH)
+    }
+
+    private fun addQuadVertices(x: Double, y: Double, w: Double, h: Double) {
+        worldRenderer.pos(x, y + h, 0.0).endVertex()
+        worldRenderer.pos(x + w, y + h, 0.0).endVertex()
+        worldRenderer.pos(x + w, y, 0.0).endVertex()
+        worldRenderer.pos(x, y, 0.0).endVertex()
+    }
+
+    private fun renderMapBackground(x: Double, y: Double, w: Double, h: Double, color: Color) {
+        if (color.alpha == 0) return
+        GlStateManager.enableBlend()
+        GlStateManager.disableTexture2D()
+        GlStateManager.enableAlpha()
+        GlStateManager.color(color.red / 255f, color.green / 255f, color.red / 255f, color.alpha / 255f)
+
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION)
+        addQuadVertices(x, y, w, h)
+        tessellator.draw()
+
+        GlStateManager.disableAlpha()
+        GlStateManager.enableTexture2D()
+        GlStateManager.disableBlend()
     }
 
 

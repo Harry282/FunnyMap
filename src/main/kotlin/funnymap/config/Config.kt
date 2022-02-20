@@ -7,6 +7,7 @@ import gg.essential.vigilance.data.Category
 import gg.essential.vigilance.data.Property
 import gg.essential.vigilance.data.PropertyType
 import gg.essential.vigilance.data.SortingBehavior
+import java.awt.Color
 import java.io.File
 
 object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sortingBehavior = CategorySorting) {
@@ -28,6 +29,33 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         subcategory = "Toggle"
     )
     var mapHideInBoss = false
+
+    @Property(
+        name = "Map Background Color",
+        type = PropertyType.COLOR,
+        category = "Map",
+        subcategory = "Render",
+        allowAlpha = true
+    )
+    var mapBackground = Color(0, 0, 0, 100)
+
+    @Property(
+        name = "Map Border Color",
+        type = PropertyType.COLOR,
+        category = "Map",
+        subcategory = "Render",
+        allowAlpha = true
+    )
+    var mapBorder = Color(0, 0, 0, 255)
+
+    @Property(
+        name = "Border Thickness",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Map",
+        subcategory = "Render",
+        maxF = 10f
+    )
+    var mapBorderWidth = 3f
 
     @Property(
         name = "Map Position",
@@ -79,7 +107,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         maxF = 4f,
         decimalPlaces = 2
     )
-    var mapScale = 1f
+    var mapScale = 1.25f
 
     @Property(
         name = "Map Text Scale",
@@ -91,6 +119,17 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         decimalPlaces = 2
     )
     var textScale = 0.75f
+
+    @Property(
+        name = "Player Heads Scale",
+        type = PropertyType.DECIMAL_SLIDER,
+        description = "Scale of player heads relative to map size.",
+        category = "Map",
+        subcategory = "Size",
+        maxF = 2f,
+        decimalPlaces = 2
+    )
+    var playerHeadScale = 1f
 
     @Property(
         name = "Auto Scan",
