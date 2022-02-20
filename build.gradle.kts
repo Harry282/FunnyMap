@@ -13,7 +13,7 @@ plugins {
     idea
 }
 
-version = "0.2.0"
+version = "0.3.0"
 group = "funnymap"
 
 minecraft {
@@ -40,7 +40,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     packageLib("gg.essential:loader-launchwrapper:1.1.3")
-    implementation("gg.essential:essential-1.8.9-forge:1902")
+    implementation("gg.essential:essential-1.8.9-forge:1914")
 }
 
 mixin {
