@@ -27,11 +27,9 @@ class Dungeon {
                 isScanning = false
             }.start()
         }
-        if (dungeonStarted && dungeonTeamates.isEmpty()) {
-            MapUpdate.getPlayers()
-        }
         if (hasScanned) {
             Thread {
+                MapUpdate.getPlayers()
                 MapUpdate.updateRooms()
                 MapUpdate.updatePlayers()
             }.start()
@@ -44,8 +42,6 @@ class Dungeon {
         val message = StringUtils.stripControlCodes(event.message.unformattedText)
         if (entryMessages.any { it == message }) {
             inBoss = true
-        } else if (message == "[NPC] Mort: Here, I found this map when I first entered the dungeon.") {
-            dungeonStarted = true
         }
     }
 
@@ -83,7 +79,6 @@ class Dungeon {
         var hasScanned = false
 
         // 6 x 6 room grid, 11 x 11 with connections
-        var dungeonStarted = false
         var inBoss = false
         val dungeonList = Array<Tile>(121) { Door(0, 0) }
         val uniqueRooms = mutableListOf<Room>()
