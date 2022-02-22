@@ -255,6 +255,7 @@ object MapRender {
     }
 
     private fun drawPlayerHead(player: DungeonPlayer, multiplier: Double) {
+        if (player.dead) return
         GlStateManager.pushMatrix()
         try {
             GlStateManager.translate(
