@@ -6,6 +6,7 @@ import funnymap.FunnyMap.Companion.mc
 import funnymap.core.*
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.roomSize
+import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
@@ -181,7 +182,11 @@ object MapRender {
 
                     val name = mutableListOf<String>()
 
-                    if (config.mapRoomNames != 0 && (tile.data.type == RoomType.PUZZLE || tile.data.type == RoomType.TRAP) ||
+                    if (config.mapRoomNames != 0 && tile.data.type.equalsOneOf(
+                            RoomType.PUZZLE,
+                            RoomType.TRAP,
+                            RoomType.CHAMPION
+                        ) ||
                         config.mapRoomNames == 2 && tile.data.type == RoomType.NORMAL
                     ) {
                         name.addAll(tile.data.name.split(" "))
