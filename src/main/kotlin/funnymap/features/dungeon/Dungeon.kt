@@ -6,6 +6,7 @@ import funnymap.core.Door
 import funnymap.core.DungeonPlayer
 import funnymap.core.Room
 import funnymap.core.Tile
+import funnymap.utils.Utils
 import funnymap.utils.Utils.currentFloor
 import net.minecraft.util.StringUtils
 import net.minecraftforge.client.event.ClientChatReceivedEvent
@@ -29,9 +30,11 @@ class Dungeon {
         }
         if (hasScanned) {
             Thread {
-                MapUpdate.getPlayers()
                 MapUpdate.updateRooms()
-                MapUpdate.updatePlayers()
+                getDungeonTabList()?.let {
+                    MapUpdate.getPlayers(it)
+                    MapUpdate.updatePlayers(it)
+                }
             }.start()
         }
     }
@@ -54,6 +57,14 @@ class Dungeon {
 
     private fun shouldScan() =
         config.autoScan && !isScanning && !hasScanned && System.currentTimeMillis() - lastScanTime >= 250 && currentFloor != null
+
+    private fun getDungeonTabList(): List<Pair<NetworkPlayerInfo, String>>? {
+        val tabEntries = Utils.tabList
+        if (tabEntries.size < 18 || !tabEntries[0].second.contains("§r§b§lParty §r§f(")) {
+            return null
+        }
+        return tabEntries
+    }
 
     companion object {
 

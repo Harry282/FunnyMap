@@ -29,9 +29,8 @@ object MapUpdate {
         MapUtils.calibrated = true
     }
 
-    fun getPlayers() {
+    fun getPlayers(tabEntries: List<Pair<NetworkPlayerInfo, String>>) {
         if (Dungeon.dungeonTeamates.isNotEmpty()) return
-        val tabEntries = getDungeonTabList() ?: return
 
         for (i in 0..4) {
             val text = StringUtils.stripControlCodes(tabEntries[1 + i * 4].second).trim()
@@ -43,9 +42,8 @@ object MapUpdate {
         }
     }
 
-    fun updatePlayers() {
+    fun updatePlayers(tabEntries: List<Pair<NetworkPlayerInfo, String>>) {
         if (Dungeon.dungeonTeamates.isEmpty()) return
-        val tabEntries = getDungeonTabList() ?: return
 
         var iconNum = 0
         for (i in listOf(5, 9, 13, 17, 1)) {
@@ -76,14 +74,6 @@ object MapUpdate {
                 }
             }
         }
-    }
-
-    private fun getDungeonTabList(): List<Pair<NetworkPlayerInfo, String>>? {
-        val tabEntries = Utils.tabList
-        if (tabEntries.size < 18 || !tabEntries[0].second.contains("§r§b§lParty §r§f(")) {
-            return null
-        }
-        return tabEntries
     }
 
     fun updateRooms() {
