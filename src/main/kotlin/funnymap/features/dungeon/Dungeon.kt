@@ -6,11 +6,14 @@ import funnymap.core.Door
 import funnymap.core.DungeonPlayer
 import funnymap.core.Room
 import funnymap.core.Tile
+import funnymap.events.ReceivePacketEvent
 import funnymap.utils.Utils
 import funnymap.utils.Utils.currentFloor
+import net.minecraft.client.network.NetworkPlayerInfo
+import net.minecraft.network.play.server.S02PacketChat
 import net.minecraft.util.StringUtils
-import net.minecraftforge.client.event.ClientChatReceivedEvent
 import net.minecraftforge.event.world.WorldEvent
+import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 
@@ -39,12 +42,15 @@ class Dungeon {
         }
     }
 
-    @SubscribeEvent
-    fun onChat(event: ClientChatReceivedEvent) {
-        if (event.type.toInt() == 2 || inBoss) return
-        val message = StringUtils.stripControlCodes(event.message.unformattedText)
-        if (entryMessages.any { it == message }) {
-            inBoss = true
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    fun onChatPacket(event: ReceivePacketEvent) {
+        if (event.packet !is S02PacketChat || event.packet.type.toInt() == 2 || !inDungeons) return
+        val text = StringUtils.stripControlCodes(event.packet.chatComponent.unformattedText)
+        when {
+            text == "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> getDungeonTabList()?.let {
+                MapUpdate.getPlayers(it)
+            }
+            entryMessages.any { it == text } -> inBoss = true
         }
     }
 

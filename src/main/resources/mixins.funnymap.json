@@ -4,6 +4,7 @@
   "package": "funnymap.mixins",
   "refmap": "mixins.funnymap.refmap.json",
   "client": [
-    "MixinModList"
+    "MixinModList",
+    "MixinNetworkManager"
   ]
 }
