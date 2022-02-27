@@ -3,10 +3,7 @@ package funnymap.config
 import funnymap.FunnyMap
 import funnymap.features.dungeon.MoveMapGui
 import gg.essential.vigilance.Vigilant
-import gg.essential.vigilance.data.Category
-import gg.essential.vigilance.data.Property
-import gg.essential.vigilance.data.PropertyType
-import gg.essential.vigilance.data.SortingBehavior
+import gg.essential.vigilance.data.*
 import java.awt.Color
 import java.io.File
 
@@ -156,6 +153,14 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         category = "Rooms"
     )
     var mapDarkenUndiscovered = true
+
+    @Property(
+        name = "Darken Multiplier",
+        type = PropertyType.PERCENT_SLIDER,
+        description = "How much to darken undiscovered rooms",
+        category = "Rooms"
+    )
+    var mapDarkenPercent = 0.4f
 
     @Property(
         name = "Room Names",
