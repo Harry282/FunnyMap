@@ -213,9 +213,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     }
 
     private object CategorySorting : SortingBehavior() {
-        override fun getCategoryComparator(): Comparator<in Category> = Comparator.comparingInt { o: Category ->
-            configCategories.indexOf(o.name)
-        }
+        override fun getCategoryComparator(): Comparator<in Category> = compareBy { configCategories.indexOf(it.name) }
     }
 
     private val configCategories = listOf(

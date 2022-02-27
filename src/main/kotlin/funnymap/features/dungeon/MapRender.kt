@@ -42,8 +42,8 @@ object MapRender {
         val width = 128.0 * config.mapScale
         val thickness = config.mapBorderWidth.toDouble()
 
-        renderMapBackground(x, y, height, width, config.mapBackground)
-        renderMapBorder(x, y, height, width, thickness, config.mapBorder)
+        renderMapBackground(x, y, width, height, config.mapBackground)
+        renderMapBorder(x, y, width, height, thickness, config.mapBorder)
 
         GlStateManager.pushMatrix()
         GlStateManager.translate(config.mapX.toFloat(), config.mapY.toFloat(), 0f)
@@ -190,12 +190,12 @@ object MapRender {
 
                     val name = mutableListOf<String>()
 
-                    if (config.mapRoomNames != 0 && tile.data.type.equalsOneOf(
-                            RoomType.PUZZLE,
-                            RoomType.TRAP,
+                    if (config.mapRoomNames != 0 && tile.data.type.equalsOneOf(RoomType.PUZZLE, RoomType.TRAP) ||
+                        config.mapRoomNames == 2 && tile.data.type.equalsOneOf(
+                            RoomType.NORMAL,
+                            RoomType.RARE,
                             RoomType.CHAMPION
-                        ) ||
-                        config.mapRoomNames == 2 && tile.data.type == RoomType.NORMAL
+                        )
                     ) {
                         name.addAll(tile.data.name.split(" "))
                     }
