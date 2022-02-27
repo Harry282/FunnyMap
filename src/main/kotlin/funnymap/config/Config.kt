@@ -28,6 +28,15 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var mapHideInBoss = false
 
     @Property(
+        name = "Show Run Information",
+        type = PropertyType.SWITCH,
+        description = "Shows run information under map.",
+        category = "Map",
+        subcategory = "Toggle"
+    )
+    var mapShowRunInformation = false
+
+    @Property(
         name = "Map Background Color",
         type = PropertyType.COLOR,
         category = "Map",

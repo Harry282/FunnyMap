@@ -37,6 +37,7 @@ class Dungeon {
                 getDungeonTabList()?.let {
                     MapUpdate.getPlayers(it)
                     MapUpdate.updatePlayers(it)
+                    RunInformation.updateRunInformation(it)
                 }
             }.start()
         }

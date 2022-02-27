@@ -7,6 +7,7 @@ import funnymap.core.*
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.roomSize
 import funnymap.utils.Utils.equalsOneOf
+import funnymap.utils.Utils.itemID
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
@@ -38,7 +39,7 @@ object MapRender {
 
         val x = config.mapX.toDouble()
         val y = config.mapY.toDouble()
-        val height = 128.0 * config.mapScale
+        val height = if (config.mapShowRunInformation) (128.0 + 20.0) * config.mapScale else 128.0 * config.mapScale
         val width = 128.0 * config.mapScale
         val thickness = config.mapBorderWidth.toDouble()
 
@@ -54,6 +55,9 @@ object MapRender {
         if (mc.currentScreen !is MoveMapGui) {
             renderText()
             renderPlayerHeads()
+            if (config.mapShowRunInformation) {
+                renderRunInformation()
+            }
         }
         GlStateManager.popMatrix()
     }
@@ -302,5 +306,15 @@ object MapRender {
         val x2 = if (vertical) x1 + doorWidth else x1 + width
         val y2 = if (vertical) y1 + width else y1 + doorWidth
         Gui.drawRect(x1, y1, x2, y2, color)
+    }
+
+    private fun renderRunInformation() {
+        GlStateManager.pushMatrix()
+        GlStateManager.translate(0f, 128f, 0f)
+        GlStateManager.scale(0.6, 0.6, 1.0)
+        mc.fontRendererObj.drawString("Secrets: ${RunInformation.secretCount}/${Dungeon.secretCount}", 0, 0, 0xffffff)
+        mc.fontRendererObj.drawString("Crypts: ${RunInformation.cryptsCount}", 90, 0, 0xffffff)
+        mc.fontRendererObj.drawString("Deaths: ${RunInformation.deathCount}", 150, 0, 0xffffff)
+        GlStateManager.popMatrix()
     }
 }
