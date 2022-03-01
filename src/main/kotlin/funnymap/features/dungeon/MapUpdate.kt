@@ -1,7 +1,10 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.mc
-import funnymap.core.*
+import funnymap.core.DungeonPlayer
+import funnymap.core.Room
+import funnymap.core.RoomState
+import funnymap.core.RoomType
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
@@ -68,8 +71,8 @@ object MapUpdate {
                 it.yaw = it.player.rotationYawHead
             } else if (decor != null) {
                 decor.entries.find { (icon, _) -> icon == it.icon }?.let { (_, vec4b) ->
-                    it.x = (vec4b.mapX.toDouble() - MapUtils.startCorner.first) * MapUtils.multiplier
-                    it.z = (vec4b.mapZ.toDouble() - MapUtils.startCorner.second) * MapUtils.multiplier
+                    it.x = (vec4b.mapX.toDouble() - MapUtils.startCorner.first) * MapUtils.multiplier - 200
+                    it.z = (vec4b.mapZ.toDouble() - MapUtils.startCorner.second) * MapUtils.multiplier - 200
                     it.yaw = vec4b.yaw
                 }
             }

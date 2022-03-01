@@ -89,8 +89,8 @@ class Dungeon {
         }
 
         const val roomSize = 32
-        const val startX = 15
-        const val startZ = 15
+        const val startX = -185
+        const val startZ = -185
 
         var lastScanTime: Long = 0
         var isScanning = false
