@@ -7,6 +7,7 @@ import funnymap.core.*
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.roomSize
 import funnymap.utils.Utils.equalsOneOf
+import funnymap.utils.Utils.itemID
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
@@ -274,8 +275,21 @@ object MapRender {
                 (player.z - Dungeon.startZ) * multiplier + 8,
                 0.0
             )
+            if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID == "SPIRIT_LEAP") {
+                GlStateManager.pushMatrix()
+                GlStateManager.scale(0.8, 0.8, 1.0)
+                mc.fontRendererObj.drawString(
+                    player.name,
+                    -mc.fontRendererObj.getStringWidth(player.name) shr 1,
+                    10,
+                    0xffffff
+                )
+                GlStateManager.popMatrix()
+            }
             GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
             GlStateManager.scale(config.playerHeadScale, config.playerHeadScale, 1f)
+            Gui.drawRect(-7, -7, 7, 7, 0x000000)
+            GlStateManager.color(255f, 255f, 255f)
             mc.textureManager.bindTexture(mc.netHandler.getPlayerInfo(player.player.uniqueID).locationSkin)
             Gui.drawScaledCustomSizeModalRect(-6, -6, 8f, 8f, 8, 8, 12, 12, 64f, 64f)
             if (player.player.isWearing(EnumPlayerModelParts.HAT)) {

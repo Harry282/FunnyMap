@@ -3,7 +3,10 @@ package funnymap.config
 import funnymap.FunnyMap
 import funnymap.features.dungeon.MoveMapGui
 import gg.essential.vigilance.Vigilant
-import gg.essential.vigilance.data.*
+import gg.essential.vigilance.data.Category
+import gg.essential.vigilance.data.Property
+import gg.essential.vigilance.data.PropertyType
+import gg.essential.vigilance.data.SortingBehavior
 import java.awt.Color
 import java.io.File
 
@@ -35,6 +38,16 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         subcategory = "Toggle"
     )
     var mapShowRunInformation = false
+
+    @Property(
+        name = "Show Player Names",
+        type = PropertyType.SELECTOR,
+        description = "Show player name under player head",
+        category = "Map",
+        subcategory = "Toggle",
+        options = ["Off", "Holding Leap", "Always"]
+    )
+    var playerHeads = 0
 
     @Property(
         name = "Map Background Color",

@@ -6,6 +6,7 @@ import funnymap.FunnyMap.Companion.mc
 import funnymap.utils.ScoreboardUtils.sidebarLines
 import gg.essential.universal.UChat
 import net.minecraft.client.network.NetworkPlayerInfo
+import net.minecraft.item.ItemStack
 import net.minecraft.world.WorldSettings
 
 
@@ -35,6 +36,17 @@ object Utils {
         }
 
     fun modMessage(message: String) = UChat.chat("$CHAT_PREFIX $message")
+
+    val ItemStack.itemID: String
+        get() {
+            if (this.hasTagCompound() && this.tagCompound.hasKey("ExtraAttributes")) {
+                val attributes = this.getSubCompound("ExtraAttributes", false)
+                if (attributes.hasKey("id", 8)) {
+                    return attributes.getString("id")
+                }
+            }
+            return ""
+        }
 
     private val tabListOrder = Comparator<NetworkPlayerInfo> { o1, o2 ->
         if (o1 == null) return@Comparator -1
