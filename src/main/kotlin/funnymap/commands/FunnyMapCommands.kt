@@ -5,7 +5,7 @@ import funnymap.FunnyMap.Companion.display
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.RoomData
 import funnymap.features.dungeon.DungeonScan
-import gg.essential.universal.UChat
+import funnymap.utils.Utils
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
@@ -40,7 +40,7 @@ class FunnyMapCommands : CommandBase() {
                 DungeonScan.getRoomData(it.first, it.second) ?: DungeonScan.getCore(it.first, it.second)
             }.run {
                 GuiScreen.setClipboardString(this.toString())
-                UChat.chat(
+                Utils.modMessage(
                     if (this is RoomData) "Copied room data to clipboard."
                     else "Existing room data not found. Copied room core to clipboard."
                 )
