@@ -7,7 +7,6 @@ import funnymap.core.*
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.roomSize
 import funnymap.utils.Utils.equalsOneOf
-import funnymap.utils.Utils.itemID
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
