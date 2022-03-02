@@ -87,7 +87,7 @@ object RenderUtils {
     }
 
     fun drawPlayerHead(player: DungeonPlayer, multiplier: Double) {
-        if (player.dead) return
+        if (player.dead || player.player.isDead) return
         GlStateManager.pushMatrix()
         try {
             GlStateManager.translate(
