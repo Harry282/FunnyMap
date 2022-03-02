@@ -2,7 +2,9 @@ package funnymap.utils
 
 import com.google.common.collect.ComparisonChain
 import funnymap.FunnyMap.Companion.CHAT_PREFIX
+import funnymap.FunnyMap.Companion.NEKO_PREFIX
 import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.Companion.nekomap
 import funnymap.utils.ScoreboardUtils.sidebarLines
 import gg.essential.universal.UChat
 import net.minecraft.client.network.NetworkPlayerInfo
@@ -35,7 +37,7 @@ object Utils {
             return null
         }
 
-    fun modMessage(message: String) = UChat.chat("$CHAT_PREFIX $message")
+    fun modMessage(message: String) = UChat.chat("${if (nekomap) NEKO_PREFIX else CHAT_PREFIX} $message")
 
     val ItemStack.itemID: String
         get() {

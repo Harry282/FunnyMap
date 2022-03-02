@@ -34,6 +34,10 @@ class FunnyMap {
         if (!directory.exists()) {
             directory.mkdirs()
         }
+        val nekoDir = File(directory, "nekomap")
+        if (nekoDir.exists()) {
+            nekomap = true
+        }
     }
 
     @Mod.EventHandler
@@ -101,11 +105,14 @@ class FunnyMap {
         const val MOD_NAME = "Funny Map"
         const val MOD_VERSION = "0.4.0"
         const val CHAT_PREFIX = "§b§l<§fFunny Map§b§l>§r"
+        const val NEKO_PREFIX = "§b§l<§dNeko §fMap§b§l>§r"
 
         val mc: Minecraft = Minecraft.getMinecraft()
         val config = Config
         var display: GuiScreen? = null
         var tickCount = 0
+
+        var nekomap = false
 
         var inSkyblock = false
         var inDungeons = false
