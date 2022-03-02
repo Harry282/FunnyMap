@@ -117,7 +117,7 @@ class Dungeon {
             "[BOSS] Thorn: Welcome Adventurers! I am Thorn, the Spirit! And host of the Vegan Trials!",
             "[BOSS] Livid: Welcome, you arrive right on time. I am Livid, the Master of Shadows.",
             "[BOSS] Sadan: So you made it all the way here...and you wish to defy me? Sadan?!",
-            "[BOSS] Necron: Finally, I heard so much about you. The Eye likes you very much."
+            "[BOSS] Maxor: WELL WELL WELL LOOK WHO’S HERE!"
         )
     }
 }
