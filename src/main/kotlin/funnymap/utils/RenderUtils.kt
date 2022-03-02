@@ -86,8 +86,17 @@ object RenderUtils {
         GlStateManager.popMatrix()
     }
 
+    fun drawTexturedModalRect(x: Int, y: Int, width: Int, height: Int) {
+        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX)
+        worldRenderer.pos(x.toDouble(), (y + height).toDouble(), 0.0).tex(0.0, 1.0).endVertex()
+        worldRenderer.pos((x + width).toDouble(), (y + height).toDouble(), 0.0).tex(1.0, 1.0).endVertex()
+        worldRenderer.pos((x + width).toDouble(), y.toDouble(), 0.0).tex(1.0, 0.0).endVertex()
+        worldRenderer.pos(x.toDouble(), y.toDouble(), 0.0).tex(0.0, 0.0).endVertex()
+        tessellator.draw()
+    }
+
     fun drawPlayerHead(player: DungeonPlayer, multiplier: Double) {
-        if (player.dead || player.player.isDead) return
+        if (player.dead) return
         GlStateManager.pushMatrix()
         try {
             GlStateManager.translate(
@@ -115,8 +124,7 @@ object RenderUtils {
             if (player.player.isWearing(EnumPlayerModelParts.HAT)) {
                 Gui.drawScaledCustomSizeModalRect(-6, -6, 40f, 8f, 8, 8, 12, 12, 64f, 64f)
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (_: Exception) {
         }
         GlStateManager.popMatrix()
     }
