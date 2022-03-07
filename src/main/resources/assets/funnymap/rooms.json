@@ -1127,6 +1127,14 @@
       "cores": [
         633179672
       ]
+    },
+    {
+      "name": "Rail Track",
+      "type": "RARE",
+      "secrets": 3,
+      "cores": [
+        -701175845
+      ]
     }
   ]
 }
