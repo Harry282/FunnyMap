@@ -50,6 +50,14 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var playerHeads = 0
 
     @Property(
+        name = "Room Opacity",
+        type = PropertyType.PERCENT_SLIDER,
+        category = "Map",
+        subcategory = "Render"
+    )
+    var mapRoomTransparency = 1f
+
+    @Property(
         name = "Map Background Color",
         type = PropertyType.COLOR,
         category = "Map",

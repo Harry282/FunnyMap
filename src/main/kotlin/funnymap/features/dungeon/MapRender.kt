@@ -8,6 +8,7 @@ import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.roomSize
 import funnymap.utils.RenderUtils
 import funnymap.utils.Utils.equalsOneOf
+import gg.essential.elementa.utils.withAlpha
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.ResourceLocation
@@ -83,10 +84,10 @@ object MapRender {
                             (red * (1 - config.mapDarkenPercent)).toInt(),
                             (green * (1 - config.mapDarkenPercent)).toInt(),
                             (blue * (1 - config.mapDarkenPercent)).toInt(),
-                            alpha
+                            (alpha * config.mapRoomTransparency).toInt()
                         )
                     }
-                } else tile.getColor()
+                } else tile.getColor().run { withAlpha((alpha * config.mapRoomTransparency).toInt()) }
 
                 when {
                     xEven && yEven -> if (tile is Room) {
