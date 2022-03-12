@@ -9,6 +9,8 @@ import funnymap.core.Tile
 import funnymap.events.ReceivePacketEvent
 import funnymap.utils.Utils
 import funnymap.utils.Utils.currentFloor
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.network.play.server.S02PacketChat
 import net.minecraft.util.StringUtils
@@ -17,29 +19,27 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 
-
 class Dungeon {
 
     @SubscribeEvent
-    fun onTick(event: TickEvent.ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START || !inDungeons) return
+    fun onTick(event: TickEvent.ClientTickEvent) = runBlocking {
+        if (event.phase != TickEvent.Phase.START || !inDungeons) return@runBlocking
         if (shouldScan()) {
             lastScanTime = System.currentTimeMillis()
-            Thread {
+            launch {
                 isScanning = true
                 DungeonScan.scanDungeon()
                 isScanning = false
-            }.start()
+            }
         }
         if (hasScanned) {
-            Thread {
+            launch {
                 MapUpdate.updateRooms()
                 getDungeonTabList()?.let {
-                    MapUpdate.getPlayers(it)
                     MapUpdate.updatePlayers(it)
                     RunInformation.updateRunInformation(it)
                 }
-            }.start()
+            }
         }
     }
 
