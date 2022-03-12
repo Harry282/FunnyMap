@@ -195,9 +195,8 @@ object MapRender {
     }
 
     private fun renderPlayerHeads() {
-        val multiplier = (roomSize + 4.0) / Dungeon.roomSize
         for (player in Dungeon.dungeonTeamates) {
-            RenderUtils.drawPlayerHead(player, multiplier)
+            RenderUtils.drawPlayerHead(player)
         }
     }
 

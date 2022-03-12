@@ -95,15 +95,21 @@ object RenderUtils {
         tessellator.draw()
     }
 
-    fun drawPlayerHead(player: DungeonPlayer, multiplier: Double) {
-        if (player.dead) return
+    fun drawPlayerHead(player: DungeonPlayer) {
+        if (player.dead || player.player == null) return
         GlStateManager.pushMatrix()
         try {
-            GlStateManager.translate(
-                (player.x - Dungeon.startX) * multiplier + 8,
-                (player.z - Dungeon.startZ) * multiplier + 8,
-                0.0
-            )
+            val skin = mc.netHandler.getPlayerInfo(player.player.uniqueID).locationSkin ?: return
+            if (player.player == mc.thePlayer) {
+                GlStateManager.translate(
+                    (mc.thePlayer.posX - Dungeon.startX) * MapUtils.coordMultiplier + 8,
+                    (mc.thePlayer.posZ - Dungeon.startZ) * MapUtils.coordMultiplier + 8,
+                    0.0
+                )
+            } else {
+                GlStateManager.translate(player.mapX, player.mapZ, 0.0)
+            }
+
             if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID == "SPIRIT_LEAP") {
                 GlStateManager.pushMatrix()
                 GlStateManager.scale(0.8, 0.8, 1.0)
@@ -118,13 +124,14 @@ object RenderUtils {
             GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
             GlStateManager.scale(config.playerHeadScale, config.playerHeadScale, 1f)
             Gui.drawRect(-7, -7, 7, 7, 0x000000)
-            GlStateManager.color(255f, 255f, 255f)
-            mc.textureManager.bindTexture(mc.netHandler.getPlayerInfo(player.player.uniqueID).locationSkin)
+            GlStateManager.color(1f, 1f, 1f, 1f)
+            mc.textureManager.bindTexture(skin)
             Gui.drawScaledCustomSizeModalRect(-6, -6, 8f, 8f, 8, 8, 12, 12, 64f, 64f)
             if (player.player.isWearing(EnumPlayerModelParts.HAT)) {
                 Gui.drawScaledCustomSizeModalRect(-6, -6, 40f, 8f, 8, 8, 12, 12, 64f, 64f)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         GlStateManager.popMatrix()
     }

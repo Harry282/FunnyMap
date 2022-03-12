@@ -29,6 +29,8 @@ object MapUpdate {
 
         MapUtils.multiplier = 32 / (MapUtils.roomSize + 4.0)
 
+        MapUtils.coordMultiplier = (MapUtils.roomSize + 4.0) / Dungeon.roomSize
+
         MapUtils.calibrated = true
     }
 
@@ -63,16 +65,14 @@ object MapUpdate {
             }
         }
 
-        val decor = MapUtils.getMapData()?.mapDecorations
+        val decor = MapUtils.getMapData()?.mapDecorations ?: return
         Dungeon.dungeonTeamates.forEach {
-            if (it.player == mc.thePlayer || it.player.getDistanceSqToEntity(mc.thePlayer) < 200) {
-                it.x = it.player.posX
-                it.z = it.player.posZ
+            if (it.player == mc.thePlayer) {
                 it.yaw = it.player.rotationYawHead
-            } else if (decor != null) {
+            } else {
                 decor.entries.find { (icon, _) -> icon == it.icon }?.let { (_, vec4b) ->
-                    it.x = (vec4b.mapX.toDouble() - MapUtils.startCorner.first) * MapUtils.multiplier - 200
-                    it.z = (vec4b.mapZ.toDouble() - MapUtils.startCorner.second) * MapUtils.multiplier - 200
+                    it.mapX = vec4b.mapX.toDouble()
+                    it.mapZ = vec4b.mapZ.toDouble()
                     it.yaw = vec4b.yaw
                 }
             }
