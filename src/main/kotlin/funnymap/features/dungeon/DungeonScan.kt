@@ -5,8 +5,8 @@ import com.google.gson.JsonElement
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.*
-import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
+import funnymap.utils.Utils.modMessage
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
@@ -24,15 +24,15 @@ object DungeonScan {
                         ResourceLocation("funnymap", "rooms.json")
                     ).inputStream
                 )
-            ).readText(),
-            JsonElement::class.java
+            ).readText(), JsonElement::class.java
         ).asJsonObject["rooms"].asJsonArray.map { jsonElement ->
             val room = jsonElement.asJsonObject
             RoomData(
                 room["name"].asString,
                 RoomType.valueOf(room["type"].asString),
                 room["secrets"].asInt,
-                room["cores"].asJsonArray.map { it.asInt }
+                room["cores"].asJsonArray.map { it.asInt },
+                room["trappedChests"]?.asInt ?: 0
             )
         }
     } catch (e: Throwable) {
@@ -45,8 +45,7 @@ object DungeonScan {
         var allLoaded = true
         val startTime = System.currentTimeMillis()
 
-        scan@
-        for (x in 0..10) {
+        scan@ for (x in 0..10) {
             for (z in 0..10) {
                 val xPos = Dungeon.startX + x * (Dungeon.roomSize shr 1)
                 val zPos = Dungeon.startZ + z * (Dungeon.roomSize shr 1)
@@ -59,6 +58,7 @@ object DungeonScan {
 
                 getRoom(xPos, zPos, z, x)?.let {
                     if (it is Room && x and 1 == 0 && z and 1 == 0) Dungeon.rooms.add(it)
+                    if (it is Door && it.type == DoorType.WITHER) Dungeon.doors[it] = Pair(x, z)
                     Dungeon.dungeonList[z * 11 + x] = it
                 }
             }
@@ -69,18 +69,10 @@ object DungeonScan {
             MapUpdate.calibrate()
 
             if (config.scanChatInfo) {
-                Utils.modMessage(
-                    "&aScan Finished! Took &b${System.currentTimeMillis() - startTime}&ams!\n" +
-                            "&aPuzzles (&c${Dungeon.puzzles.size}&a):${
-                                Dungeon.puzzles.joinToString(
-                                    "\n&b- &d",
-                                    "\n&b- &d",
-                                    "\n"
-                                )
-                            }" +
-                            "&6Trap: &a${Dungeon.trapType}\n" +
-                            " &8Wither Doors: &7${Dungeon.witherDoors - 1}\n" +
-                            " &7Total Secrets: &b${Dungeon.secretCount}"
+                modMessage(
+                    "&aScan Finished! Took &b${System.currentTimeMillis() - startTime}&ams!\n&aPuzzles (&c${Dungeon.puzzles.size}&a):${
+                        Dungeon.puzzles.joinToString("\n&b- &d", "\n&b- &d", "\n")
+                    }&6Trap: &a${Dungeon.trapType}\n&8Wither Doors: &7${Dungeon.doors.size - 1}\n &7Total Secrets: &b${Dungeon.secretCount}"
                 )
             }
         } else Dungeon.reset()
@@ -117,13 +109,11 @@ object DungeonScan {
                 Door(x, z).apply {
                     val bState = mc.theWorld.getBlockState(BlockPos(x, 69, z))
                     type = when {
-                        bState.block == Blocks.coal_block -> {
-                            Dungeon.witherDoors++
-                            DoorType.WITHER
-                        }
+                        bState.block == Blocks.coal_block -> DoorType.WITHER
                         bState.block == Blocks.monster_egg -> DoorType.ENTRANCE
-                        bState.block == Blocks.stained_hardened_clay &&
-                                Blocks.stained_hardened_clay.getMetaFromState(bState) == 14 -> DoorType.BLOOD
+                        bState.block == Blocks.stained_hardened_clay && Blocks.stained_hardened_clay.getMetaFromState(
+                            bState
+                        ) == 14 -> DoorType.BLOOD
                         else -> DoorType.NORMAL
                     }
                 }

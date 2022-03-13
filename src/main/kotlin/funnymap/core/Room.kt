@@ -17,6 +17,6 @@ data class Room(override var x: Int, override var z: Int, var data: RoomData) : 
             RoomType.PUZZLE -> config.colorPuzzle
             RoomType.RARE -> config.colorRare
             RoomType.TRAP -> config.colorTrap
-            else -> config.colorRoom
+            else -> if (hasMimic) config.colorRoomMimic else config.colorRoom
         }
 }

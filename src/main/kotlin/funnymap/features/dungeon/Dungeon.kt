@@ -9,6 +9,7 @@ import funnymap.core.Tile
 import funnymap.events.ReceivePacketEvent
 import funnymap.utils.Utils
 import funnymap.utils.Utils.currentFloor
+import funnymap.utils.Utils.equalsOneOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import net.minecraft.client.network.NetworkPlayerInfo
@@ -34,6 +35,9 @@ class Dungeon {
         }
         if (hasScanned) {
             launch {
+                if (!mimicFound && currentFloor.equalsOneOf(6, 7)) {
+                    MimicDetector.findMimic()
+                }
                 MapUpdate.updateRooms()
                 getDungeonTabList()?.let {
                     MapUpdate.updatePlayers(it)
@@ -81,6 +85,7 @@ class Dungeon {
             dungeonList.fill(Door(0, 0))
             uniqueRooms.clear()
             rooms.clear()
+            mimicFound = false
 
             puzzles.clear()
             trapType = ""
@@ -101,6 +106,7 @@ class Dungeon {
         val dungeonList = Array<Tile>(121) { Door(0, 0) }
         val uniqueRooms = mutableListOf<Room>()
         val rooms = mutableListOf<Room>()
+        var mimicFound = false
 
         val dungeonTeamates = mutableListOf<DungeonPlayer>()
 

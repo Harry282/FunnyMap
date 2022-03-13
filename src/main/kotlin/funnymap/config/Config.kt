@@ -308,6 +308,15 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var colorRoom = Color(107, 58, 17)
 
     @Property(
+        name = "Mimic Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms",
+        allowAlpha = true
+    )
+    var colorRoomMimic = Color(186, 66, 52)
+
+    @Property(
         name = "Puzzle Room",
         type = PropertyType.COLOR,
         category = "Colors",
