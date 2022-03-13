@@ -79,7 +79,7 @@ object MapRender {
                 val yEven = y and 1 == 0
 
                 val color = if (config.mapDarkenUndiscovered && tile.state == RoomState.UNDISCOVERED) {
-                    tile.getColor().run {
+                    tile.color.run {
                         Color(
                             (red * (1 - config.mapDarkenPercent)).toInt(),
                             (green * (1 - config.mapDarkenPercent)).toInt(),
@@ -87,7 +87,7 @@ object MapRender {
                             (alpha * config.mapRoomTransparency).toInt()
                         )
                     }
-                } else tile.getColor().run { withAlpha((alpha * config.mapRoomTransparency).toInt()) }
+                } else tile.color.run { withAlpha((alpha * config.mapRoomTransparency).toInt()) }
 
                 when {
                     xEven && yEven -> if (tile is Room) {

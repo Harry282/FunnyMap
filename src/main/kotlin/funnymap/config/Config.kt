@@ -50,14 +50,6 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var playerHeads = 0
 
     @Property(
-        name = "Room Opacity",
-        type = PropertyType.PERCENT_SLIDER,
-        category = "Map",
-        subcategory = "Render"
-    )
-    var mapRoomTransparency = 1f
-
-    @Property(
         name = "Map Background Color",
         type = PropertyType.COLOR,
         category = "Map",
@@ -185,14 +177,6 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var mapDarkenUndiscovered = true
 
     @Property(
-        name = "Darken Multiplier",
-        type = PropertyType.PERCENT_SLIDER,
-        description = "How much to darken undiscovered rooms",
-        category = "Rooms"
-    )
-    var mapDarkenPercent = 0.4f
-
-    @Property(
         name = "Room Names",
         type = PropertyType.SELECTOR,
         description = "Shows names of rooms on map.",
@@ -228,6 +212,129 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var mapCheckmark = 1
 
     @Property(
+        name = "Room Opacity",
+        type = PropertyType.PERCENT_SLIDER,
+        category = "Colors"
+    )
+    var mapRoomTransparency = 1f
+
+    @Property(
+        name = "Darken Multiplier",
+        type = PropertyType.PERCENT_SLIDER,
+        description = "How much to darken undiscovered rooms",
+        category = "Colors"
+    )
+    var mapDarkenPercent = 0.4f
+
+    @Property(
+        name = "Blood Door",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Doors",
+        allowAlpha = true
+    )
+    var colorBloodDoor = Color(231, 0, 0)
+
+    @Property(
+        name = "Entrance Door",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Doors",
+        allowAlpha = true
+    )
+    var colorEntranceDoor = Color(20, 133, 0)
+
+    @Property(
+        name = "Normal Door",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Doors",
+        allowAlpha = true
+    )
+    var colorRoomDoor = Color(92, 52, 14)
+
+    @Property(
+        name = "Wither Door",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Doors",
+        allowAlpha = true
+    )
+    var colorWitherDoor = Color(0, 0, 0)
+
+    @Property(
+        name = "Blood Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms",
+        allowAlpha = true
+    )
+    var colorBlood = Color(255, 0, 0)
+
+    @Property(
+        name = "Entrance Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms",
+        allowAlpha = true
+    )
+    var colorEntrance = Color(20, 133, 0)
+
+    @Property(
+        name = "Fairy Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms",
+        allowAlpha = true
+    )
+    var colorFairy = Color(224, 0, 255)
+
+    @Property(
+        name = "Miniboss Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms",
+        allowAlpha = true
+    )
+    var colorMiniboss = Color(254, 223, 0)
+
+    @Property(
+        name = "Normal Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms",
+        allowAlpha = true
+    )
+    var colorRoom = Color(107, 58, 17)
+
+    @Property(
+        name = "Puzzle Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms",
+        allowAlpha = true
+    )
+    var colorPuzzle = Color(117, 0, 133)
+
+    @Property(
+        name = "Rare Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms",
+        allowAlpha = true
+    )
+    var colorRare = Color(255, 203, 89)
+
+    @Property(
+        name = "Trap Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms",
+        allowAlpha = true
+    )
+    var colorTrap = Color(216, 127, 51)
+
+    @Property(
         name = "Force Skyblock",
         type = PropertyType.SWITCH,
         category = "Debug"
@@ -247,6 +354,6 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     }
 
     private val configCategories = listOf(
-        "Map", "Rooms", "Debug"
+        "Map", "Rooms", "Colors", "Debug"
     )
 }
