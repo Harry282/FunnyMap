@@ -27,7 +27,7 @@ object MapRender {
 
     @SubscribeEvent
     fun onOverlay(event: RenderGameOverlayEvent.Post) {
-        if (event.type != RenderGameOverlayEvent.ElementType.ALL || !inDungeons || !config.mapEnabled) return
+        if (event.type != RenderGameOverlayEvent.ElementType.HOTBAR || !inDungeons || !config.mapEnabled) return
         if (config.mapHideInBoss && Dungeon.inBoss || !Dungeon.hasScanned) return
 
         GlStateManager.pushMatrix()
@@ -51,9 +51,8 @@ object MapRender {
             config.mapBorder
         )
 
-        GlStateManager.translate(MapUtils.startCorner.first.toFloat(), MapUtils.startCorner.second.toFloat(), 0f)
-
         renderRooms()
+
         if (mc.currentScreen !is MoveMapGui) {
             renderText()
             renderPlayerHeads()
@@ -65,6 +64,9 @@ object MapRender {
     }
 
     private fun renderRooms() {
+        GlStateManager.pushMatrix()
+        GlStateManager.translate(MapUtils.startCorner.first.toFloat(), MapUtils.startCorner.second.toFloat(), 0f)
+
         val connectorSize = roomSize shr 2
 
         for (y in 0..10) {
@@ -119,10 +121,13 @@ object MapRender {
                 }
             }
         }
-
+        GlStateManager.popMatrix()
     }
 
     private fun renderText() {
+        GlStateManager.pushMatrix()
+        GlStateManager.translate(MapUtils.startCorner.first.toFloat(), MapUtils.startCorner.second.toFloat(), 0f)
+
         val connectorSize = roomSize shr 2
 
         for (y in 0..10 step 2) {
@@ -174,6 +179,7 @@ object MapRender {
                 }
             }
         }
+        GlStateManager.popMatrix()
     }
 
     private fun getCheckmark(state: RoomState, type: Int): ResourceLocation? {
@@ -225,7 +231,7 @@ object MapRender {
 
     private fun renderRunInformation() {
         GlStateManager.pushMatrix()
-        GlStateManager.translate(0f - MapUtils.startCorner.first, 128f - MapUtils.startCorner.second, 0f)
+        GlStateManager.translate(0f, 128f, 0f)
         GlStateManager.scale(0.66, 0.66, 1.0)
         mc.fontRendererObj.drawString("Secrets: ${RunInformation.secretCount}/${Dungeon.secretCount}", 5, 0, 0xffffff)
         mc.fontRendererObj.drawString("Crypts: ${RunInformation.cryptsCount}", 85, 0, 0xffffff)

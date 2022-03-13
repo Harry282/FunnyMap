@@ -102,8 +102,8 @@ object RenderUtils {
             val skin = mc.netHandler.getPlayerInfo(player.player.uniqueID).locationSkin ?: return
             if (player.player == mc.thePlayer) {
                 GlStateManager.translate(
-                    (mc.thePlayer.posX - Dungeon.startX) * MapUtils.coordMultiplier + 8,
-                    (mc.thePlayer.posZ - Dungeon.startZ) * MapUtils.coordMultiplier + 8,
+                    (mc.thePlayer.posX - Dungeon.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first - 2,
+                    (mc.thePlayer.posZ - Dungeon.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second - 2,
                     0.0
                 )
             } else {
@@ -123,7 +123,7 @@ object RenderUtils {
             }
             GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
             GlStateManager.scale(config.playerHeadScale, config.playerHeadScale, 1f)
-            Gui.drawRect(-7, -7, 7, 7, 0x000000)
+            renderRectBorder(-6.0, -6.0, 12.0, 12.0, 1.0, Color(0, 0, 0, 255))
             GlStateManager.color(1f, 1f, 1f, 1f)
             mc.textureManager.bindTexture(skin)
             Gui.drawScaledCustomSizeModalRect(-6, -6, 8f, 8f, 8, 8, 12, 12, 64f, 64f)
