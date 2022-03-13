@@ -263,6 +263,15 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var colorWitherDoor = Color(0, 0, 0)
 
     @Property(
+        name = "Opened Wither Door",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Doors",
+        allowAlpha = true
+    )
+    var colorOpenWitherDoor = Color(92, 52, 14)
+
+    @Property(
         name = "Blood Room",
         type = PropertyType.COLOR,
         category = "Colors",

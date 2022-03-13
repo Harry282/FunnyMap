@@ -1,10 +1,7 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.mc
-import funnymap.core.DungeonPlayer
-import funnymap.core.Room
-import funnymap.core.RoomState
-import funnymap.core.RoomType
+import funnymap.core.*
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
@@ -12,6 +9,8 @@ import funnymap.utils.MapUtils.yaw
 import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.client.network.NetworkPlayerInfo
+import net.minecraft.init.Blocks
+import net.minecraft.util.BlockPos
 import net.minecraft.util.StringUtils
 
 object MapUpdate {
@@ -26,8 +25,6 @@ object MapUpdate {
         }
 
         MapUtils.roomSize = if (Utils.currentFloor in 1..3 || Dungeon.rooms.size == 24) 18 else 16
-
-        MapUtils.multiplier = 32 / (MapUtils.roomSize + 4.0)
 
         MapUtils.coordMultiplier = (MapUtils.roomSize + 4.0) / Dungeon.roomSize
 
@@ -109,6 +106,20 @@ object MapUpdate {
                     } else room.state
                     34 -> RoomState.CLEARED
                     else -> RoomState.DISCOVERED
+                }
+            }
+        }
+    }
+
+    fun updateDoors() {
+        for ((door, pos) in Dungeon.doors) {
+            if (!door.opened && mc.theWorld.getChunkFromChunkCoords(door.x shr 4, door.z shr 4).isLoaded) {
+                if (mc.theWorld.getBlockState(BlockPos(door.x, 69, door.z)).block == Blocks.air) {
+                    val room = Dungeon.dungeonList[pos.first + pos.second * 11]
+                    if (room is Door && room.type == DoorType.WITHER) {
+                        room.opened = true
+                        door.opened = true
+                    }
                 }
             }
         }

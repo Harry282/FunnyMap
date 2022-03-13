@@ -39,6 +39,7 @@ class Dungeon {
                     MimicDetector.findMimic()
                 }
                 MapUpdate.updateRooms()
+                MapUpdate.updateDoors()
                 getDungeonTabList()?.let {
                     MapUpdate.updatePlayers(it)
                     RunInformation.updateRunInformation(it)
@@ -85,6 +86,7 @@ class Dungeon {
             dungeonList.fill(Door(0, 0))
             uniqueRooms.clear()
             rooms.clear()
+            doors.clear()
             mimicFound = false
 
             puzzles.clear()
@@ -106,6 +108,7 @@ class Dungeon {
         val dungeonList = Array<Tile>(121) { Door(0, 0) }
         val uniqueRooms = mutableListOf<Room>()
         val rooms = mutableListOf<Room>()
+        val doors = mutableMapOf<Door, Pair<Int, Int>>()
         var mimicFound = false
 
         val dungeonTeamates = mutableListOf<DungeonPlayer>()

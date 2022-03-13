@@ -10,7 +10,6 @@ object MapUtils {
     var startCorner = Pair(5, 5)
     var roomSize = 16
     var calibrated = false
-    var multiplier = 1.6
     var coordMultiplier = 1.0
 
     fun getMapData(): MapData? {
