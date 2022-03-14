@@ -3,10 +3,7 @@ package funnymap.config
 import funnymap.FunnyMap
 import funnymap.features.dungeon.MoveMapGui
 import gg.essential.vigilance.Vigilant
-import gg.essential.vigilance.data.Category
-import gg.essential.vigilance.data.Property
-import gg.essential.vigilance.data.PropertyType
-import gg.essential.vigilance.data.SortingBehavior
+import gg.essential.vigilance.data.*
 import java.awt.Color
 import java.io.File
 
@@ -50,31 +47,22 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var playerHeads = 0
 
     @Property(
-        name = "Map Background Color",
-        type = PropertyType.COLOR,
+        name = "Auto Scan",
+        type = PropertyType.SWITCH,
+        description = "Automatically scans when entering dungeon. Manual scan can be done with \"/fmap scan\"",
         category = "Map",
-        subcategory = "Render",
-        allowAlpha = true
+        subcategory = "Scanning"
     )
-    var mapBackground = Color(0, 0, 0, 100)
+    var autoScan = true
 
     @Property(
-        name = "Map Border Color",
-        type = PropertyType.COLOR,
+        name = "Chat Info",
+        type = PropertyType.SWITCH,
+        description = "Show dungeon overview information after scanning.",
         category = "Map",
-        subcategory = "Render",
-        allowAlpha = true
+        subcategory = "Scanning"
     )
-    var mapBorder = Color(0, 0, 0, 255)
-
-    @Property(
-        name = "Border Thickness",
-        type = PropertyType.DECIMAL_SLIDER,
-        category = "Map",
-        subcategory = "Render",
-        maxF = 10f
-    )
-    var mapBorderWidth = 3f
+    var scanChatInfo = true
 
     @Property(
         name = "Map Position",
@@ -151,22 +139,31 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var playerHeadScale = 1f
 
     @Property(
-        name = "Auto Scan",
-        type = PropertyType.SWITCH,
-        description = "Automatically scans when entering dungeon. Manual scan can be done with \"/fmap scan\"",
+        name = "Map Background Color",
+        type = PropertyType.COLOR,
         category = "Map",
-        subcategory = "Scanning"
+        subcategory = "Render",
+        allowAlpha = true
     )
-    var autoScan = true
+    var mapBackground = Color(0, 0, 0, 100)
 
     @Property(
-        name = "Chat Info",
-        type = PropertyType.SWITCH,
-        description = "Show dungeon overview information after scanning.",
+        name = "Map Border Color",
+        type = PropertyType.COLOR,
         category = "Map",
-        subcategory = "Scanning"
+        subcategory = "Render",
+        allowAlpha = true
     )
-    var scanChatInfo = true
+    var mapBorder = Color(0, 0, 0, 255)
+
+    @Property(
+        name = "Border Thickness",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Map",
+        subcategory = "Render",
+        maxF = 10f
+    )
+    var mapBorderWidth = 3f
 
     @Property(
         name = "Dark Undiscovered Rooms",
@@ -368,10 +365,18 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     }
 
     private object CategorySorting : SortingBehavior() {
-        override fun getCategoryComparator(): Comparator<in Category> = compareBy { configCategories.indexOf(it.name) }
-    }
 
-    private val configCategories = listOf(
-        "Map", "Rooms", "Colors", "Debug"
-    )
+        private val configCategories = listOf(
+            "Map", "Rooms", "Colors", "Debug"
+        )
+
+        private val configSubcategories = listOf(
+            "Toggle", "Scanning", "Size", "Render"
+        )
+
+        override fun getCategoryComparator(): Comparator<in Category> = compareBy { configCategories.indexOf(it.name) }
+
+        override fun getSubcategoryComparator(): Comparator<in Map.Entry<String, List<PropertyData>>> =
+            compareBy { configSubcategories.indexOf(it.key) }
+    }
 }
