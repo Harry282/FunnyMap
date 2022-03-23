@@ -11,20 +11,13 @@ import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 import net.minecraft.util.ResourceLocation
-import java.io.BufferedReader
-import java.io.InputStreamReader
 
 object DungeonScan {
 
     private val roomList: List<RoomData> = try {
         Gson().fromJson(
-            BufferedReader(
-                InputStreamReader(
-                    mc.resourceManager.getResource(
-                        ResourceLocation("funnymap", "rooms.json")
-                    ).inputStream
-                )
-            ).readText(), JsonElement::class.java
+            mc.resourceManager.getResource(ResourceLocation("funnymap", "rooms.json"))
+                .inputStream.bufferedReader().use { it.readText() }, JsonElement::class.java
         ).asJsonObject["rooms"].asJsonArray.map { jsonElement ->
             val room = jsonElement.asJsonObject
             RoomData(
