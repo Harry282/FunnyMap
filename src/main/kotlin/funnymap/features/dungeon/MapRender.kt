@@ -201,8 +201,12 @@ object MapRender {
     }
 
     private fun renderPlayerHeads() {
-        for (player in Dungeon.dungeonTeamates) {
-            RenderUtils.drawPlayerHead(player)
+        if (Dungeon.dungeonTeamates.isEmpty()) {
+            RenderUtils.drawPlayerHead(DungeonPlayer(mc.thePlayer, mc.thePlayer.name))
+        } else {
+            for (player in Dungeon.dungeonTeamates) {
+                RenderUtils.drawPlayerHead(player)
+            }
         }
     }
 
