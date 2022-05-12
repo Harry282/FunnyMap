@@ -202,7 +202,9 @@ object MapRender {
 
     private fun renderPlayerHeads() {
         if (Dungeon.dungeonTeamates.isEmpty()) {
-            RenderUtils.drawPlayerHead(DungeonPlayer(mc.thePlayer, mc.thePlayer.name))
+            RenderUtils.drawPlayerHead(DungeonPlayer(mc.thePlayer, mc.thePlayer.name).apply {
+                yaw = mc.thePlayer.rotationYawHead
+            })
         } else {
             for (player in Dungeon.dungeonTeamates) {
                 RenderUtils.drawPlayerHead(player)
