@@ -4,6 +4,7 @@ import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.DungeonPlayer
 import funnymap.features.dungeon.Dungeon
+import funnymap.utils.Utils.equalsOneOf
 import funnymap.utils.Utils.itemID
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.GlStateManager
@@ -110,7 +111,11 @@ object RenderUtils {
                 GlStateManager.translate(player.mapX, player.mapZ, 0.0)
             }
 
-            if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID == "SPIRIT_LEAP") {
+            if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
+                    "SPIRIT_LEAP",
+                    "INFINITE_SPIRIT_LEAP"
+                )
+            ) {
                 GlStateManager.pushMatrix()
                 GlStateManager.scale(0.8, 0.8, 1.0)
                 mc.fontRendererObj.drawString(
@@ -130,8 +135,7 @@ object RenderUtils {
             if (player.player.isWearing(EnumPlayerModelParts.HAT)) {
                 Gui.drawScaledCustomSizeModalRect(-6, -6, 40f, 8f, 8, 8, 12, 12, 64f, 64f)
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
+        } catch (_: Exception) {
         }
         GlStateManager.popMatrix()
     }
