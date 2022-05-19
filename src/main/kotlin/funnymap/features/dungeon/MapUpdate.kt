@@ -32,27 +32,27 @@ object MapUpdate {
     }
 
     fun getPlayers(tabEntries: List<Pair<NetworkPlayerInfo, String>>) {
-        if (Dungeon.dungeonTeamates.isNotEmpty()) return
+        if (Dungeon.dungeonTeammates.isNotEmpty()) return
 
         for (i in 0..4) {
             val text = StringUtils.stripControlCodes(tabEntries[1 + i * 4].second).trim()
             val name = text.split(" ")[0]
             if (name == "") continue
             mc.theWorld.playerEntities.find { it.name == name }?.let {
-                Dungeon.dungeonTeamates.add(DungeonPlayer(it, name))
+                Dungeon.dungeonTeammates.add(DungeonPlayer(it, name))
             }
         }
     }
 
     fun updatePlayers(tabEntries: List<Pair<NetworkPlayerInfo, String>>) {
-        if (Dungeon.dungeonTeamates.isEmpty()) return
+        if (Dungeon.dungeonTeammates.isEmpty()) return
 
         var iconNum = 0
         for (i in listOf(5, 9, 13, 17, 1)) {
             val tabText = StringUtils.stripControlCodes(tabEntries[i].second).trim()
             val name = tabText.split(" ")[0]
             if (name == "") continue
-            val player = Dungeon.dungeonTeamates.find { it.name == name } ?: continue
+            val player = Dungeon.dungeonTeammates.find { it.name == name } ?: continue
             player.dead = tabText.contains("(DEAD)")
             if (!player.dead) {
                 player.icon = "icon-${iconNum}"
@@ -63,7 +63,7 @@ object MapUpdate {
         }
 
         val decor = MapUtils.getMapData()?.mapDecorations ?: return
-        Dungeon.dungeonTeamates.forEach {
+        Dungeon.dungeonTeammates.forEach {
             if (it.player == mc.thePlayer) {
                 it.yaw = it.player.rotationYawHead
             } else {

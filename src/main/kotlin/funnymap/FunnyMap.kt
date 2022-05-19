@@ -36,19 +36,14 @@ class FunnyMap {
         if (!directory.exists()) {
             directory.mkdirs()
         }
-        val nekoDir = File(directory, "nekomap")
-        if (nekoDir.exists()) {
-            nekomap = true
-        }
     }
 
     @Mod.EventHandler
     fun onInit(event: FMLInitializationEvent) {
         ClientCommandHandler.instance.registerCommand((FunnyMapCommands()))
-
         listOf(
             this,
-            Dungeon(),
+            Dungeon,
             MapRender
         ).forEach(MinecraftForge.EVENT_BUS::register)
     }
@@ -116,7 +111,7 @@ class FunnyMap {
         var display: GuiScreen? = null
         var tickCount = 0
 
-        var nekomap = false
+        var nekomap = File(mc.mcDataDir, "config/funnymap/nekomap").exists()
 
         var inSkyblock = false
         var inDungeons = false

@@ -20,7 +20,41 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 
-class Dungeon {
+object Dungeon {
+
+    const val roomSize = 32
+    const val startX = -185
+    const val startZ = -185
+
+    private var lastScanTime: Long = 0
+    private var isScanning = false
+    var hasScanned = false
+
+    // 6 x 6 room grid, 11 x 11 with connections
+    var inBoss = false
+    val dungeonList = Array<Tile>(121) { Door(0, 0) }
+    val uniqueRooms = mutableListOf<Room>()
+    val rooms = mutableListOf<Room>()
+    val doors = mutableMapOf<Door, Pair<Int, Int>>()
+    var mimicFound = false
+
+    val dungeonTeammates = mutableListOf<DungeonPlayer>()
+
+    // Used for chat info
+    val puzzles = mutableListOf<String>()
+    var trapType = ""
+    var witherDoors = 0
+    var secretCount = 0
+
+    private val entryMessages = listOf(
+        "[BOSS] Bonzo: Gratz for making it this far, but I’m basically unbeatable.",
+        "[BOSS] Scarf: This is where the journey ends for you, Adventurers.",
+        "[BOSS] The Professor: I was burdened with terrible news recently...",
+        "[BOSS] Thorn: Welcome Adventurers! I am Thorn, the Spirit! And host of the Vegan Trials!",
+        "[BOSS] Livid: Welcome, you arrive right on time. I am Livid, the Master of Shadows.",
+        "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!",
+        "[BOSS] Maxor: WELL WELL WELL LOOK WHO’S HERE!"
+    )
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) = runBlocking {
@@ -78,55 +112,20 @@ class Dungeon {
         return tabEntries
     }
 
-    companion object {
 
-        fun reset() {
-            dungeonTeamates.clear()
+    fun reset() {
 
-            dungeonList.fill(Door(0, 0))
-            uniqueRooms.clear()
-            rooms.clear()
-            doors.clear()
-            mimicFound = false
+        dungeonTeammates.clear()
 
-            puzzles.clear()
-            trapType = ""
-            witherDoors = 0
-            secretCount = 0
-        }
+        dungeonList.fill(Door(0, 0))
+        uniqueRooms.clear()
+        rooms.clear()
+        doors.clear()
+        mimicFound = false
 
-        const val roomSize = 32
-        const val startX = -185
-        const val startZ = -185
-
-        var lastScanTime: Long = 0
-        var isScanning = false
-        var hasScanned = false
-
-        // 6 x 6 room grid, 11 x 11 with connections
-        var inBoss = false
-        val dungeonList = Array<Tile>(121) { Door(0, 0) }
-        val uniqueRooms = mutableListOf<Room>()
-        val rooms = mutableListOf<Room>()
-        val doors = mutableMapOf<Door, Pair<Int, Int>>()
-        var mimicFound = false
-
-        val dungeonTeamates = mutableListOf<DungeonPlayer>()
-
-        // Used for chat info
-        val puzzles = mutableListOf<String>()
-        var trapType = ""
-        var witherDoors = 0
-        var secretCount = 0
-
-        val entryMessages = listOf(
-            "[BOSS] Bonzo: Gratz for making it this far, but I’m basically unbeatable.",
-            "[BOSS] Scarf: This is where the journey ends for you, Adventurers.",
-            "[BOSS] The Professor: I was burdened with terrible news recently...",
-            "[BOSS] Thorn: Welcome Adventurers! I am Thorn, the Spirit! And host of the Vegan Trials!",
-            "[BOSS] Livid: Welcome, you arrive right on time. I am Livid, the Master of Shadows.",
-            "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!",
-            "[BOSS] Maxor: WELL WELL WELL LOOK WHO’S HERE!"
-        )
+        puzzles.clear()
+        trapType = ""
+        witherDoors = 0
+        secretCount = 0
     }
 }
