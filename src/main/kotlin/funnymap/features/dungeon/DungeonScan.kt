@@ -1,7 +1,9 @@
 package funnymap.features.dungeon
 
 import com.google.gson.Gson
-import com.google.gson.JsonElement
+import com.google.gson.JsonIOException
+import com.google.gson.JsonSyntaxException
+import com.google.gson.reflect.TypeToken
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.*
