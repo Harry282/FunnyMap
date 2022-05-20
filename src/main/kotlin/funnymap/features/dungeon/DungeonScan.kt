@@ -14,23 +14,18 @@ import net.minecraft.util.ResourceLocation
 
 object DungeonScan {
 
-    private val roomList: List<RoomData> = try {
+    val roomList: Set<RoomData> = try {
         Gson().fromJson(
             mc.resourceManager.getResource(ResourceLocation("funnymap", "rooms.json"))
-                .inputStream.bufferedReader().use { it.readText() }, JsonElement::class.java
-        ).asJsonObject["rooms"].asJsonArray.map { jsonElement ->
-            val room = jsonElement.asJsonObject
-            RoomData(
-                room["name"].asString,
-                RoomType.valueOf(room["type"].asString),
-                room["secrets"].asInt,
-                room["cores"].asJsonArray.map { it.asInt },
-                room["trappedChests"]?.asInt ?: 0
-            )
-        }
-    } catch (e: Throwable) {
-        e.printStackTrace()
-        listOf()
+                .inputStream.bufferedReader(),
+            object : TypeToken<Set<RoomData>>() {}.type
+        )
+    } catch (e: JsonSyntaxException) {
+        println("Error parsing FunnyMap room data.")
+        setOf()
+    } catch (e: JsonIOException) {
+        println("Error reading FunnyMap room data.")
+        setOf()
     }
 
     fun scanDungeon() {
