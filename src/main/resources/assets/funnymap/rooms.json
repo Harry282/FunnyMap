@@ -1,9 +1,9 @@
 [
   {
-    "name":"Waterfall",
-    "type":"NORMAL",
-    "secrets":8,
-    "cores":[
+    "name": "Waterfall",
+    "type": "NORMAL",
+    "secrets": 8,
+    "cores": [
       740310812,
       82232284,
       1379043687,
@@ -11,194 +11,194 @@
     ]
   },
   {
-    "name":"Raccoon",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Raccoon",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       497881745
     ]
   },
   {
-    "name":"Spider",
-    "type":"NORMAL",
-    "secrets":9,
-    "cores":[
+    "name": "Spider",
+    "type": "NORMAL",
+    "secrets": 9,
+    "cores": [
       365045229,
       -1361285742,
       1778566373
     ]
   },
   {
-    "name":"Gold",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Gold",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -1035453872,
       1451614295
     ]
   },
   {
-    "name":"Shadow Assassin",
-    "type":"CHAMPION",
-    "secrets":0,
-    "cores":[
+    "name": "Shadow Assassin",
+    "type": "CHAMPION",
+    "secrets": 0,
+    "cores": [
       -430117371
     ]
   },
   {
-    "name":"Fairy",
-    "type":"FAIRY",
-    "secrets":0,
-    "cores":[
+    "name": "Fairy",
+    "type": "FAIRY",
+    "secrets": 0,
+    "cores": [
       1484567748
     ]
   },
   {
-    "name":"Mossy",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Mossy",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       -1169615458,
       1432034198,
       1896208123
     ]
   },
   {
-    "name":"Banners",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Banners",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -667603340
     ]
   },
   {
-    "name":"Catwalk",
-    "type":"NORMAL",
-    "secrets":6,
-    "cores":[
+    "name": "Catwalk",
+    "type": "NORMAL",
+    "secrets": 6,
+    "cores": [
       1600132124,
       -1010346133,
       -1694830065
     ]
   },
   {
-    "name":"Duncan",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Duncan",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       544418695
     ]
   },
   {
-    "name":"Blaze",
-    "type":"PUZZLE",
-    "secrets":1,
-    "cores":[
+    "name": "Blaze",
+    "type": "PUZZLE",
+    "secrets": 1,
+    "cores": [
       1103121487,
       -1092103153
     ]
   },
   {
-    "name":"Red Green",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Red Green",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       -1085327384
     ]
   },
   {
-    "name":"Entrance",
-    "type":"ENTRANCE",
-    "secrets":0,
-    "cores":[
+    "name": "Entrance",
+    "type": "ENTRANCE",
+    "secrets": 0,
+    "cores": [
       274652966,
       -1092072828,
       1913969999
     ]
   },
   {
-    "name":"New Trap",
-    "type":"TRAP",
-    "secrets":3,
-    "cores":[
+    "name": "New Trap",
+    "type": "TRAP",
+    "secrets": 3,
+    "cores": [
       -1358669872
     ],
-    "trappedChests":1
+    "trappedChests": 1
   },
   {
-    "name":"Wizard",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Wizard",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       -23510667,
       1958624830,
       735485465
     ]
   },
   {
-    "name":"Blood",
-    "type":"BLOOD",
-    "secrets":0,
-    "cores":[
+    "name": "Blood",
+    "type": "BLOOD",
+    "secrets": 0,
+    "cores": [
       -2130054003
     ]
   },
   {
-    "name":"Dino Site",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Dino Site",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       -1113939414,
       -1425445617,
       -609789679
     ]
   },
   {
-    "name":"Spikes",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Spikes",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       881396995
     ]
   },
   {
-    "name":"Quiz",
-    "type":"PUZZLE",
-    "secrets":0,
-    "cores":[
+    "name": "Quiz",
+    "type": "PUZZLE",
+    "secrets": 0,
+    "cores": [
       1928619293
     ]
   },
   {
-    "name":"Hall",
-    "type":"NORMAL",
-    "secrets":0,
-    "cores":[
+    "name": "Hall",
+    "type": "NORMAL",
+    "secrets": 0,
+    "cores": [
       -2131538192
     ]
   },
   {
-    "name":"Bomb Defuse",
-    "type":"PUZZLE",
-    "secrets":0,
-    "cores":[
+    "name": "Bomb Defuse",
+    "type": "PUZZLE",
+    "secrets": 0,
+    "cores": [
       86014075
     ]
   },
   {
-    "name":"Redstone Warrior",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Redstone Warrior",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       1313090868,
       1819727964
     ]
   },
   {
-    "name":"Pit",
-    "type":"NORMAL",
-    "secrets":5,
-    "cores":[
+    "name": "Pit",
+    "type": "NORMAL",
+    "secrets": 5,
+    "cores": [
       -1862968316,
       -258250108,
       265221970,
@@ -206,10 +206,10 @@
     ]
   },
   {
-    "name":"Flags",
-    "type":"NORMAL",
-    "secrets":7,
-    "cores":[
+    "name": "Flags",
+    "type": "NORMAL",
+    "secrets": 7,
+    "cores": [
       -1267948931,
       284566079,
       1157102457,
@@ -217,52 +217,52 @@
     ]
   },
   {
-    "name":"Tic Tac Toe",
-    "type":"PUZZLE",
-    "secrets":1,
-    "cores":[
+    "name": "Tic Tac Toe",
+    "type": "PUZZLE",
+    "secrets": 1,
+    "cores": [
       1958698161
     ]
   },
   {
-    "name":"Cages",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Cages",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -316384390
     ]
   },
   {
-    "name":"Big Red Flag",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Big Red Flag",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -1265317780
     ]
   },
   {
-    "name":"Balcony",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Balcony",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       1989395652,
       559495102
     ]
   },
   {
-    "name":"Dueces",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Dueces",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       1046920372
     ],
-    "trappedChests":1
+    "trappedChests": 1
   },
   {
-    "name":"Stairs",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Stairs",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       -330702540,
       -283979980,
       -697693183,
@@ -270,42 +270,42 @@
     ]
   },
   {
-    "name":"Dome",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Dome",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       462413746
     ]
   },
   {
-    "name":"Small Waterfall",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Small Waterfall",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -1682285647
     ]
   },
   {
-    "name":"Cage",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Cage",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       272954274
     ]
   },
   {
-    "name":"Steps",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Steps",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       1350621298
     ]
   },
   {
-    "name":"Atlas",
-    "type":"NORMAL",
-    "secrets":6,
-    "cores":[
+    "name": "Atlas",
+    "type": "NORMAL",
+    "secrets": 6,
+    "cores": [
       -685489527,
       745093020,
       308515062,
@@ -313,105 +313,105 @@
     ]
   },
   {
-    "name":"Dragon",
-    "type":"CHAMPION",
-    "secrets":0,
-    "cores":[
+    "name": "Dragon",
+    "type": "CHAMPION",
+    "secrets": 0,
+    "cores": [
       84632407
     ]
   },
   {
-    "name":"Lava Ravine",
-    "type":"NORMAL",
-    "secrets":6,
-    "cores":[
+    "name": "Lava Ravine",
+    "type": "NORMAL",
+    "secrets": 6,
+    "cores": [
       -2040489612,
       -294054018,
       -2053308786
     ]
   },
   {
-    "name":"Deathmite",
-    "type":"NORMAL",
-    "secrets":6,
-    "cores":[
+    "name": "Deathmite",
+    "type": "NORMAL",
+    "secrets": 6,
+    "cores": [
       -233562612,
       -1901273450,
       -1408070175
     ]
   },
   {
-    "name":"Blue Skulls",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Blue Skulls",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -999204041
     ]
   },
   {
-    "name":"Ice Path",
-    "type":"PUZZLE",
-    "secrets":0,
-    "cores":[
+    "name": "Ice Path",
+    "type": "PUZZLE",
+    "secrets": 0,
+    "cores": [
       1073658098
     ]
   },
   {
-    "name":"Purple Flags",
-    "type":"NORMAL",
-    "secrets":5,
-    "cores":[
+    "name": "Purple Flags",
+    "type": "NORMAL",
+    "secrets": 5,
+    "cores": [
       887024382,
       701310376
     ]
   },
   {
-    "name":"Long Hall",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Long Hall",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       -872480083
     ]
   },
   {
-    "name":"Red Blue",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Red Blue",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       1011477602,
       1607395895,
       -1794981292
     ]
   },
   {
-    "name":"Overgrown Chains",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Overgrown Chains",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       1077887433
     ]
   },
   {
-    "name":"Old Trap",
-    "type":"TRAP",
-    "secrets":4,
-    "cores":[
+    "name": "Old Trap",
+    "type": "TRAP",
+    "secrets": 4,
+    "cores": [
       1128554492
     ]
   },
   {
-    "name":"Water",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Water",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -1849552977
     ]
   },
   {
-    "name":"Rails",
-    "type":"NORMAL",
-    "secrets":9,
-    "cores":[
+    "name": "Rails",
+    "type": "NORMAL",
+    "secrets": 9,
+    "cores": [
       526587049,
       -214948895,
       -1778261714,
@@ -419,60 +419,60 @@
     ]
   },
   {
-    "name":"Ice Fill",
-    "type":"PUZZLE",
-    "secrets":0,
-    "cores":[
+    "name": "Ice Fill",
+    "type": "PUZZLE",
+    "secrets": 0,
+    "cores": [
       2051424561,
       884728242
     ]
   },
   {
-    "name":"Mushroom",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Mushroom",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       1073109158
     ]
   },
   {
-    "name":"Rare Overgrown",
-    "type":"RARE",
-    "secrets":3,
-    "cores":[
+    "name": "Rare Overgrown",
+    "type": "RARE",
+    "secrets": 3,
+    "cores": [
       -1643528240
     ]
   },
   {
-    "name":"Bridges",
-    "type":"NORMAL",
-    "secrets":6,
-    "cores":[
+    "name": "Bridges",
+    "type": "NORMAL",
+    "secrets": 6,
+    "cores": [
       -1604951086,
       -1989950542
     ]
   },
   {
-    "name":"Creeper Beams",
-    "type":"PUZZLE",
-    "secrets":0,
-    "cores":[
+    "name": "Creeper Beams",
+    "type": "PUZZLE",
+    "secrets": 0,
+    "cores": [
       -755321869
     ]
   },
   {
-    "name":"Three Weirdos",
-    "type":"PUZZLE",
-    "secrets":0,
-    "cores":[
+    "name": "Three Weirdos",
+    "type": "PUZZLE",
+    "secrets": 0,
+    "cores": [
       -476788643
     ]
   },
   {
-    "name":"Museum",
-    "type":"NORMAL",
-    "secrets":5,
-    "cores":[
+    "name": "Museum",
+    "type": "NORMAL",
+    "secrets": 5,
+    "cores": [
       -1957538226,
       -2121384577,
       -1797804860,
@@ -480,70 +480,70 @@
     ]
   },
   {
-    "name":"Quad Lava",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Quad Lava",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       52900193
     ]
   },
   {
-    "name":"Small Stairs",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Small Stairs",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -1250912300
     ]
   },
   {
-    "name":"Jumping Skulls",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Jumping Skulls",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -1496765468
     ]
   },
   {
-    "name":"King Midas",
-    "type":"CHAMPION",
-    "secrets":0,
-    "cores":[
+    "name": "King Midas",
+    "type": "CHAMPION",
+    "secrets": 0,
+    "cores": [
       -1678546839
     ]
   },
   {
-    "name":"Diagonal",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Diagonal",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       2147431657,
       1144217017,
       -464769223
     ]
   },
   {
-    "name":"Mural",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Mural",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -1027066030
     ]
   },
   {
-    "name":"Market",
-    "type":"NORMAL",
-    "secrets":5,
-    "cores":[
+    "name": "Market",
+    "type": "NORMAL",
+    "secrets": 5,
+    "cores": [
       270637140,
       -402574914,
       -880417926
     ]
   },
   {
-    "name":"Hallway",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Hallway",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       -402028497,
       351544339,
       -1723662179,
@@ -551,42 +551,42 @@
     ]
   },
   {
-    "name":"Beams",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Beams",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -2082251638
     ]
   },
   {
-    "name":"Dip",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Dip",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -1691958814
     ]
   },
   {
-    "name":"Basement",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Basement",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -204678789
     ]
   },
   {
-    "name":"Water Board",
-    "type":"PUZZLE",
-    "secrets":0,
-    "cores":[
+    "name": "Water Board",
+    "type": "PUZZLE",
+    "secrets": 0,
+    "cores": [
       -109725212
     ]
   },
   {
-    "name":"Quartz Knight",
-    "type":"NORMAL",
-    "secrets":7,
-    "cores":[
+    "name": "Quartz Knight",
+    "type": "NORMAL",
+    "secrets": 7,
+    "cores": [
       -1639566599,
       153753389,
       -129760550,
@@ -594,60 +594,60 @@
     ]
   },
   {
-    "name":"Pressure Plates",
-    "type":"NORMAL",
-    "secrets":6,
-    "cores":[
+    "name": "Pressure Plates",
+    "type": "NORMAL",
+    "secrets": 6,
+    "cores": [
       1172966775,
       681797038
     ]
   },
   {
-    "name":"Default",
-    "type":"CHAMPION",
-    "secrets":0,
-    "cores":[
+    "name": "Default",
+    "type": "CHAMPION",
+    "secrets": 0,
+    "cores": [
       652570347,
       1956609103
     ]
   },
   {
-    "name":"Cell",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Cell",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       1751890846
     ]
   },
   {
-    "name":"Mirror",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Mirror",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -1823353629
     ]
   },
   {
-    "name":"Lots Of Floors",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Lots Of Floors",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       1449723216
     ]
   },
   {
-    "name":"Teleport Maze",
-    "type":"PUZZLE",
-    "secrets":0,
-    "cores":[
+    "name": "Teleport Maze",
+    "type": "PUZZLE",
+    "secrets": 0,
+    "cores": [
       487124604
     ]
   },
   {
-    "name":"Mines",
-    "type":"NORMAL",
-    "secrets":10,
-    "cores":[
+    "name": "Mines",
+    "type": "NORMAL",
+    "secrets": 10,
+    "cores": [
       -361911912,
       -39488099,
       1363618678,
@@ -655,28 +655,28 @@
     ]
   },
   {
-    "name":"Sloth",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Sloth",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -1390729196
     ]
   },
   {
-    "name":"Withermancer",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Withermancer",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       -499989468,
       -406356904,
       -1645219026
     ]
   },
   {
-    "name":"Cathedral",
-    "type":"NORMAL",
-    "secrets":8,
-    "cores":[
+    "name": "Cathedral",
+    "type": "NORMAL",
+    "secrets": 8,
+    "cores": [
       -2043617055,
       789869846,
       -1212586959,
@@ -684,233 +684,233 @@
     ]
   },
   {
-    "name":"Gravel",
-    "type":"NORMAL",
-    "secrets":6,
-    "cores":[
+    "name": "Gravel",
+    "type": "NORMAL",
+    "secrets": 6,
+    "cores": [
       841898152,
       1127962661,
       4304131
     ]
   },
   {
-    "name":"Crypt",
-    "type":"NORMAL",
-    "secrets":5,
-    "cores":[
+    "name": "Crypt",
+    "type": "NORMAL",
+    "secrets": 5,
+    "cores": [
       -845911506,
       331494915
     ]
   },
   {
-    "name":"Slabs",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Slabs",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -1811244478
     ]
   },
   {
-    "name":"Temple",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Temple",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       1663174337
     ]
   },
   {
-    "name":"Double Diamond",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Double Diamond",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       1308341800
     ]
   },
   {
-    "name":"Archway",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Archway",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       -1447684689,
       1440798119
     ]
   },
   {
-    "name":"Boulder",
-    "type":"PUZZLE",
-    "secrets":0,
-    "cores":[
+    "name": "Boulder",
+    "type": "PUZZLE",
+    "secrets": 0,
+    "cores": [
       -671152674,
       307825200
     ]
   },
   {
-    "name":"Chains",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Chains",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       113272043
     ]
   },
   {
-    "name":"Skull",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Skull",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -46929855,
       1667732153
     ]
   },
   {
-    "name":"Scaffolding",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Scaffolding",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       2091387826
     ]
   },
   {
-    "name":"Cobble Wall Pillar",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Cobble Wall Pillar",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       259238824
     ]
   },
   {
-    "name":"Buttons",
-    "type":"NORMAL",
-    "secrets":5,
-    "cores":[
+    "name": "Buttons",
+    "type": "NORMAL",
+    "secrets": 5,
+    "cores": [
       -1359302282,
       160943502,
       823430452,
       2123177620
     ],
-    "trappedChests":1
+    "trappedChests": 1
   },
   {
-    "name":"Overgrown",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Overgrown",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       1858897577
     ]
   },
   {
-    "name":"Knight",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Knight",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       -1746428299
     ]
   },
   {
-    "name":"Grand Library",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Grand Library",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       749593273,
       1348435369
     ]
   },
   {
-    "name":"Well",
-    "type":"NORMAL",
-    "secrets":7,
-    "cores":[
+    "name": "Well",
+    "type": "NORMAL",
+    "secrets": 7,
+    "cores": [
       196766004,
       718434953,
       1955671195
     ]
   },
   {
-    "name":"Andesite",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Andesite",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -673246822
     ]
   },
   {
-    "name":"Locked Away",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Locked Away",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       754378401
     ]
   },
   {
-    "name":"Sarcophagus",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Sarcophagus",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       1986002687
     ]
   },
   {
-    "name":"Tomioka",
-    "type":"NORMAL",
-    "secrets":0,
-    "cores":[
+    "name": "Tomioka",
+    "type": "NORMAL",
+    "secrets": 0,
+    "cores": [
       -195263543
     ]
   },
   {
-    "name":"Arrow Trap",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Arrow Trap",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       332584803
     ]
   },
   {
-    "name":"Melon",
-    "type":"NORMAL",
-    "secrets":7,
-    "cores":[
+    "name": "Melon",
+    "type": "NORMAL",
+    "secrets": 7,
+    "cores": [
       -325025964,
       1964904676,
       158528145
     ]
   },
   {
-    "name":"End",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "End",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -1897192562
     ]
   },
   {
-    "name":"Perch",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Perch",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       27598620
     ]
   },
   {
-    "name":"Multicolored",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Multicolored",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -671539463
     ]
   },
   {
-    "name":"Painting",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Painting",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       474745227
     ]
   },
   {
-    "name":"Layers",
-    "type":"NORMAL",
-    "secrets":8,
-    "cores":[
+    "name": "Layers",
+    "type": "NORMAL",
+    "secrets": 8,
+    "cores": [
       1516049261,
       820948152,
       456930870,
@@ -918,10 +918,10 @@
     ]
   },
   {
-    "name":"Supertall",
-    "type":"NORMAL",
-    "secrets":6,
-    "cores":[
+    "name": "Supertall",
+    "type": "NORMAL",
+    "secrets": 6,
+    "cores": [
       1522346451,
       -1376632689,
       291711773,
@@ -929,210 +929,210 @@
     ]
   },
   {
-    "name":"Admin",
-    "type":"NORMAL",
-    "secrets":0,
-    "cores":[
+    "name": "Admin",
+    "type": "NORMAL",
+    "secrets": 0,
+    "cores": [
       -1989372370
     ]
   },
   {
-    "name":"Silver Sword",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Silver Sword",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -224496952
     ]
   },
   {
-    "name":"Logs",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Logs",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       -1803705489
     ]
   },
   {
-    "name":"Pedestal",
-    "type":"NORMAL",
-    "secrets":5,
-    "cores":[
+    "name": "Pedestal",
+    "type": "NORMAL",
+    "secrets": 5,
+    "cores": [
       -1346033867,
       281551136
     ]
   },
   {
-    "name":"Prison Cell",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Prison Cell",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       1172045122
     ]
   },
   {
-    "name":"Grass Ruin",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Grass Ruin",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       568565222,
       -786211724
     ]
   },
   {
-    "name":"Granite",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Granite",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -456244067
     ]
   },
   {
-    "name":"Mage",
-    "type":"NORMAL",
-    "secrets":4,
-    "cores":[
+    "name": "Mage",
+    "type": "NORMAL",
+    "secrets": 4,
+    "cores": [
       -338946136,
       1089356068
     ]
   },
   {
-    "name":"Leaves",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Leaves",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -1967474423
     ]
   },
   {
-    "name":"Redstone Key",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Redstone Key",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       348655632
     ],
-    "trappedChests":1
+    "trappedChests": 1
   },
   {
-    "name":"Drop",
-    "type":"NORMAL",
-    "secrets":2,
-    "cores":[
+    "name": "Drop",
+    "type": "NORMAL",
+    "secrets": 2,
+    "cores": [
       -615308028
     ]
   },
   {
-    "name":"Rare Pillars",
-    "type":"RARE",
-    "secrets":1,
-    "cores":[
+    "name": "Rare Pillars",
+    "type": "RARE",
+    "secrets": 1,
+    "cores": [
       1216268340
     ]
   },
   {
-    "name":"Vinny 8 Ball",
-    "type":"RARE",
-    "secrets":1,
-    "cores":[
+    "name": "Vinny 8 Ball",
+    "type": "RARE",
+    "secrets": 1,
+    "cores": [
       -1169880205
     ]
   },
   {
-    "name":"Golden Oasis",
-    "type":"NORMAL",
-    "secrets":1,
-    "cores":[
+    "name": "Golden Oasis",
+    "type": "NORMAL",
+    "secrets": 1,
+    "cores": [
       -1666473430
     ]
   },
   {
-    "name":"Black Flag",
-    "type":"NORMAL",
-    "secrets":3,
-    "cores":[
+    "name": "Black Flag",
+    "type": "NORMAL",
+    "secrets": 3,
+    "cores": [
       153580070
     ]
   },
   {
-    "name":"Sand Dragon",
-    "type":"RARE",
-    "secrets":1,
-    "cores":[
+    "name": "Sand Dragon",
+    "type": "RARE",
+    "secrets": 1,
+    "cores": [
       -1497998508
     ]
   },
   {
-    "name":"Chambers",
-    "type":"NORMAL",
-    "secrets":5,
-    "cores":[
+    "name": "Chambers",
+    "type": "NORMAL",
+    "secrets": 5,
+    "cores": [
       1756685113,
       368708000,
       252800591
     ]
   },
   {
-    "name":"Doors",
-    "type":"NORMAL",
-    "secrets":5,
-    "cores":[
+    "name": "Doors",
+    "type": "NORMAL",
+    "secrets": 5,
+    "cores": [
       164990589,
       1033794268
     ]
   },
   {
-    "name":"Stone Window",
-    "type":"RARE",
-    "secrets":2,
-    "cores":[
+    "name": "Stone Window",
+    "type": "RARE",
+    "secrets": 2,
+    "cores": [
       477318192
     ]
   },
   {
-    "name":"Tombstone",
-    "type":"RARE",
-    "secrets":2,
-    "cores":[
+    "name": "Tombstone",
+    "type": "RARE",
+    "secrets": 2,
+    "cores": [
       1965783806
     ]
   },
   {
-    "name":"Lava Pit",
-    "type":"RARE",
-    "secrets":3,
-    "cores":[
+    "name": "Lava Pit",
+    "type": "RARE",
+    "secrets": 3,
+    "cores": [
       -1519947323
     ]
   },
   {
-    "name":"Mini Rails",
-    "type":"RARE",
-    "secrets":4,
-    "cores":[
+    "name": "Mini Rails",
+    "type": "RARE",
+    "secrets": 4,
+    "cores": [
       256380076
     ]
   },
   {
-    "name":"Carpets",
-    "type":"RARE",
-    "secrets":1,
-    "cores":[
+    "name": "Carpets",
+    "type": "RARE",
+    "secrets": 1,
+    "cores": [
       988444684,
       1890757664
     ]
   },
   {
-    "name":"Three Floors",
-    "type":"RARE",
-    "secrets":1,
-    "cores":[
+    "name": "Three Floors",
+    "type": "RARE",
+    "secrets": 1,
+    "cores": [
       633179672
     ]
   },
   {
-    "name":"Rail Track",
-    "type":"RARE",
-    "secrets":3,
-    "cores":[
+    "name": "Rail Track",
+    "type": "RARE",
+    "secrets": 3,
+    "cores": [
       -701175845
     ]
   }
