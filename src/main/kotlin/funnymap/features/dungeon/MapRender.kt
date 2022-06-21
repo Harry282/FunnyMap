@@ -9,7 +9,6 @@ import funnymap.utils.MapUtils.roomSize
 import funnymap.utils.RenderUtils
 import funnymap.utils.Utils.equalsOneOf
 import gg.essential.elementa.utils.withAlpha
-import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.client.event.RenderGameOverlayEvent
@@ -145,9 +144,15 @@ object MapRender {
                             GlStateManager.enableAlpha()
                             GlStateManager.color(255f, 255f, 255f, 255f)
                             mc.textureManager.bindTexture(it)
-                            Gui.drawModalRectWithCustomSizedTexture(
-                                xOffset + 2, yOffset + 2,
-                                0f, 0f, roomSize - 4, roomSize - 4, roomSize - 4f, roomSize - 4f
+                            val checkmarkSize = when (config.mapCheckmark) {
+                                1 -> 8 // default
+                                else -> 10 // neu
+                            }
+                            RenderUtils.drawTexturedModalRect(
+                                xOffset + (roomSize - checkmarkSize) / 2,
+                                yOffset + (roomSize - checkmarkSize) / 2,
+                                checkmarkSize,
+                                checkmarkSize
                             )
                             GlStateManager.disableAlpha()
                         }
