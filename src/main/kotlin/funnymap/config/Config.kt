@@ -185,7 +185,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     @Property(
         name = "Room Secrets",
         type = PropertyType.SELECTOR,
-        description = "Shows total secrets of rooms on map. REPLACE CHECKMARKS NOT ADDED",
+        description = "Shows total secrets of rooms on map.",
         category = "Rooms",
         options = ["Off", "On", "Replace Checkmark"]
     )

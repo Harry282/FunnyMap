@@ -128,6 +128,10 @@ object MapRender {
         GlStateManager.translate(MapUtils.startCorner.first.toFloat(), MapUtils.startCorner.second.toFloat(), 0f)
 
         val connectorSize = roomSize shr 2
+        val checkmarkSize = when (config.mapCheckmark) {
+            1 -> 8 // default
+            else -> 10 // neu
+        }
 
         for (y in 0..10 step 2) {
             for (x in 0..10 step 2) {
@@ -144,10 +148,7 @@ object MapRender {
                             GlStateManager.enableAlpha()
                             GlStateManager.color(255f, 255f, 255f, 255f)
                             mc.textureManager.bindTexture(it)
-                            val checkmarkSize = when (config.mapCheckmark) {
-                                1 -> 8 // default
-                                else -> 10 // neu
-                            }
+
                             RenderUtils.drawTexturedModalRect(
                                 xOffset + (roomSize - checkmarkSize) / 2,
                                 yOffset + (roomSize - checkmarkSize) / 2,
@@ -156,6 +157,24 @@ object MapRender {
                             )
                             GlStateManager.disableAlpha()
                         }
+                    }
+
+                    val color = if (config.mapColorText) when (tile.state) {
+                        RoomState.GREEN -> 0x55ff55
+                        RoomState.CLEARED, RoomState.FAILED -> 0xffffff
+                        else -> 0xaaaaaa
+                    } else 0xffffff
+
+                    if (config.mapRoomSecrets == 2) {
+                        GlStateManager.pushMatrix()
+                        GlStateManager.translate(
+                            xOffset + (roomSize shr 1).toFloat(),
+                            yOffset + 2 + (roomSize shr 1).toFloat(),
+                            0f
+                        )
+                        GlStateManager.scale(2f, 2f, 1f)
+                        RenderUtils.renderCenteredText(listOf(tile.data.secrets.toString()), 0, 0, color)
+                        GlStateManager.popMatrix()
                     }
 
                     val name = mutableListOf<String>()
@@ -172,13 +191,6 @@ object MapRender {
                     if (tile.data.type == RoomType.NORMAL && config.mapRoomSecrets == 1) {
                         name.add(tile.data.secrets.toString())
                     }
-
-                    val color = if (config.mapColorText) when (tile.state) {
-                        RoomState.GREEN -> 0x55ff55
-                        RoomState.CLEARED, RoomState.FAILED -> 0xffffff
-                        else -> 0xaaaaaa
-                    } else 0xffffff
-
                     // Offset + half of roomsize
                     RenderUtils.renderCenteredText(name, xOffset + (roomSize shr 1), yOffset + (roomSize shr 1), color)
                 }
