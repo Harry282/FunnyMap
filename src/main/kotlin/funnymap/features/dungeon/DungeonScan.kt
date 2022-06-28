@@ -64,16 +64,16 @@ object DungeonScan {
 
         return when {
             rowEven && columnEven -> {
-                getRoomData(x, z)?.let {
-                    Room(x, z, it).apply {
-                        if (Dungeon.uniqueRooms.none { match -> match.data.name == data.name }) {
-                            Dungeon.uniqueRooms.add(this)
-                            Dungeon.secretCount += data.secrets
-                            when (data.type) {
-                                RoomType.TRAP -> Dungeon.trapType = data.name.split(" ")[0]
-                                RoomType.PUZZLE -> Dungeon.puzzles.add(data.name)
-                                else -> {}
-                            }
+                val roomCore = ScanUtils.getCore(x, z)
+                Room(x, z, getRoomData(roomCore) ?: return null).apply {
+                    core = roomCore
+                    if (Dungeon.uniqueRooms.none { match -> match.data.name == data.name }) {
+                        Dungeon.uniqueRooms.add(this)
+                        Dungeon.secretCount += data.secrets
+                        when (data.type) {
+                            RoomType.TRAP -> Dungeon.trapType = data.name.split(" ")[0]
+                            RoomType.PUZZLE -> Dungeon.puzzles.add(data.name)
+                            else -> {}
                         }
                     }
                 }
