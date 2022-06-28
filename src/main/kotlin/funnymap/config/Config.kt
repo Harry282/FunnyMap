@@ -356,6 +356,13 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     )
     var forceSkyblock = false
 
+    @Property(
+        name = "Nanosecond Scan Timer",
+        type = PropertyType.SWITCH,
+        category = "Debug"
+    )
+    var nanoScanTime = false
+
     init {
         initialize()
         setCategoryDescription(

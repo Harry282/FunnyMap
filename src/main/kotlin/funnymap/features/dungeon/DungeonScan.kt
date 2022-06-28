@@ -33,7 +33,7 @@ object DungeonScan {
     fun scanDungeon() {
         Dungeon.reset()
         var allLoaded = true
-        val startTime = System.currentTimeMillis()
+        val startTime = if (config.nanoScanTime) System.nanoTime() else System.currentTimeMillis()
 
         scan@ for (x in 0..10) {
             for (z in 0..10) {
@@ -59,11 +59,20 @@ object DungeonScan {
             MapUpdate.calibrate()
 
             if (config.scanChatInfo) {
-                modMessage(
-                    "&aScan Finished! Took &b${System.currentTimeMillis() - startTime}&ams!\n&aPuzzles (&c${Dungeon.puzzles.size}&a):${
-                        Dungeon.puzzles.joinToString("\n&b- &d", "\n&b- &d", "\n")
-                    }&6Trap: &a${Dungeon.trapType}\n&8Wither Doors: &7${Dungeon.doors.size - 1}\n &7Total Secrets: &b${Dungeon.secretCount}"
+                val scanTime = if (config.nanoScanTime) {
+                    "&b${System.nanoTime() - startTime}&ans!"
+                } else {
+                    "&b${System.currentTimeMillis() - startTime}&ams!"
+                }
+                val lines = listOf(
+                    "&aScan Finished! Took $scanTime",
+                    "&aPuzzles (&c${Dungeon.puzzles.size}&a):",
+                    Dungeon.puzzles.joinToString("\n&b- &d"),
+                    "&6Trap: &a${Dungeon.trapType}",
+                    "&8Wither Doors: &7${Dungeon.doors.size - 1}",
+                    "&7Total Secrets: &b${Dungeon.secretCount}"
                 )
+                modMessage(lines.joinToString(separator = "\n"))
             }
         } else Dungeon.reset()
     }
