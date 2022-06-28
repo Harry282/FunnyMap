@@ -10,6 +10,7 @@ import funnymap.utils.Utils
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender
+import net.minecraft.util.BlockPos
 
 class FunnyMapCommands : CommandBase() {
     override fun getCommandName(): String {
@@ -47,5 +48,16 @@ class FunnyMapCommands : CommandBase() {
                 )
             }
         }
+    }
+
+    override fun addTabCompletionOptions(
+        sender: ICommandSender,
+        args: Array<String>,
+        pos: BlockPos
+    ): MutableList<String> {
+        if (args.size == 1) {
+            return getListOfStringsMatchingLastWord(args, mutableListOf("scan", "roomdata"))
+        }
+        return super.addTabCompletionOptions(sender, args, pos)
     }
 }
