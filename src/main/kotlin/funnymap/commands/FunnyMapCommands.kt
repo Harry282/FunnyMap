@@ -5,6 +5,7 @@ import funnymap.FunnyMap.Companion.display
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.RoomData
 import funnymap.features.dungeon.DungeonScan
+import funnymap.features.dungeon.ScanUtils
 import funnymap.utils.Utils
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.command.CommandBase
@@ -36,8 +37,8 @@ class FunnyMapCommands : CommandBase() {
         }
         when (args[0]) {
             "scan" -> DungeonScan.scanDungeon()
-            "roomdata" -> DungeonScan.getRoomCentre(mc.thePlayer.posX.toInt(), mc.thePlayer.posZ.toInt()).let {
-                DungeonScan.getRoomData(it.first, it.second) ?: DungeonScan.getCore(it.first, it.second)
+            "roomdata" -> ScanUtils.getRoomCentre(mc.thePlayer.posX.toInt(), mc.thePlayer.posZ.toInt()).let {
+                ScanUtils.getRoomData(it.first, it.second) ?: ScanUtils.getCore(it.first, it.second)
             }.run {
                 GuiScreen.setClipboardString(this.toString())
                 Utils.modMessage(
