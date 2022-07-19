@@ -5,7 +5,7 @@ import net.minecraftforge.gradle.user.TaskSingleReobf
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "1.7.0"
+    kotlin("jvm") version "1.7.10"
     id("net.minecraftforge.gradle.forge") version "6f53277"
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("org.spongepowered.mixin") version "0.6-SNAPSHOT"
@@ -40,7 +40,7 @@ dependencies {
     annotationProcessor("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     implementation("org.spongepowered:mixin:0.7.11-SNAPSHOT")
     packageLib("gg.essential:loader-launchwrapper:1.1.3")
-    implementation("gg.essential:essential-1.8.9-forge:3159")
+    implementation("gg.essential:essential-1.8.9-forge:3662")
 }
 
 mixin {
