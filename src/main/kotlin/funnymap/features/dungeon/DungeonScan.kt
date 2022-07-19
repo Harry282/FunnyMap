@@ -48,7 +48,7 @@ object DungeonScan {
                 val lines = listOf(
                     "&aScan Finished! Took $scanTime",
                     "&aPuzzles (&c${Dungeon.puzzles.size}&a):",
-                    Dungeon.puzzles.joinToString("\n&b- &d"),
+                    Dungeon.puzzles.joinToString(separator = "\n&b- &d", prefix = "&b- &d"),
                     "&6Trap: &a${Dungeon.trapType}",
                     "&8Wither Doors: &7${Dungeon.doors.size - 1}",
                     "&7Total Secrets: &b${Dungeon.secretCount}"
