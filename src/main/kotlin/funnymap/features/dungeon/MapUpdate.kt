@@ -9,6 +9,7 @@ import funnymap.utils.MapUtils.yaw
 import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.client.network.NetworkPlayerInfo
+import net.minecraft.entity.player.EnumPlayerModelParts
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 import net.minecraft.util.StringUtils
@@ -31,15 +32,28 @@ object MapUpdate {
         MapUtils.calibrated = true
     }
 
-    fun getPlayers(tabEntries: List<Pair<NetworkPlayerInfo, String>>) {
-        if (Dungeon.dungeonTeammates.isNotEmpty()) return
+    fun preloadHeads() {
+        val tabEntries = Dungeon.getDungeonTabList() ?: return
+        for (i in listOf(5, 9, 13, 17, 1)) {
+            // Accessing the skin locations to load in skin
+            tabEntries[i].first.locationSkin
+        }
+    }
 
-        for (i in 0..4) {
-            val text = StringUtils.stripControlCodes(tabEntries[1 + i * 4].second).trim()
-            val name = text.split(" ")[0]
-            if (name == "") continue
-            mc.theWorld.playerEntities.find { it.name == name }?.let {
-                Dungeon.dungeonTeammates.add(DungeonPlayer(it, name))
+    fun getPlayers() {
+        val tabEntries = Dungeon.getDungeonTabList() ?: return
+        Dungeon.dungeonTeammates.clear()
+        var iconNum = 0
+        for (i in listOf(5, 9, 13, 17, 1)) {
+            with(tabEntries[i]) {
+                val name = StringUtils.stripControlCodes(second).trim().split(" ")[0]
+                if (name != "") {
+                    Dungeon.dungeonTeammates[name] = DungeonPlayer(first.locationSkin).apply {
+                        icon = "icon-$iconNum"
+                        renderHat = mc.theWorld.getPlayerEntityByName(name)?.isWearing(EnumPlayerModelParts.HAT) == true
+                    }
+                    iconNum++
+                }
             }
         }
     }
@@ -52,25 +66,26 @@ object MapUpdate {
             val tabText = StringUtils.stripControlCodes(tabEntries[i].second).trim()
             val name = tabText.split(" ")[0]
             if (name == "") continue
-            val player = Dungeon.dungeonTeammates.find { it.name == name } ?: continue
-            player.dead = tabText.contains("(DEAD)")
-            if (!player.dead) {
-                player.icon = "icon-${iconNum}"
-                iconNum++
-            } else {
-                player.icon = ""
+            Dungeon.dungeonTeammates[name]?.run {
+                dead = tabText.contains("(DEAD)")
+                if (dead) {
+                    icon = ""
+                } else {
+                    icon = "icon-$iconNum"
+                    iconNum++
+                }
             }
         }
 
         val decor = MapUtils.getMapData()?.mapDecorations ?: return
-        Dungeon.dungeonTeammates.forEach {
-            if (it.player == mc.thePlayer) {
-                it.yaw = it.player.rotationYawHead
+        Dungeon.dungeonTeammates.forEach { (name, player) ->
+            if (name == mc.thePlayer.name) {
+                player.yaw = mc.thePlayer.rotationYawHead
             } else {
-                decor.entries.find { (icon, _) -> icon == it.icon }?.let { (_, vec4b) ->
-                    it.mapX = vec4b.mapX.toDouble()
-                    it.mapZ = vec4b.mapZ.toDouble()
-                    it.yaw = vec4b.yaw
+                decor.entries.find { (icon, _) -> icon == player.icon }?.let { (_, vec4b) ->
+                    player.mapX = vec4b.mapX
+                    player.mapZ = vec4b.mapZ
+                    player.yaw = vec4b.yaw
                 }
             }
         }

@@ -219,12 +219,14 @@ object MapRender {
 
     private fun renderPlayerHeads() {
         if (Dungeon.dungeonTeammates.isEmpty()) {
-            RenderUtils.drawPlayerHead(DungeonPlayer(mc.thePlayer, mc.thePlayer.name).apply {
+            RenderUtils.drawPlayerHead(mc.thePlayer.name, DungeonPlayer(mc.thePlayer.locationSkin).apply {
                 yaw = mc.thePlayer.rotationYawHead
             })
         } else {
-            for (player in Dungeon.dungeonTeammates) {
-                RenderUtils.drawPlayerHead(player)
+            Dungeon.dungeonTeammates.forEach { (name, teammate) ->
+                if (!teammate.dead) {
+                    RenderUtils.drawPlayerHead(name, teammate)
+                }
             }
         }
     }

@@ -11,7 +11,6 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.WorldRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
-import net.minecraft.entity.player.EnumPlayerModelParts
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
@@ -96,19 +95,17 @@ object RenderUtils {
         tessellator.draw()
     }
 
-    fun drawPlayerHead(player: DungeonPlayer) {
-        if (player.dead || player.player == null) return
+    fun drawPlayerHead(name: String, player: DungeonPlayer) {
         GlStateManager.pushMatrix()
         try {
-            val skin = mc.netHandler.getPlayerInfo(player.player.uniqueID).locationSkin ?: return
-            if (player.player == mc.thePlayer) {
+            if (name == mc.thePlayer.name) {
                 GlStateManager.translate(
                     (mc.thePlayer.posX - Dungeon.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first - 2,
                     (mc.thePlayer.posZ - Dungeon.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second - 2,
                     0.0
                 )
             } else {
-                GlStateManager.translate(player.mapX, player.mapZ, 0.0)
+                GlStateManager.translate(player.mapX.toFloat(), player.mapZ.toFloat(), 0f)
             }
 
             if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
@@ -119,23 +116,27 @@ object RenderUtils {
                 GlStateManager.pushMatrix()
                 GlStateManager.scale(0.8, 0.8, 1.0)
                 mc.fontRendererObj.drawString(
-                    player.name,
-                    -mc.fontRendererObj.getStringWidth(player.name) shr 1,
+                    name,
+                    -mc.fontRendererObj.getStringWidth(name) shr 1,
                     10,
                     0xffffff
                 )
                 GlStateManager.popMatrix()
             }
+
             GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
             GlStateManager.scale(config.playerHeadScale, config.playerHeadScale, 1f)
+
             renderRectBorder(-6.0, -6.0, 12.0, 12.0, 1.0, Color(0, 0, 0, 255))
             GlStateManager.color(1f, 1f, 1f, 1f)
-            mc.textureManager.bindTexture(skin)
+            mc.textureManager.bindTexture(player.skin)
+
             Gui.drawScaledCustomSizeModalRect(-6, -6, 8f, 8f, 8, 8, 12, 12, 64f, 64f)
-            if (player.player.isWearing(EnumPlayerModelParts.HAT)) {
+            if (player.renderHat) {
                 Gui.drawScaledCustomSizeModalRect(-6, -6, 40f, 8f, 8, 8, 12, 12, 64f, 64f)
             }
-        } catch (_: Exception) {
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
         GlStateManager.popMatrix()
     }

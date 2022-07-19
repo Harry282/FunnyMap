@@ -38,7 +38,7 @@ object Dungeon {
     val doors = mutableMapOf<Door, Pair<Int, Int>>()
     var mimicFound = false
 
-    val dungeonTeammates = mutableListOf<DungeonPlayer>()
+    val dungeonTeammates = mutableMapOf<String, DungeonPlayer>()
 
     // Used for chat info
     val puzzles = mutableListOf<String>()
@@ -87,9 +87,11 @@ object Dungeon {
         if (event.packet !is S02PacketChat || event.packet.type.toInt() == 2 || !inDungeons) return
         val text = StringUtils.stripControlCodes(event.packet.chatComponent.unformattedText)
         when {
-            text == "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> getDungeonTabList()?.let {
-                MapUpdate.getPlayers(it)
-            }
+            text.equalsOneOf(
+                "Dungeon starts in 4 seconds.",
+                "Dungeon starts in 4 seconds. Get ready!"
+            ) -> MapUpdate.preloadHeads()
+            text == "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> MapUpdate.getPlayers()
             entryMessages.any { it == text } -> inBoss = true
         }
     }
@@ -104,7 +106,7 @@ object Dungeon {
     private fun shouldScan() =
         config.autoScan && !isScanning && !hasScanned && System.currentTimeMillis() - lastScanTime >= 250 && currentFloor != null
 
-    private fun getDungeonTabList(): List<Pair<NetworkPlayerInfo, String>>? {
+    fun getDungeonTabList(): List<Pair<NetworkPlayerInfo, String>>? {
         val tabEntries = Utils.tabList
         if (tabEntries.size < 18 || !tabEntries[0].second.contains("§r§b§lParty §r§f(")) {
             return null
