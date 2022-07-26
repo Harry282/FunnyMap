@@ -13,23 +13,13 @@ import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
 
 class FunnyMapCommands : CommandBase() {
-    override fun getCommandName(): String {
-        return "funnymap"
-    }
+    override fun getCommandName(): String = "funnymap"
 
-    override fun getCommandAliases(): List<String> {
-        return listOf(
-            "fmap"
-        )
-    }
+    override fun getCommandAliases(): List<String> = listOf("fmap")
 
-    override fun getCommandUsage(sender: ICommandSender): String {
-        return "/$commandName"
-    }
+    override fun getCommandUsage(sender: ICommandSender): String = "/$commandName"
 
-    override fun getRequiredPermissionLevel(): Int {
-        return 0
-    }
+    override fun getRequiredPermissionLevel(): Int = 0
 
     override fun processCommand(sender: ICommandSender, args: Array<String>) {
         if (args.isEmpty()) {
