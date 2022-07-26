@@ -11,7 +11,7 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.WorldRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
-import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11.*
 import java.awt.Color
 
 object RenderUtils {
@@ -27,7 +27,7 @@ object RenderUtils {
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
         GlStateManager.color(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
 
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION)
+        worldRenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION)
         addQuadVertices(x, y, w, h)
         tessellator.draw()
 
@@ -43,8 +43,8 @@ object RenderUtils {
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
         GlStateManager.color(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
 
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION)
-        GlStateManager.shadeModel(GL11.GL_FLAT)
+        worldRenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION)
+        GlStateManager.shadeModel(GL_FLAT)
 
         addQuadVertices(x - thickness, y, thickness, h)
         addQuadVertices(x - thickness, y - thickness, w + thickness * 2, thickness)
@@ -55,7 +55,7 @@ object RenderUtils {
 
         GlStateManager.enableTexture2D()
         GlStateManager.disableBlend()
-        GlStateManager.shadeModel(GL11.GL_SMOOTH)
+        GlStateManager.shadeModel(GL_SMOOTH)
     }
 
     private fun addQuadVertices(x: Double, y: Double, w: Double, h: Double) {
@@ -87,7 +87,7 @@ object RenderUtils {
     }
 
     fun drawTexturedModalRect(x: Int, y: Int, width: Int, height: Int) {
-        worldRenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX)
+        worldRenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX)
         worldRenderer.pos(x.toDouble(), (y + height).toDouble(), 0.0).tex(0.0, 1.0).endVertex()
         worldRenderer.pos((x + width).toDouble(), (y + height).toDouble(), 0.0).tex(1.0, 1.0).endVertex()
         worldRenderer.pos((x + width).toDouble(), y.toDouble(), 0.0).tex(1.0, 0.0).endVertex()
@@ -117,9 +117,10 @@ object RenderUtils {
                 GlStateManager.scale(0.8, 0.8, 1.0)
                 mc.fontRendererObj.drawString(
                     name,
-                    -mc.fontRendererObj.getStringWidth(name) shr 1,
-                    10,
-                    0xffffff
+                    (-mc.fontRendererObj.getStringWidth(name) shr 1).toFloat(),
+                    10f,
+                    0xffffff,
+                    true
                 )
                 GlStateManager.popMatrix()
             }
