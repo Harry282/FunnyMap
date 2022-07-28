@@ -4,7 +4,6 @@ import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.*
 import funnymap.features.dungeon.ScanUtils.getRoomData
-import funnymap.features.dungeon.ScanUtils.isColumnAir
 import funnymap.features.dungeon.ScanUtils.isDoor
 import funnymap.utils.Utils.modMessage
 import net.minecraft.init.Blocks
@@ -25,7 +24,6 @@ object DungeonScan {
                     allLoaded = false
                     break@scan
                 }
-                if (isColumnAir(xPos, zPos)) continue
 
                 getRoom(xPos, zPos, z, x)?.let {
                     if (it is Room && x and 1 == 0 && z and 1 == 0) Dungeon.rooms.add(it)
@@ -59,12 +57,15 @@ object DungeonScan {
     }
 
     private fun getRoom(x: Int, z: Int, row: Int, column: Int): Tile? {
+        val roomCore = ScanUtils.getCore(x, z)
+        // Empty air column
+        if (roomCore == -318865360) return null
+
         val rowEven = row and 1 == 0
         val columnEven = column and 1 == 0
 
         return when {
             rowEven && columnEven -> {
-                val roomCore = ScanUtils.getCore(x, z)
                 Room(x, z, getRoomData(roomCore) ?: return null).apply {
                     core = roomCore
                     if (Dungeon.uniqueRooms.none { match -> match.data.name == data.name }) {
