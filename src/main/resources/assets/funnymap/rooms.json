@@ -90,11 +90,18 @@
     ]
   },
   {
-    "name": "Blaze",
+    "name": "Higher Blaze",
     "type": "PUZZLE",
     "secrets": 1,
     "cores": [
-      1103121487,
+      1103121487
+    ]
+  },
+  {
+    "name": "Lower Blaze",
+    "type": "PUZZLE",
+    "secrets": 1,
+    "cores": [
       -1092103153
     ]
   },
