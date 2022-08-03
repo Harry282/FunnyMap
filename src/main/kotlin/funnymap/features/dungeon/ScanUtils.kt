@@ -5,12 +5,14 @@ import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import funnymap.FunnyMap
+import funnymap.core.Room
 import funnymap.core.RoomData
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.block.Block
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 import net.minecraft.util.ResourceLocation
+import kotlin.math.roundToInt
 
 object ScanUtils {
     val roomList: Set<RoomData> = try {
@@ -36,13 +38,16 @@ object ScanUtils {
     }
 
     fun getRoomCentre(posX: Int, posZ: Int): Pair<Int, Int> {
-        val roomX = (posX - Dungeon.startX) shr 5
-        val roomZ = (posZ - Dungeon.startZ) shr 5
-        var x = 32 * roomX + Dungeon.startX
-        if (x !in posX - 16..posX + 16) x += 32
-        var z = 32 * roomZ + Dungeon.startZ
-        if (z !in posZ - 16..posZ + 16) z += 32
-        return Pair(x, z)
+        val roomX = ((posX - Dungeon.startX) / 32f).roundToInt()
+        val roomZ = ((posZ - Dungeon.startZ) / 32f).roundToInt()
+        return Pair(roomX * 32 + Dungeon.startX, roomZ * 32 + Dungeon.startZ)
+    }
+
+    fun getRoomFromPos(pos: BlockPos): Room? {
+        val x = ((pos.x - Dungeon.startX + 15) shr 5)
+        val z = ((pos.z - Dungeon.startZ + 15) shr 5)
+        val room = Dungeon.dungeonList.getOrNull(x * 2 + z * 22)
+        return if (room is Room) room else null
     }
 
     fun isColumnAir(x: Int, z: Int): Boolean {
