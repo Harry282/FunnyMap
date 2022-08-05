@@ -1,14 +1,14 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.inDungeons
 import funnymap.core.Door
 import funnymap.core.DungeonPlayer
 import funnymap.core.Room
 import funnymap.core.Tile
 import funnymap.events.ReceivePacketEvent
+import funnymap.utils.LocationUtils.dungeonFloor
+import funnymap.utils.LocationUtils.inDungeons
 import funnymap.utils.Utils
-import funnymap.utils.Utils.currentFloor
 import funnymap.utils.Utils.equalsOneOf
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
@@ -69,7 +69,7 @@ object Dungeon {
         }
         if (hasScanned) {
             launch {
-                if (!mimicFound && currentFloor.equalsOneOf(6, 7)) {
+                if (!mimicFound && dungeonFloor.equalsOneOf(6, 7)) {
                     MimicDetector.findMimic()
                 }
                 MapUpdate.updateRooms()
@@ -104,7 +104,7 @@ object Dungeon {
     }
 
     private fun shouldScan() =
-        config.autoScan && !isScanning && !hasScanned && System.currentTimeMillis() - lastScanTime >= 250 && currentFloor != null
+        config.autoScan && !isScanning && !hasScanned && System.currentTimeMillis() - lastScanTime >= 250 && dungeonFloor != -1
 
     fun getDungeonTabList(): List<Pair<NetworkPlayerInfo, String>>? {
         val tabEntries = Utils.tabList
@@ -116,7 +116,6 @@ object Dungeon {
 
 
     fun reset() {
-
         dungeonTeammates.clear()
 
         dungeonList.fill(Door(0, 0))

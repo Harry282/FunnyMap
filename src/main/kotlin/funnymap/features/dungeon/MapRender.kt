@@ -1,9 +1,9 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.inDungeons
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.*
+import funnymap.utils.LocationUtils.inDungeons
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.roomSize
 import funnymap.utils.RenderUtils

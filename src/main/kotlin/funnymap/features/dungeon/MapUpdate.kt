@@ -2,11 +2,11 @@ package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.*
+import funnymap.utils.LocationUtils.dungeonFloor
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
 import funnymap.utils.MapUtils.yaw
-import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.entity.player.EnumPlayerModelParts
@@ -17,15 +17,15 @@ import net.minecraft.util.StringUtils
 object MapUpdate {
     fun calibrate() {
         MapUtils.startCorner = when {
-            Utils.currentFloor == 1 -> Pair(22, 11)
-            Utils.currentFloor.equalsOneOf(2, 3) -> Pair(11, 11)
-            Utils.currentFloor == 4 && Dungeon.rooms.size > 25 -> Pair(5, 16)
+            dungeonFloor == 1 -> Pair(22, 11)
+            dungeonFloor.equalsOneOf(2, 3) -> Pair(11, 11)
+            dungeonFloor == 4 && Dungeon.rooms.size > 25 -> Pair(5, 16)
             Dungeon.rooms.size == 30 -> Pair(16, 5)
             Dungeon.rooms.size == 25 -> Pair(11, 11)
             else -> Pair(5, 5)
         }
 
-        MapUtils.roomSize = if (Utils.currentFloor in 1..3 || Dungeon.rooms.size == 24) 18 else 16
+        MapUtils.roomSize = if (dungeonFloor in 1..3 || Dungeon.rooms.size == 24) 18 else 16
 
         MapUtils.coordMultiplier = (MapUtils.roomSize + 4.0) / Dungeon.roomSize
 
