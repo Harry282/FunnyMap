@@ -1,15 +1,15 @@
 pluginManagement {
     repositories {
-        mavenCentral()
         gradlePluginPortal()
-        maven { url = uri("https://maven.minecraftforge.net") }
-        maven { url = uri("https://jitpack.io") }
+        maven("https://maven.fabricmc.net")
+        maven("https://maven.architectury.dev/")
+        maven("https://maven.minecraftforge.net")
+        maven("https://repo.essential.gg/repository/maven-public")
     }
     resolutionStrategy {
         eachPlugin {
             when (requested.id.id) {
-                "net.minecraftforge.gradle.forge" -> useModule("com.github.Skytils:ForgeGradle:${requested.version}")
-                "org.spongepowered.mixin" -> useModule("com.github.xcfrg:MixinGradle:${requested.version}")
+                "gg.essential.loom" -> useModule("gg.essential:architectury-loom:${requested.version}")
             }
         }
     }
