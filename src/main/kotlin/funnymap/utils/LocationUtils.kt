@@ -31,7 +31,6 @@ object LocationUtils {
                         } ?: return@fixedRateTimer
                         inDungeons = true
                         dungeonFloor = line.substringBefore(")").lastOrNull()?.digitToIntOrNull() ?: 0
-                        Utils.modMessage("Entered floor $dungeonFloor")
                     }
                 }
             }
