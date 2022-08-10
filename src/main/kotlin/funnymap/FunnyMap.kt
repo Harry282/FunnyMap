@@ -4,7 +4,6 @@ import funnymap.commands.FunnyMapCommands
 import funnymap.config.Config
 import funnymap.features.dungeon.Dungeon
 import funnymap.features.dungeon.MapRender
-import funnymap.utils.ScoreboardUtils
 import funnymap.utils.UpdateChecker
 import gg.essential.api.EssentialAPI
 import kotlinx.coroutines.launch
@@ -19,7 +18,6 @@ import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
-import net.minecraftforge.fml.common.network.FMLNetworkEvent
 import java.awt.Desktop
 import java.io.File
 import java.net.URI
@@ -70,33 +68,9 @@ class FunnyMap {
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START) return
-        tickCount++
-        if (display != null) {
-            mc.displayGuiScreen(display)
-            display = null
-        }
-        if (tickCount % 20 == 0) {
-            if (mc.thePlayer != null) {
-                val onHypixel = EssentialAPI.getMinecraftUtil().isHypixel()
-
-                inSkyblock = config.forceSkyblock || onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
-                    ?.let { ScoreboardUtils.cleanSB(it.displayName).contains("SKYBLOCK") } ?: false
-
-                inDungeons = config.forceSkyblock || inSkyblock && ScoreboardUtils.sidebarLines.any {
-                    ScoreboardUtils.cleanSB(it).run {
-                        (contains("The Catacombs") && !contains("Queue")) || contains("Dungeon Cleared:")
-                    }
-                }
-            }
-            tickCount = 0
-        }
-    }
-
-    @SubscribeEvent
-    fun onDisconnect(event: FMLNetworkEvent.ClientDisconnectionFromServerEvent) {
-        inSkyblock = false
-        inDungeons = false
+        if (event.phase != TickEvent.Phase.START || display == null) return
+        mc.displayGuiScreen(display)
+        display = null
     }
 
     companion object {
@@ -109,11 +83,7 @@ class FunnyMap {
         val mc: Minecraft = Minecraft.getMinecraft()
         val config = Config
         var display: GuiScreen? = null
-        var tickCount = 0
 
         var nekomap = File(mc.mcDataDir, "config/funnymap/nekomap").exists()
-
-        var inSkyblock = false
-        var inDungeons = false
     }
 }

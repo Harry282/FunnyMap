@@ -3,10 +3,8 @@ package funnymap.utils
 import com.google.common.collect.ComparisonChain
 import funnymap.FunnyMap.Companion.CHAT_PREFIX
 import funnymap.FunnyMap.Companion.NEKO_PREFIX
-import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.FunnyMap.Companion.nekomap
-import funnymap.utils.ScoreboardUtils.sidebarLines
 import gg.essential.universal.UChat
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.item.ItemStack
@@ -19,24 +17,6 @@ object Utils {
             this == it
         }
     }
-
-    val currentFloor: Int?
-        get() {
-            sidebarLines.forEach {
-                val line = ScoreboardUtils.cleanSB(it)
-                if (line.contains("The Catacombs (")) {
-                    val index = line.indexOf(")")
-                    if (index != -1) {
-                        try {
-                            return (line[index - 1]).digitToInt()
-                        } catch (_: IllegalArgumentException) {
-                        }
-                    }
-
-                }
-            }
-            return if (config.forceSkyblock) 7 else null
-        }
 
     fun modMessage(message: String) = UChat.chat("${if (nekomap) NEKO_PREFIX else CHAT_PREFIX} $message")
 
