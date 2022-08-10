@@ -34,11 +34,7 @@ object MapRender {
         GlStateManager.scale(config.mapScale, config.mapScale, 1f)
 
         RenderUtils.renderRect(
-            0.0,
-            0.0,
-            128.0,
-            if (config.mapShowRunInformation) 138.0 else 128.0,
-            config.mapBackground
+            0.0, 0.0, 128.0, if (config.mapShowRunInformation) 138.0 else 128.0, config.mapBackground
         )
 
         RenderUtils.renderRectBorder(
@@ -93,13 +89,10 @@ object MapRender {
                 when {
                     xEven && yEven -> if (tile is Room) {
                         RenderUtils.renderRect(
-                            xOffset.toDouble(),
-                            yOffset.toDouble(),
-                            roomSize.toDouble(),
-                            roomSize.toDouble(),
-                            color
+                            xOffset.toDouble(), yOffset.toDouble(), roomSize.toDouble(), roomSize.toDouble(), color
                         )
                     }
+
                     !xEven && !yEven -> {
                         RenderUtils.renderRect(
                             xOffset.toDouble(),
@@ -109,13 +102,9 @@ object MapRender {
                             color
                         )
                     }
+
                     else -> drawRoomConnector(
-                        xOffset,
-                        yOffset,
-                        connectorSize,
-                        tile is Door,
-                        !xEven,
-                        color
+                        xOffset, yOffset, connectorSize, tile is Door, !xEven, color
                     )
                 }
             }
@@ -168,9 +157,7 @@ object MapRender {
                     if (config.mapRoomSecrets == 2) {
                         GlStateManager.pushMatrix()
                         GlStateManager.translate(
-                            xOffset + (roomSize shr 1).toFloat(),
-                            yOffset + 2 + (roomSize shr 1).toFloat(),
-                            0f
+                            xOffset + (roomSize shr 1).toFloat(), yOffset + 2 + (roomSize shr 1).toFloat(), 0f
                         )
                         GlStateManager.scale(2f, 2f, 1f)
                         RenderUtils.renderCenteredText(listOf(tile.data.secrets.toString()), 0, 0, color)
@@ -179,11 +166,11 @@ object MapRender {
 
                     val name = mutableListOf<String>()
 
-                    if (config.mapRoomNames != 0 && tile.data.type.equalsOneOf(RoomType.PUZZLE, RoomType.TRAP) ||
-                        config.mapRoomNames == 2 && tile.data.type.equalsOneOf(
-                            RoomType.NORMAL,
-                            RoomType.RARE,
-                            RoomType.CHAMPION
+                    if (config.mapRoomNames != 0 && tile.data.type.equalsOneOf(
+                            RoomType.PUZZLE,
+                            RoomType.TRAP
+                        ) || config.mapRoomNames == 2 && tile.data.type.equalsOneOf(
+                            RoomType.NORMAL, RoomType.RARE, RoomType.CHAMPION
                         )
                     ) {
                         name.addAll(tile.data.name.split(" "))
@@ -207,12 +194,14 @@ object MapRender {
                 RoomState.FAILED -> defaultCross
                 else -> null
             }
+
             2 -> when (state) {
                 RoomState.CLEARED -> neuWhite
                 RoomState.GREEN -> neuGreen
                 RoomState.FAILED -> neuCross
                 else -> null
             }
+
             else -> null
         }
     }
@@ -237,7 +226,7 @@ object MapRender {
         doorWidth: Int,
         doorway: Boolean,
         vertical: Boolean,
-        color: Color
+        color: Color,
     ) {
         val doorwayOffset = if (roomSize == 16) 5 else 6
         val width = if (doorway) 6 else roomSize
@@ -247,7 +236,8 @@ object MapRender {
             if (vertical) y1 += doorwayOffset else x1 += doorwayOffset
         }
         RenderUtils.renderRect(
-            x1.toDouble(), y1.toDouble(),
+            x1.toDouble(),
+            y1.toDouble(),
             (if (vertical) doorWidth else width).toDouble(),
             (if (vertical) width else doorWidth).toDouble(),
             color

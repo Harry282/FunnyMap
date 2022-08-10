@@ -4,6 +4,7 @@ import funnymap.commands.FunnyMapCommands
 import funnymap.config.Config
 import funnymap.features.dungeon.Dungeon
 import funnymap.features.dungeon.MapRender
+import funnymap.utils.LocationUtils
 import funnymap.utils.UpdateChecker
 import gg.essential.api.EssentialAPI
 import kotlinx.coroutines.launch
@@ -23,26 +24,19 @@ import java.io.File
 import java.net.URI
 
 @Mod(
-    modid = FunnyMap.MOD_ID,
-    name = FunnyMap.MOD_NAME,
-    version = FunnyMap.MOD_VERSION
+    modid = FunnyMap.MOD_ID, name = FunnyMap.MOD_NAME, version = FunnyMap.MOD_VERSION
 )
 class FunnyMap {
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
-        val directory = File(event.modConfigurationDirectory, "funnymap")
-        if (!directory.exists()) {
-            directory.mkdirs()
-        }
+        File(event.modConfigurationDirectory, "funnymap").mkdirs()
     }
 
     @Mod.EventHandler
     fun onInit(event: FMLInitializationEvent) {
         ClientCommandHandler.instance.registerCommand((FunnyMapCommands()))
         listOf(
-            this,
-            Dungeon,
-            MapRender
+            this, Dungeon, LocationUtils, MapRender
         ).forEach(MinecraftForge.EVENT_BUS::register)
     }
 
@@ -50,18 +44,14 @@ class FunnyMap {
     fun postInit(event: FMLLoadCompleteEvent) = runBlocking {
         launch {
             if (UpdateChecker.hasUpdate() > 0) {
-                try {
-                    EssentialAPI.getNotifications().push(
-                        MOD_NAME,
-                        "New release available on Github. Click to open download link.",
-                        10f,
-                        action = {
+                EssentialAPI.getNotifications()
+                    .push(MOD_NAME, "New release available on Github. Click to open download link.", 10f, action = {
+                        try {
                             Desktop.getDesktop().browse(URI("https://github.com/Harry282/FunnyMap/releases"))
+                        } catch (e: Exception) {
+                            e.printStackTrace()
                         }
-                    )
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
+                    })
             }
         }
     }

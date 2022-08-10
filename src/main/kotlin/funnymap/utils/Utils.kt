@@ -35,17 +35,14 @@ object Utils {
         if (o1 == null) return@Comparator -1
         if (o2 == null) return@Comparator 0
         return@Comparator ComparisonChain.start().compareTrueFirst(
-            o1.gameType != WorldSettings.GameType.SPECTATOR,
-            o2.gameType != WorldSettings.GameType.SPECTATOR
+            o1.gameType != WorldSettings.GameType.SPECTATOR, o2.gameType != WorldSettings.GameType.SPECTATOR
         ).compare(
-            o1.playerTeam?.registeredName ?: "",
-            o2.playerTeam?.registeredName ?: ""
+            o1.playerTeam?.registeredName ?: "", o2.playerTeam?.registeredName ?: ""
         ).compare(o1.gameProfile.name, o2.gameProfile.name).result()
     }
 
     val tabList: List<Pair<NetworkPlayerInfo, String>>
-        get() = (mc.thePlayer?.sendQueue?.playerInfoMap?.sortedWith(tabListOrder) ?: emptyList())
-            .map { Pair(it, mc.ingameGUI.tabList.getPlayerName(it)) }
-
-
+        get() = (mc.thePlayer?.sendQueue?.playerInfoMap?.sortedWith(tabListOrder) ?: emptyList()).map {
+            Pair(it, mc.ingameGUI.tabList.getPlayerName(it))
+        }
 }

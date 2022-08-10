@@ -5,5 +5,5 @@ data class RoomData(
     val type: RoomType,
     val secrets: Int,
     val cores: List<Int>,
-    val trappedChests: Int
+    val trappedChests: Int,
 )

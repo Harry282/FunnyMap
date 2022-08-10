@@ -88,9 +88,9 @@ object Dungeon {
         val text = StringUtils.stripControlCodes(event.packet.chatComponent.unformattedText)
         when {
             text.equalsOneOf(
-                "Dungeon starts in 4 seconds.",
-                "Dungeon starts in 4 seconds. Get ready!"
+                "Dungeon starts in 4 seconds.", "Dungeon starts in 4 seconds. Get ready!"
             ) -> MapUpdate.preloadHeads()
+
             text == "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> MapUpdate.getPlayers()
             entryMessages.any { it == text } -> inBoss = true
         }

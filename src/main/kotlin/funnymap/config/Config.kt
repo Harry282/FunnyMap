@@ -366,8 +366,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     init {
         initialize()
         setCategoryDescription(
-            "Map",
-            "&f&l Funny Map\n&7Big thanks to &lIllegalMap&r&7 by UnclaimedBloom"
+            "Map", "&f&l Funny Map\n&7Big thanks to &lIllegalMap&r&7 by UnclaimedBloom"
         )
     }
 

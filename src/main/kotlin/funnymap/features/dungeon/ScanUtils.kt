@@ -17,9 +17,12 @@ import kotlin.math.roundToInt
 object ScanUtils {
     val roomList: Set<RoomData> = try {
         Gson().fromJson(
-            FunnyMap.mc.resourceManager.getResource(ResourceLocation("funnymap", "rooms.json"))
-                .inputStream.bufferedReader(),
-            object : TypeToken<Set<RoomData>>() {}.type
+            FunnyMap.mc.resourceManager.getResource(
+                ResourceLocation(
+                    "funnymap",
+                    "rooms.json"
+                )
+            ).inputStream.bufferedReader(), object : TypeToken<Set<RoomData>>() {}.type
         )
     } catch (e: JsonSyntaxException) {
         println("Error parsing FunnyMap room data.")

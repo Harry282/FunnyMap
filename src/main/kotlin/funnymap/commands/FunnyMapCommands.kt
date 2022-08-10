@@ -43,7 +43,7 @@ class FunnyMapCommands : CommandBase() {
     override fun addTabCompletionOptions(
         sender: ICommandSender,
         args: Array<String>,
-        pos: BlockPos
+        pos: BlockPos,
     ): MutableList<String> {
         if (args.size == 1) {
             return getListOfStringsMatchingLastWord(args, mutableListOf("scan", "roomdata"))

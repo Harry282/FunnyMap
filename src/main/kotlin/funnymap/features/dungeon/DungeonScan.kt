@@ -79,6 +79,7 @@ object DungeonScan {
                     }
                 }
             }
+
             !rowEven && !columnEven -> {
                 Dungeon.dungeonList[(row - 1) * 11 + column - 1].let {
                     if (it is Room) {
@@ -86,6 +87,7 @@ object DungeonScan {
                     } else null
                 }
             }
+
             isDoor(x, z) -> {
                 Door(x, z).apply {
                     val bState = mc.theWorld.getBlockState(BlockPos(x, 69, z))
@@ -95,10 +97,12 @@ object DungeonScan {
                         bState.block == Blocks.stained_hardened_clay && Blocks.stained_hardened_clay.getMetaFromState(
                             bState
                         ) == 14 -> DoorType.BLOOD
+
                         else -> DoorType.NORMAL
                     }
                 }
             }
+
             else -> {
                 Dungeon.dungeonList[if (rowEven) row * 11 + column - 1 else (row - 1) * 11 + column].let {
                     if (it is Room) {

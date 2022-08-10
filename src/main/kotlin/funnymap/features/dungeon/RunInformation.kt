@@ -20,10 +20,12 @@ object RunInformation {
                     val matcher = deathsPattern.find(text) ?: return@forEach
                     deathCount = matcher.groups["deaths"]?.value?.toIntOrNull() ?: deathCount
                 }
+
                 text.contains("Secrets Found: ") && !text.contains("%") -> {
                     val matcher = secretsFoundPattern.find(text) ?: return@forEach
                     secretCount = matcher.groups["secrets"]?.value?.toIntOrNull() ?: secretCount
                 }
+
                 text.contains("Crypts: ") -> {
                     val matcher = cryptsPattern.find(text) ?: return@forEach
                     cryptsCount = matcher.groups["crypts"]?.value?.toIntOrNull() ?: cryptsCount

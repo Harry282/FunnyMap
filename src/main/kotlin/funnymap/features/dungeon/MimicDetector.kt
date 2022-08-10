@@ -5,7 +5,6 @@ import funnymap.core.Room
 import funnymap.features.dungeon.ScanUtils.getRoomFromPos
 import funnymap.utils.Utils.modMessage
 import net.minecraft.tileentity.TileEntityChest
-import net.minecraft.util.BlockPos
 
 object MimicDetector {
     fun findMimic() {
@@ -22,8 +21,7 @@ object MimicDetector {
 
     private fun getMimicRoom(): String {
         mc.theWorld.loadedTileEntityList.filter { it is TileEntityChest && it.chestType == 1 }
-            .groupingBy { getRoomFromPos(it.pos)?.data?.name }.eachCount()
-            .forEach { (room, trappedChests) ->
+            .groupingBy { getRoomFromPos(it.pos)?.data?.name }.eachCount().forEach { (room, trappedChests) ->
                 Dungeon.uniqueRooms.find { it.data.name == room && it.data.trappedChests < trappedChests }
                     ?.let { return it.data.name }
             }

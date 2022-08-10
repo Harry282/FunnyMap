@@ -109,18 +109,13 @@ object RenderUtils {
             }
 
             if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
-                    "SPIRIT_LEAP",
-                    "INFINITE_SPIRIT_LEAP"
+                    "SPIRIT_LEAP", "INFINITE_SPIRIT_LEAP"
                 )
             ) {
                 GlStateManager.pushMatrix()
                 GlStateManager.scale(0.8, 0.8, 1.0)
                 mc.fontRendererObj.drawString(
-                    name,
-                    (-mc.fontRendererObj.getStringWidth(name) shr 1).toFloat(),
-                    10f,
-                    0xffffff,
-                    true
+                    name, (-mc.fontRendererObj.getStringWidth(name) shr 1).toFloat(), 10f, 0xffffff, true
                 )
                 GlStateManager.popMatrix()
             }

@@ -115,10 +115,12 @@ object MapUpdate {
                         RoomType.PUZZLE -> RoomState.FAILED
                         else -> room.state
                     } else RoomState.DISCOVERED
+
                     30 -> if (room is Room) when (room.data.type) {
                         RoomType.ENTRANCE -> RoomState.DISCOVERED
                         else -> RoomState.GREEN
                     } else room.state
+
                     34 -> RoomState.CLEARED
                     else -> RoomState.DISCOVERED
                 }
