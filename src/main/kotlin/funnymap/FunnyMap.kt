@@ -7,8 +7,8 @@ import funnymap.features.dungeon.MapRender
 import funnymap.utils.LocationUtils
 import funnymap.utils.UpdateChecker
 import gg.essential.api.EssentialAPI
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraftforge.client.ClientCommandHandler
@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 import java.awt.Desktop
 import java.io.File
 import java.net.URI
+import kotlin.coroutines.EmptyCoroutineContext
 
 @Mod(
     modid = FunnyMap.MOD_ID, name = FunnyMap.MOD_NAME, version = FunnyMap.MOD_VERSION
@@ -41,18 +42,16 @@ class FunnyMap {
     }
 
     @Mod.EventHandler
-    fun postInit(event: FMLLoadCompleteEvent) = runBlocking {
-        launch {
-            if (UpdateChecker.hasUpdate() > 0) {
-                EssentialAPI.getNotifications()
-                    .push(MOD_NAME, "New release available on Github. Click to open download link.", 10f, action = {
-                        try {
-                            Desktop.getDesktop().browse(URI("https://github.com/Harry282/FunnyMap/releases"))
-                        } catch (e: Exception) {
-                            e.printStackTrace()
-                        }
-                    })
-            }
+    fun postInit(event: FMLLoadCompleteEvent) = scope.launch {
+        if (UpdateChecker.hasUpdate() > 0) {
+            EssentialAPI.getNotifications()
+                .push(MOD_NAME, "New release available on Github. Click to open download link.", 10f, action = {
+                    try {
+                        Desktop.getDesktop().browse(URI("https://github.com/Harry282/FunnyMap/releases"))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                })
         }
     }
 
@@ -73,6 +72,7 @@ class FunnyMap {
         val mc: Minecraft = Minecraft.getMinecraft()
         val config = Config
         var display: GuiScreen? = null
+        val scope = CoroutineScope(EmptyCoroutineContext)
 
         var nekomap = File(mc.mcDataDir, "config/funnymap/nekomap").exists()
     }

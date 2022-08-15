@@ -1,6 +1,7 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.config
+import funnymap.FunnyMap.Companion.scope
 import funnymap.core.Door
 import funnymap.core.DungeonPlayer
 import funnymap.core.Room
@@ -11,7 +12,6 @@ import funnymap.utils.LocationUtils.inDungeons
 import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.network.play.server.S02PacketChat
 import net.minecraft.util.StringUtils
@@ -57,18 +57,18 @@ object Dungeon {
     )
 
     @SubscribeEvent
-    fun onTick(event: TickEvent.ClientTickEvent) = runBlocking {
-        if (event.phase != TickEvent.Phase.START || !inDungeons) return@runBlocking
+    fun onTick(event: TickEvent.ClientTickEvent) {
+        if (event.phase != TickEvent.Phase.START || !inDungeons) return
         if (shouldScan()) {
             lastScanTime = System.currentTimeMillis()
-            launch {
+            scope.launch {
                 isScanning = true
                 DungeonScan.scanDungeon()
                 isScanning = false
             }
         }
         if (hasScanned) {
-            launch {
+            scope.launch {
                 if (!mimicFound && dungeonFloor.equalsOneOf(6, 7)) {
                     MimicDetector.findMimic()
                 }
