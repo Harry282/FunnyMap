@@ -59,16 +59,14 @@ object Dungeon {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || !inDungeons) return
-        if (shouldScan()) {
-            lastScanTime = System.currentTimeMillis()
-            scope.launch {
+        scope.launch {
+            if (shouldScan()) {
+                lastScanTime = System.currentTimeMillis()
                 isScanning = true
                 DungeonScan.scanDungeon()
                 isScanning = false
             }
-        }
-        if (hasScanned) {
-            scope.launch {
+            if (hasScanned) {
                 if (!mimicFound && dungeonFloor.equalsOneOf(6, 7)) {
                     MimicDetector.findMimic()
                 }
