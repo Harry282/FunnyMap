@@ -66,16 +66,16 @@ object Dungeon {
                 DungeonScan.scanDungeon()
                 isScanning = false
             }
-            if (hasScanned) {
-                if (!mimicFound && dungeonFloor.equalsOneOf(6, 7)) {
-                    MimicDetector.findMimic()
-                }
-                MapUpdate.updateRooms()
-                MapUpdate.updateDoors()
-                getDungeonTabList()?.let {
-                    MapUpdate.updatePlayers(it)
-                    RunInformation.updateRunInformation(it)
-                }
+        }
+        if (hasScanned) {
+            if (!mimicFound && dungeonFloor.equalsOneOf(6, 7)) {
+                MimicDetector.findMimic()
+            }
+            MapUpdate.updateRooms()
+            MapUpdate.updateDoors()
+            getDungeonTabList()?.let {
+                MapUpdate.updatePlayers(it)
+                RunInformation.updateRunInformation(it)
             }
         }
     }
