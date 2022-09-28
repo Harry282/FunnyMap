@@ -109,7 +109,7 @@ object RenderUtils {
             }
 
             if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
-                    "SPIRIT_LEAP", "INFINITE_SPIRIT_LEAP"
+                    "SPIRIT_LEAP", "INFINITE_SPIRIT_LEAP", "HAUNT_ABILITY"
                 )
             ) {
                 GlStateManager.pushMatrix()
