@@ -46,7 +46,7 @@ object MapUpdate {
         var iconNum = 0
         for (i in listOf(5, 9, 13, 17, 1)) {
             with(tabEntries[i]) {
-                val name = StringUtils.stripControlCodes(second).trim().split(" ")[0]
+                val name = StringUtils.stripControlCodes(second).trim().substringAfterLast("] ").split(" ")[0]
                 if (name != "") {
                     Dungeon.dungeonTeammates[name] = DungeonPlayer(first.locationSkin).apply {
                         icon = "icon-$iconNum"
@@ -64,7 +64,7 @@ object MapUpdate {
         var iconNum = 0
         for (i in listOf(5, 9, 13, 17, 1)) {
             val tabText = StringUtils.stripControlCodes(tabEntries[i].second).trim()
-            val name = tabText.split(" ")[0]
+            val name = tabText.substringAfterLast("] ").split(" ")[0]
             if (name == "") continue
             Dungeon.dungeonTeammates[name]?.run {
                 dead = tabText.contains("(DEAD)")
