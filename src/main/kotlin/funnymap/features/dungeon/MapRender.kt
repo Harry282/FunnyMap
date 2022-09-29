@@ -12,8 +12,8 @@ import gg.essential.elementa.utils.withAlpha
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.ResourceLocation
+import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
@@ -27,8 +27,8 @@ object MapRender {
     private val defaultCross = ResourceLocation("funnymap", "default/cross.png")
 
     @SubscribeEvent
-    fun onOverlay(event: TickEvent.RenderTickEvent) {
-        if (event.phase != TickEvent.Phase.END || !inDungeons || !config.mapEnabled) return
+    fun onOverlay(event: RenderGameOverlayEvent.Pre) {
+        if (event.type != RenderGameOverlayEvent.ElementType.ALL || !inDungeons || !config.mapEnabled) return
         if (config.mapHideInBoss && Dungeon.inBoss || !Dungeon.hasScanned) return
 
         GlStateManager.pushMatrix()
