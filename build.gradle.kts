@@ -88,7 +88,7 @@ tasks {
         input.set(shadowJar.get().archiveFile)
     }
     named<ShadowJar>("shadowJar") {
-        archiveBaseName.set("FunnyMapExtras")
+        archiveBaseName.set("FunnyMap")
         archiveClassifier.set("dev")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         configurations = listOf(packageLib)
