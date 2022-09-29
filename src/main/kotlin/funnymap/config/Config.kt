@@ -19,6 +19,24 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var mapEnabled = true
 
     @Property(
+        name = "Rotate Map",
+        type = PropertyType.SWITCH,
+        description = "Rotates map to follow the player.",
+        category = "Map",
+        subcategory = "Toggle"
+    )
+    var mapRotate = false
+
+    @Property(
+        name = "Center Map",
+        type = PropertyType.SWITCH,
+        description = "Centers the map on the player if Rotate Map is enabled.",
+        category = "Map",
+        subcategory = "Toggle"
+    )
+    var mapCenter = false
+
+    @Property(
         name = "Hide In Boss",
         type = PropertyType.SWITCH,
         description = "Hides the map in boss.",

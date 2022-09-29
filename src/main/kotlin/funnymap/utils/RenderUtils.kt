@@ -114,6 +114,7 @@ object RenderUtils {
             ) {
                 GlStateManager.pushMatrix()
                 GlStateManager.scale(0.8, 0.8, 1.0)
+                if (config.mapRotate) GlStateManager.rotate(mc.thePlayer.rotationYawHead + 180f, 0f, 0f, 1f)
                 mc.fontRendererObj.drawString(
                     name, (-mc.fontRendererObj.getStringWidth(name) shr 1).toFloat(), 10f, 0xffffff, true
                 )

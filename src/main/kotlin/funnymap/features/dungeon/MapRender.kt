@@ -9,10 +9,12 @@ import funnymap.utils.MapUtils.roomSize
 import funnymap.utils.RenderUtils
 import funnymap.utils.Utils.equalsOneOf
 import gg.essential.elementa.utils.withAlpha
+import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.ResourceLocation
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
+import org.lwjgl.opengl.GL11
 import java.awt.Color
 
 object MapRender {
@@ -46,15 +48,45 @@ object MapRender {
             config.mapBorder
         )
 
+        if (config.mapRotate) {
+            GlStateManager.pushMatrix()
+            val scale = ScaledResolution(mc).scaleFactor
+            GL11.glScissor(
+                (config.mapX * scale),
+                (mc.displayHeight - config.mapY * scale - 128 * scale * config.mapScale).toInt(),
+                (128 * scale * config.mapScale).toInt(),
+                (128 * scale * config.mapScale).toInt()
+            )
+            GL11.glEnable(GL11.GL_SCISSOR_TEST)
+            GlStateManager.translate(64.0, 64.0, 0.0)
+            GlStateManager.rotate(-mc.thePlayer.rotationYawHead + 180f, 0f, 0f, 1f)
+
+            if (config.mapCenter) {
+                GlStateManager.translate(
+                    -((mc.thePlayer.posX - Dungeon.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first - 2),
+                    -((mc.thePlayer.posZ - Dungeon.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second - 2),
+                    0.0
+                )
+            } else {
+                GlStateManager.translate(-64.0, -64.0, 0.0)
+            }
+        }
+
         renderRooms()
 
         if (mc.currentScreen !is MoveMapGui) {
             renderText()
             renderPlayerHeads()
+            GL11.glDisable(GL11.GL_SCISSOR_TEST)
+            GlStateManager.popMatrix()
             if (config.mapShowRunInformation) {
                 renderRunInformation()
             }
+        } else if (config.mapRotate) {
+            GL11.glDisable(GL11.GL_SCISSOR_TEST)
+            GlStateManager.popMatrix()
         }
+
         GlStateManager.popMatrix()
     }
 
