@@ -77,14 +77,15 @@ object MapRender {
         if (mc.currentScreen !is MoveMapGui) {
             renderText()
             renderPlayerHeads()
+        }
+
+        if (config.mapRotate) {
             GL11.glDisable(GL11.GL_SCISSOR_TEST)
             GlStateManager.popMatrix()
-            if (config.mapShowRunInformation) {
-                renderRunInformation()
-            }
-        } else if (config.mapRotate) {
-            GL11.glDisable(GL11.GL_SCISSOR_TEST)
-            GlStateManager.popMatrix()
+        }
+
+        if (config.mapShowRunInformation) {
+            renderRunInformation()
         }
 
         GlStateManager.popMatrix()
