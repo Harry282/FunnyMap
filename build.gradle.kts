@@ -84,7 +84,7 @@ tasks {
         enabled = false
     }
     named<RemapJarTask>("remapJar") {
-        archiveBaseName.set("FunnyMapExtras")
+        archiveBaseName.set("FunnyMap")
         input.set(shadowJar.get().archiveFile)
     }
     named<ShadowJar>("shadowJar") {
