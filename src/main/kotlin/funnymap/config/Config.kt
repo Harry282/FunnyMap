@@ -129,6 +129,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         description = "Scale of entire map.",
         category = "Map",
         subcategory = "Size",
+        minF = 0.1f,
         maxF = 4f,
         decimalPlaces = 2
     )

@@ -92,8 +92,8 @@ class MoveMapGui : GuiScreen() {
         var i = Mouse.getEventDWheel().coerceIn(-1..1)
         if (i != 0) {
             if (!isShiftKeyDown()) i *= 5
-            config.mapScale =
-                (config.mapScale + i * 0.01).coerceAtMost(min((width - x) / w, (height - y) / h)).toFloat()
+            config.mapScale = (config.mapScale + i * 0.01)
+                .coerceIn(0.1..(min((width - x) / w, (height - y) / h))).toFloat()
         }
         super.handleMouseInput()
     }
