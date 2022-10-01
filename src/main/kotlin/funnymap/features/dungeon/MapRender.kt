@@ -31,6 +31,7 @@ object MapRender {
         if (event.type != RenderGameOverlayEvent.ElementType.ALL || !inDungeons || !config.mapEnabled) return
         if (config.mapHideInBoss && Dungeon.inBoss || !Dungeon.hasScanned) return
 
+        mc.entityRenderer.setupOverlayRendering()
         GlStateManager.pushMatrix()
         GlStateManager.translate(config.mapX.toFloat(), config.mapY.toFloat(), 0f)
         GlStateManager.scale(config.mapScale, config.mapScale, 1f)
