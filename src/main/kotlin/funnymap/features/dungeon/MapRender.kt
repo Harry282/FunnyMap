@@ -30,8 +30,12 @@ object MapRender {
     fun onOverlay(event: RenderGameOverlayEvent.Pre) {
         if (event.type != RenderGameOverlayEvent.ElementType.ALL || !inDungeons || !config.mapEnabled) return
         if (config.mapHideInBoss && Dungeon.inBoss || !Dungeon.hasScanned) return
-
+        if (mc.currentScreen is MoveMapGui) return
         mc.entityRenderer.setupOverlayRendering()
+        renderMap()
+    }
+
+    fun renderMap() {
         GlStateManager.pushMatrix()
         GlStateManager.translate(config.mapX.toFloat(), config.mapY.toFloat(), 0f)
         GlStateManager.scale(config.mapScale, config.mapScale, 1f)
@@ -51,34 +55,12 @@ object MapRender {
 
         if (config.mapRotate) {
             GlStateManager.pushMatrix()
-            val scale = ScaledResolution(mc).scaleFactor
-            GL11.glScissor(
-                (config.mapX * scale),
-                (mc.displayHeight - config.mapY * scale - 128 * scale * config.mapScale).toInt(),
-                (128 * scale * config.mapScale).toInt(),
-                (128 * scale * config.mapScale).toInt()
-            )
-            GL11.glEnable(GL11.GL_SCISSOR_TEST)
-            GlStateManager.translate(64.0, 64.0, 0.0)
-            GlStateManager.rotate(-mc.thePlayer.rotationYawHead + 180f, 0f, 0f, 1f)
-
-            if (config.mapCenter) {
-                GlStateManager.translate(
-                    -((mc.thePlayer.posX - Dungeon.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first - 2),
-                    -((mc.thePlayer.posZ - Dungeon.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second - 2),
-                    0.0
-                )
-            } else {
-                GlStateManager.translate(-64.0, -64.0, 0.0)
-            }
+            setupRotate()
         }
 
         renderRooms()
-
-        if (mc.currentScreen !is MoveMapGui) {
-            renderText()
-            renderPlayerHeads()
-        }
+        renderText()
+        renderPlayerHeads()
 
         if (config.mapRotate) {
             GL11.glDisable(GL11.GL_SCISSOR_TEST)
@@ -90,6 +72,29 @@ object MapRender {
         }
 
         GlStateManager.popMatrix()
+    }
+
+    private fun setupRotate() {
+        val scale = ScaledResolution(mc).scaleFactor
+        GL11.glEnable(GL11.GL_SCISSOR_TEST)
+        GL11.glScissor(
+            (config.mapX * scale),
+            (mc.displayHeight - config.mapY * scale - 128 * scale * config.mapScale).toInt(),
+            (128 * scale * config.mapScale).toInt(),
+            (128 * scale * config.mapScale).toInt()
+        )
+        GlStateManager.translate(64.0, 64.0, 0.0)
+        GlStateManager.rotate(-mc.thePlayer.rotationYawHead + 180f, 0f, 0f, 1f)
+
+        if (config.mapCenter) {
+            GlStateManager.translate(
+                -((mc.thePlayer.posX - Dungeon.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first - 2),
+                -((mc.thePlayer.posZ - Dungeon.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second - 2),
+                0.0
+            )
+        } else {
+            GlStateManager.translate(-64.0, -64.0, 0.0)
+        }
     }
 
     private fun renderRooms() {
