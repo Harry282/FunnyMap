@@ -6,17 +6,15 @@ import funnymap.core.Door
 import funnymap.core.DungeonPlayer
 import funnymap.core.Room
 import funnymap.core.Tile
-import funnymap.events.ReceivePacketEvent
+import funnymap.events.ChatEvent
 import funnymap.utils.LocationUtils.dungeonFloor
 import funnymap.utils.LocationUtils.inDungeons
 import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import kotlinx.coroutines.launch
 import net.minecraft.client.network.NetworkPlayerInfo
-import net.minecraft.network.play.server.S02PacketChat
 import net.minecraft.util.StringUtils
 import net.minecraftforge.event.world.WorldEvent
-import net.minecraftforge.fml.common.eventhandler.EventPriority
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 
@@ -80,9 +78,9 @@ object Dungeon {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    fun onChatPacket(event: ReceivePacketEvent) {
-        if (event.packet !is S02PacketChat || event.packet.type.toInt() == 2 || !inDungeons) return
+    @SubscribeEvent
+    fun onChatPacket(event: ChatEvent) {
+        if (event.packet.type.toInt() == 2 || !inDungeons) return
         val text = StringUtils.stripControlCodes(event.packet.chatComponent.unformattedText)
         when {
             text.equalsOneOf(
