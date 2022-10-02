@@ -12,24 +12,12 @@ import net.minecraft.world.WorldSettings
 
 
 object Utils {
-    fun Any?.equalsOneOf(vararg other: Any): Boolean {
-        return other.any {
-            this == it
-        }
-    }
+    fun Any?.equalsOneOf(vararg other: Any): Boolean = other.any { this == it }
 
     fun modMessage(message: String) = UChat.chat("${if (nekomap) NEKO_PREFIX else CHAT_PREFIX} $message")
 
     val ItemStack.itemID: String
-        get() {
-            if (this.hasTagCompound() && this.tagCompound.hasKey("ExtraAttributes")) {
-                val attributes = this.getSubCompound("ExtraAttributes", false)
-                if (attributes.hasKey("id", 8)) {
-                    return attributes.getString("id")
-                }
-            }
-            return ""
-        }
+        get() = this.getSubCompound("ExtraAttributes", false)?.getString("id") ?: ""
 
     private val tabListOrder = Comparator<NetworkPlayerInfo> { o1, o2 ->
         if (o1 == null) return@Comparator -1
@@ -42,7 +30,7 @@ object Utils {
     }
 
     val tabList: List<Pair<NetworkPlayerInfo, String>>
-        get() = (mc.thePlayer?.sendQueue?.playerInfoMap?.sortedWith(tabListOrder) ?: emptyList()).map {
+        get() = mc.thePlayer?.sendQueue?.playerInfoMap?.sortedWith(tabListOrder)?.map {
             Pair(it, mc.ingameGUI.tabList.getPlayerName(it))
-        }
+        } ?: emptyList()
 }
