@@ -65,7 +65,7 @@ class FunnyMap {
     companion object {
         const val MOD_ID = "funnymap"
         const val MOD_NAME = "Funny Map"
-        const val MOD_VERSION = "0.6.1"
+        const val MOD_VERSION = "0.6.2"
         const val CHAT_PREFIX = "§b§l<§fFunny Map§b§l>§r"
         const val NEKO_PREFIX = "§b§l<§dNeko §fMap§b§l>§r"
 
