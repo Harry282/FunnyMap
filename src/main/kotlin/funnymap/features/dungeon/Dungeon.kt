@@ -8,12 +8,12 @@ import funnymap.core.Room
 import funnymap.core.Tile
 import funnymap.events.ChatEvent
 import funnymap.utils.LocationUtils.dungeonFloor
+import funnymap.utils.LocationUtils.inBoss
 import funnymap.utils.LocationUtils.inDungeons
 import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import kotlinx.coroutines.launch
 import net.minecraft.client.network.NetworkPlayerInfo
-import net.minecraft.util.StringUtils
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
@@ -29,7 +29,6 @@ object Dungeon {
     var hasScanned = false
 
     // 6 x 6 room grid, 11 x 11 with connections
-    var inBoss = false
     val dungeonList = Array<Tile>(121) { Door(0, 0) }
     val uniqueRooms = mutableListOf<Room>()
     val rooms = mutableListOf<Room>()
@@ -43,16 +42,6 @@ object Dungeon {
     var trapType = ""
     var witherDoors = 0
     var secretCount = 0
-
-    private val entryMessages = listOf(
-        "[BOSS] Bonzo: Gratz for making it this far, but I’m basically unbeatable.",
-        "[BOSS] Scarf: This is where the journey ends for you, Adventurers.",
-        "[BOSS] The Professor: I was burdened with terrible news recently...",
-        "[BOSS] Thorn: Welcome Adventurers! I am Thorn, the Spirit! And host of the Vegan Trials!",
-        "[BOSS] Livid: Welcome, you arrive right on time. I am Livid, the Master of Shadows.",
-        "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!",
-        "[BOSS] Maxor: WELL WELL WELL LOOK WHO’S HERE!"
-    )
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
@@ -81,14 +70,12 @@ object Dungeon {
     @SubscribeEvent
     fun onChatPacket(event: ChatEvent) {
         if (event.packet.type.toInt() == 2 || !inDungeons) return
-        val text = StringUtils.stripControlCodes(event.packet.chatComponent.unformattedText)
         when {
-            text.equalsOneOf(
+            event.text.equalsOneOf(
                 "Dungeon starts in 4 seconds.", "Dungeon starts in 4 seconds. Get ready!"
             ) -> MapUpdate.preloadHeads()
 
-            text == "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> MapUpdate.getPlayers()
-            entryMessages.any { it == text } -> inBoss = true
+            event.text == "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> MapUpdate.getPlayers()
         }
     }
 

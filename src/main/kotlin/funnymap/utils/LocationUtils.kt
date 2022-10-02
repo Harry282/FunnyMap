@@ -2,6 +2,7 @@ package funnymap.utils
 
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
+import funnymap.events.ChatEvent
 import funnymap.utils.ScoreboardUtils.sidebarLines
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -13,6 +14,17 @@ object LocationUtils {
     var inSkyblock = false
     var inDungeons = false
     var dungeonFloor = -1
+    var inBoss = false
+
+    private val entryMessages = listOf(
+        "[BOSS] Bonzo: Gratz for making it this far, but I’m basically unbeatable.",
+        "[BOSS] Scarf: This is where the journey ends for you, Adventurers.",
+        "[BOSS] The Professor: I was burdened with terrible news recently...",
+        "[BOSS] Thorn: Welcome Adventurers! I am Thorn, the Spirit! And host of the Vegan Trials!",
+        "[BOSS] Livid: Welcome, you arrive right on time. I am Livid, the Master of Shadows.",
+        "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!",
+        "[BOSS] Maxor: WELL WELL WELL LOOK WHO’S HERE!"
+    )
 
     init {
         fixedRateTimer(period = 1000) {
@@ -22,7 +34,7 @@ object LocationUtils {
                     inDungeons = true
                     dungeonFloor = 7
                 } else {
-                    inSkyblock = onHypixel && mc.theWorld.scoreboard.getObjectiveInDisplaySlot(1)
+                    inSkyblock = onHypixel && mc.theWorld.scoreboard?.getObjectiveInDisplaySlot(1)
                         ?.let { ScoreboardUtils.cleanSB(it.displayName).contains("SKYBLOCK") } ?: false
 
                     if (!inDungeons) {
@@ -38,6 +50,12 @@ object LocationUtils {
     }
 
     @SubscribeEvent
+    fun onChat(event: ChatEvent) {
+        if (event.packet.type.toInt() == 2 || !inDungeons) return
+        if (entryMessages.any { it == event.text }) inBoss = true
+    }
+
+    @SubscribeEvent
     fun onConnect(event: FMLNetworkEvent.ClientConnectedToServerEvent) {
         onHypixel = mc.runCatching {
             !event.isLocal && ((thePlayer?.clientBrand?.lowercase()?.contains("hypixel")
@@ -49,6 +67,7 @@ object LocationUtils {
     fun onWorldUnload(event: WorldEvent.Unload) {
         inDungeons = false
         dungeonFloor = -1
+        inBoss = false
     }
 
     @SubscribeEvent
@@ -57,5 +76,6 @@ object LocationUtils {
         inSkyblock = false
         inDungeons = false
         dungeonFloor = -1
+        inBoss = false
     }
 }

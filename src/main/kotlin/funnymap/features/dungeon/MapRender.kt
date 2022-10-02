@@ -3,6 +3,7 @@ package funnymap.features.dungeon
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.*
+import funnymap.utils.LocationUtils.inBoss
 import funnymap.utils.LocationUtils.inDungeons
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.roomSize
@@ -29,7 +30,7 @@ object MapRender {
     @SubscribeEvent
     fun onOverlay(event: RenderGameOverlayEvent.Pre) {
         if (event.type != RenderGameOverlayEvent.ElementType.ALL || !inDungeons || !config.mapEnabled) return
-        if (config.mapHideInBoss && Dungeon.inBoss || !Dungeon.hasScanned) return
+        if (config.mapHideInBoss && inBoss || !Dungeon.hasScanned) return
         if (mc.currentScreen is MoveMapGui) return
         mc.entityRenderer.setupOverlayRendering()
         renderMap()
