@@ -30,7 +30,7 @@ object MapRender {
     @SubscribeEvent
     fun onOverlay(event: RenderGameOverlayEvent.Pre) {
         if (event.type != RenderGameOverlayEvent.ElementType.ALL || !inDungeons || !config.mapEnabled) return
-        if (config.mapHideInBoss && inBoss || !Dungeon.hasScanned) return
+        if (config.mapHideInBoss && inBoss) return
         if (mc.currentScreen is MoveMapGui) return
         mc.entityRenderer.setupOverlayRendering()
         renderMap()

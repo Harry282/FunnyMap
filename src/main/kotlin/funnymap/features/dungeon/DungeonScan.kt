@@ -11,7 +11,6 @@ import net.minecraft.util.BlockPos
 
 object DungeonScan {
     fun scanDungeon() {
-        Dungeon.reset()
         var allLoaded = true
         val startTime = if (config.nanoScanTime) System.nanoTime() else System.currentTimeMillis()
 
@@ -22,9 +21,9 @@ object DungeonScan {
 
                 if (!mc.theWorld.getChunkFromChunkCoords(xPos shr 4, zPos shr 4).isLoaded) {
                     allLoaded = false
-                    break@scan
+                    continue@scan
                 }
-
+                if (Dungeon.dungeonList.getOrNull(z * 11 + x) != Door(0, 0)) continue
                 getRoom(xPos, zPos, z, x)?.let {
                     if (it is Room && x and 1 == 0 && z and 1 == 0) Dungeon.rooms.add(it)
                     if (it is Door && it.type == DoorType.WITHER) Dungeon.doors[it] = Pair(x, z)
@@ -53,7 +52,7 @@ object DungeonScan {
                 )
                 modMessage(lines.joinToString(separator = "\n"))
             }
-        } else Dungeon.reset()
+        }
     }
 
     private fun getRoom(x: Int, z: Int, row: Int, column: Int): Tile? {

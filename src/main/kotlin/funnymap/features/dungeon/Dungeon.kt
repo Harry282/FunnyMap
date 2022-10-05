@@ -10,6 +10,7 @@ import funnymap.events.ChatEvent
 import funnymap.utils.LocationUtils.dungeonFloor
 import funnymap.utils.LocationUtils.inBoss
 import funnymap.utils.LocationUtils.inDungeons
+import funnymap.utils.MapUtils
 import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import kotlinx.coroutines.launch
@@ -54,16 +55,16 @@ object Dungeon {
                 isScanning = false
             }
         }
+        getDungeonTabList()?.let {
+            MapUpdate.updatePlayers(it)
+            RunInformation.updateRunInformation(it)
+        }
         if (hasScanned) {
             if (!mimicFound && dungeonFloor.equalsOneOf(6, 7)) {
                 MimicDetector.findMimic()
             }
             MapUpdate.updateRooms()
             MapUpdate.updateDoors()
-            getDungeonTabList()?.let {
-                MapUpdate.updatePlayers(it)
-                RunInformation.updateRunInformation(it)
-            }
         }
     }
 
@@ -75,7 +76,19 @@ object Dungeon {
                 "Dungeon starts in 4 seconds.", "Dungeon starts in 4 seconds. Get ready!"
             ) -> MapUpdate.preloadHeads()
 
-            event.text == "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> MapUpdate.getPlayers()
+            event.text == "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> {
+                MapUpdate.getPlayers()
+                MapUtils.startCorner = when {
+                    dungeonFloor == 1 -> Pair(22, 11)
+                    dungeonFloor.equalsOneOf(2, 3) -> Pair(11, 11)
+                    dungeonFloor == 4 -> Pair(5, 16)
+                    else -> Pair(5, 5)
+                }
+
+                MapUtils.roomSize = if (dungeonFloor in 1..3) 18 else 16
+
+                MapUtils.coordMultiplier = (MapUtils.roomSize + 4.0) / roomSize
+            }
         }
     }
 
