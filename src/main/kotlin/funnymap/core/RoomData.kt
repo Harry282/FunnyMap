@@ -1,5 +1,7 @@
 package funnymap.core
 
+import funnymap.core.map.RoomType
+
 data class RoomData(
     val name: String,
     val type: RoomType,

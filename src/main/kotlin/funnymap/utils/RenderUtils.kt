@@ -3,7 +3,7 @@ package funnymap.utils
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.DungeonPlayer
-import funnymap.features.dungeon.Dungeon
+import funnymap.features.dungeon.DungeonScan
 import funnymap.utils.Utils.equalsOneOf
 import funnymap.utils.Utils.itemID
 import net.minecraft.client.gui.Gui
@@ -100,8 +100,8 @@ object RenderUtils {
         try {
             if (name == mc.thePlayer.name) {
                 GlStateManager.translate(
-                    (mc.thePlayer.posX - Dungeon.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first - 2,
-                    (mc.thePlayer.posZ - Dungeon.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second - 2,
+                    (mc.thePlayer.posX - DungeonScan.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first - 2,
+                    (mc.thePlayer.posZ - DungeonScan.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second - 2,
                     0.0
                 )
             } else {

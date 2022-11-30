@@ -33,4 +33,10 @@ object Utils {
         get() = mc.thePlayer?.sendQueue?.playerInfoMap?.sortedWith(tabListOrder)?.map {
             Pair(it, mc.ingameGUI.tabList.getPlayerName(it))
         } ?: emptyList()
+
+    val dungeonTabList: List<Pair<NetworkPlayerInfo, String>>?
+        get() {
+            val tabEntries = tabList
+            return if (tabEntries.size < 18 || !tabEntries[0].second.contains("§r§b§lParty §r§f(")) null else tabEntries
+        }
 }

@@ -1,9 +1,10 @@
-package funnymap.core
+package funnymap.core.map
 
 import funnymap.FunnyMap.Companion.config
+import funnymap.core.RoomData
 import java.awt.Color
 
-data class Room(override var x: Int, override var z: Int, var data: RoomData) : Tile(x, z) {
+class Room(x: Int, z: Int, var data: RoomData) : Tile(x, z) {
 
     var core = 0
     var hasMimic = false

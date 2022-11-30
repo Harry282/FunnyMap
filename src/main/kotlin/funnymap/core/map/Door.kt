@@ -1,9 +1,9 @@
-package funnymap.core
+package funnymap.core.map
 
 import funnymap.FunnyMap.Companion.config
 import java.awt.Color
 
-data class Door(override var x: Int, override var z: Int) : Tile(x, z) {
+class Door(x: Int, z: Int) : Tile(x, z) {
 
     var type = DoorType.NONE
     var opened = false
