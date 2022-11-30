@@ -40,7 +40,6 @@ object MapUtils {
             val startZ = start shr 7
             startCorner = Pair(startX % (mapRoomSize + 4), startZ % (mapRoomSize + 4))
             coordMultiplier = (mapRoomSize + 4.0) / DungeonScan.roomSize
-            Utils.modMessage("Set room size to $mapRoomSize, start corner to $startCorner")
             return true
         }
         return false

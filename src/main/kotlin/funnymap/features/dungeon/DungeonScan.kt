@@ -149,7 +149,6 @@ object DungeonScan {
                     if (it !is Room) {
                         null
                     } else if (it.data.type == RoomType.ENTRANCE) {
-                        Utils.modMessage("Added Entrance Doorway")
                         Door(x, z).apply { type = DoorType.ENTRANCE }
                     } else {
                         Room(x, z, it.data).apply { isSeparator = true }

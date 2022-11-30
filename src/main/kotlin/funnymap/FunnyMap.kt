@@ -67,13 +67,10 @@ class FunnyMap {
         const val MOD_NAME = "Funny Map"
         const val MOD_VERSION = "0.6.2"
         const val CHAT_PREFIX = "§b§l<§fFunny Map§b§l>§r"
-        const val NEKO_PREFIX = "§b§l<§dNeko §fMap§b§l>§r"
 
         val mc: Minecraft = Minecraft.getMinecraft()
         val config = Config
         var display: GuiScreen? = null
         val scope = CoroutineScope(EmptyCoroutineContext)
-
-        var nekomap = File(mc.mcDataDir, "config/funnymap/nekomap").exists()
     }
 }
