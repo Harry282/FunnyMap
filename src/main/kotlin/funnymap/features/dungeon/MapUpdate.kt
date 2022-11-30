@@ -1,13 +1,17 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.Companion.scope
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
+import funnymap.utils.APIUtils
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
 import funnymap.utils.MapUtils.yaw
 import funnymap.utils.Utils
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.entity.player.EnumPlayerModelParts
 import net.minecraft.init.Blocks
@@ -32,8 +36,15 @@ object MapUpdate {
                 val name = StringUtils.stripControlCodes(second).trim().substringAfterLast("] ").split(" ")[0]
                 if (name != "") {
                     Dungeon.dungeonTeammates[name] = DungeonPlayer(first.locationSkin).apply {
+                        val player = mc.theWorld.getPlayerEntityByName(name)
+                        if (player != null) {
+                            playerLoaded = true
+                        }
                         icon = "icon-$iconNum"
                         renderHat = mc.theWorld.getPlayerEntityByName(name)?.isWearing(EnumPlayerModelParts.HAT) == true
+                        renderHat = player?.isWearing(EnumPlayerModelParts.HAT) == true
+                        uuid = player?.uniqueID.toString()
+                        scope.launch(Dispatchers.IO) { startingSecrets = APIUtils.getSecrets(uuid) }
                     }
                     iconNum++
                 }
@@ -56,6 +67,15 @@ object MapUpdate {
                 } else {
                     icon = "icon-$iconNum"
                     iconNum++
+                }
+                if (!playerLoaded) {
+                    val player = mc.theWorld.getPlayerEntityByName(name)
+                    if (player != null) {
+                        renderHat = player.isWearing(EnumPlayerModelParts.HAT) == true
+                        uuid = player.uniqueID.toString()
+                        scope.launch(Dispatchers.IO) { startingSecrets = APIUtils.getSecrets(uuid) }
+                        playerLoaded = true
+                    }
                 }
             }
         }

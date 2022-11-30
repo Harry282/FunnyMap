@@ -369,18 +369,27 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var colorTrap = Color(216, 127, 51)
 
     @Property(
+        name = "Hypixel API Key",
+        type = PropertyType.TEXT,
+        category = "Other Features",
+        protectedText = true
+    )
+    var apiKey = ""
+
+    @Property(
+        name = "Show Team Info",
+        description = "Shows team member secrets at end of run. Requires a valid API key.",
+        type = PropertyType.SWITCH,
+        category = "Other Features"
+    )
+    var teamInfo = false
+
+    @Property(
         name = "Force Skyblock",
         type = PropertyType.SWITCH,
         category = "Debug"
     )
     var forceSkyblock = false
-
-    @Property(
-        name = "Nanosecond Scan Timer",
-        type = PropertyType.SWITCH,
-        category = "Debug"
-    )
-    var nanoScanTime = false
 
     init {
         initialize()
@@ -392,7 +401,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     private object CategorySorting : SortingBehavior() {
 
         private val configCategories = listOf(
-            "Map", "Rooms", "Colors", "Debug"
+            "Map", "Rooms", "Colors", "Other Features", "Debug"
         )
 
         private val configSubcategories = listOf(

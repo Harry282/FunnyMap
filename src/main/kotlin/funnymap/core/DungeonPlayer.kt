@@ -9,4 +9,7 @@ data class DungeonPlayer(val skin: ResourceLocation) {
     var renderHat = false
     var icon = ""
     var dead = false
+    var uuid = ""
+    var startingSecrets = 0
+    var playerLoaded = false
 }
