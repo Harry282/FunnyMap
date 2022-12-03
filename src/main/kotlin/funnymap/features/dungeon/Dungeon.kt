@@ -79,6 +79,7 @@ object Dungeon {
 
         var trapType = ""
         var witherDoors = 0
+        var cryptCount = 0
         var secretCount = 0
         var mimicFound = false
 
@@ -90,6 +91,7 @@ object Dungeon {
 
             trapType = ""
             witherDoors = 0
+            cryptCount = 0
             secretCount = 0
             mimicFound = false
 

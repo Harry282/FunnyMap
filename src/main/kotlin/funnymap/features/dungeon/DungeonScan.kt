@@ -77,6 +77,7 @@ object DungeonScan {
                     Dungeon.Info.puzzles.joinToString(separator = "\n&b- &d", prefix = "&b- &d"),
                     "&6Trap: &a${Dungeon.Info.trapType}",
                     "&8Wither Doors: &7${Dungeon.Info.witherDoors - 1}",
+                    "&7Total Crypts: &6${Dungeon.Info.cryptCount}",
                     "&7Total Secrets: &b${Dungeon.Info.secretCount}"
                 )
                 Utils.modMessage(lines.joinToString(separator = "\n"))
@@ -105,6 +106,7 @@ object DungeonScan {
                     if (duplicateRoom == null) {
                         // Adds room information if no duplicate was found
                         Dungeon.Info.uniqueRooms.add(this)
+                        Dungeon.Info.cryptCount += data.crypts
                         Dungeon.Info.secretCount += data.secrets
                         when (data.type) {
                             RoomType.TRAP -> Dungeon.Info.trapType = data.name.split(" ")[0]
