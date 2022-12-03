@@ -3,20 +3,18 @@ package funnymap.features.dungeon
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.map.Room
 import funnymap.features.dungeon.ScanUtils.getRoomFromPos
-import funnymap.utils.Utils.modMessage
 import net.minecraft.tileentity.TileEntityChest
 
 object MimicDetector {
-    fun findMimic() {
+    fun findMimic(): String? {
         val mimicRoom = getMimicRoom()
-        if (mimicRoom == "") return
-        modMessage("Mimic found in $mimicRoom")
+        if (mimicRoom == "") return null
         Dungeon.Info.dungeonList.forEach {
             if (it is Room && it.data.name == mimicRoom) {
                 it.hasMimic = true
             }
         }
-        Dungeon.mimicFound = true
+        return mimicRoom
     }
 
     private fun getMimicRoom(): String {

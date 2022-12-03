@@ -9,13 +9,9 @@ import funnymap.features.extras.ExtrasDungeon
 import funnymap.features.extras.ExtrasScan
 import funnymap.utils.LocationUtils.dungeonFloor
 import funnymap.utils.Utils
-import funnymap.core.*
-import funnymap.features.dungeon.ScanUtils.getRoomData
-import funnymap.features.dungeon.ScanUtils.isDoor
-import funnymap.utils.Utils.modMessage
+import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
-import kotlin.system.measureTimeMillis
 
 /**
  * Handles everything related to scanning the dungeon. Running [scan] will update the instance of [Dungeon].
@@ -44,35 +40,34 @@ object DungeonScan {
         isScanning = true
         var allChunksLoaded = true
 
-        val scanTime = measureTimeMillis {
-            // Scans the dungeon in a 11x11 grid.
-            for (x in 0..10) {
-                for (z in 0..10) {
-                    // Translates the grid index into world position.
-                    val xPos = startX + x * (roomSize shr 1)
-                    val zPos = startZ + z * (roomSize shr 1)
+        // Scans the dungeon in a 11x11 grid.
+        for (x in 0..10) {
+            for (z in 0..10) {
+                // Translates the grid index into world position.
+                val xPos = startX + x * (roomSize shr 1)
+                val zPos = startZ + z * (roomSize shr 1)
 
-                    if (!mc.theWorld.getChunkFromChunkCoords(xPos shr 4, zPos shr 4).isLoaded) {
-                        // The room being scanned has not been loaded in.
-                        allChunksLoaded = false
-                        continue
-                    }
+                if (!mc.theWorld.getChunkFromChunkCoords(xPos shr 4, zPos shr 4).isLoaded) {
+                    // The room being scanned has not been loaded in.
+                    allChunksLoaded = false
+                    continue
+                }
 
-                    // This room has already been added in a previous scan.
-                    if (Dungeon.Info.dungeonList[x + z * 11] !is Unknown) continue
+                // This room has already been added in a previous scan.
+                if (Dungeon.Info.dungeonList[x + z * 11] !is Unknown) continue
 
-                    scanRoom(xPos, zPos, z, x)?.let {
-                        Dungeon.Info.dungeonList[z * 11 + x] = it
-                    }
+                scanRoom(xPos, zPos, z, x)?.let {
+                    Dungeon.Info.dungeonList[z * 11 + x] = it
                 }
             }
         }
 
         if (allChunksLoaded) {
             hasScanned = true
+
             if (config.scanChatInfo) {
-                val lines = listOf(
-                    "&aScan Finished! Took &b${scanTime}&ams!",
+                val lines = mutableListOf(
+                    "&aScan Finished!",
                     "&aPuzzles (&c${Dungeon.Info.puzzles.size}&a):",
                     Dungeon.Info.puzzles.joinToString(separator = "\n&b- &d", prefix = "&b- &d"),
                     "&6Trap: &a${Dungeon.Info.trapType}",
@@ -80,6 +75,11 @@ object DungeonScan {
                     "&7Total Crypts: &6${Dungeon.Info.cryptCount}",
                     "&7Total Secrets: &b${Dungeon.Info.secretCount}"
                 )
+                if (dungeonFloor.equalsOneOf(6, 7)) {
+                    MimicDetector.findMimic()?.let {
+                        lines.add("&7Mimic Room: &c$it")
+                    }
+                }
                 Utils.modMessage(lines.joinToString(separator = "\n"))
             }
         }

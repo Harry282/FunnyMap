@@ -7,13 +7,9 @@ import funnymap.core.map.Room
 import funnymap.core.map.Tile
 import funnymap.core.map.Unknown
 import funnymap.events.ChatEvent
-import funnymap.utils.LocationUtils.dungeonFloor
-import funnymap.utils.LocationUtils.inBoss
-import funnymap.utils.LocationUtils
 import funnymap.utils.LocationUtils.inDungeons
 import funnymap.utils.MapUtils
 import funnymap.utils.Utils
-import funnymap.utils.Utils.equalsOneOf
 import kotlinx.coroutines.launch
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -21,7 +17,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 
 object Dungeon {
 
-    var mimicFound = false
     val dungeonTeammates = mutableMapOf<String, DungeonPlayer>()
 
     @SubscribeEvent
@@ -33,9 +28,6 @@ object Dungeon {
         if (!DungeonScan.isScanning) {
             if (!MapUtils.calibrated) {
                 MapUtils.calibrated = MapUtils.calibrateMap()
-            }
-            if (!mimicFound && LocationUtils.dungeonFloor.equalsOneOf(6, 7)) {
-                MimicDetector.findMimic()
             }
             MapUpdate.updateRooms()
             MapUpdate.updateDoors()
