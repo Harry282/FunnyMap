@@ -113,7 +113,7 @@ object DungeonScan {
                             RoomType.PUZZLE -> Dungeon.Info.puzzles.add(data.name)
                             else -> {}
                         }
-                    } else if (duplicateRoom.x >= x && duplicateRoom.z >= z) {
+                    } else if (x < duplicateRoom.x || (x == duplicateRoom.x && z < duplicateRoom.z)) {
                         // Ensures the room stored in uniqueRooms is the furthest south-east.
                         Dungeon.Info.uniqueRooms.remove(duplicateRoom)
                         Dungeon.Info.uniqueRooms.add(this)
