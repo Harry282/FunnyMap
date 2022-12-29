@@ -9,6 +9,7 @@ import funnymap.utils.LocationUtils.inDungeons
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapRoomSize
 import funnymap.utils.RenderUtils
+import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import gg.essential.elementa.utils.withAlpha
 import net.minecraft.client.gui.ScaledResolution
@@ -257,16 +258,20 @@ object MapRender {
     }
 
     private fun renderPlayerHeads() {
-        if (Dungeon.dungeonTeammates.isEmpty()) {
-            RenderUtils.drawPlayerHead(mc.thePlayer.name, DungeonPlayer(mc.thePlayer.locationSkin).apply {
-                yaw = mc.thePlayer.rotationYawHead
-            })
-        } else {
-            Dungeon.dungeonTeammates.forEach { (name, teammate) ->
-                if (!teammate.dead) {
-                    RenderUtils.drawPlayerHead(name, teammate)
+        try {
+            if (Dungeon.dungeonTeammates.isEmpty()) {
+                RenderUtils.drawPlayerHead(mc.thePlayer.name, DungeonPlayer(mc.thePlayer.locationSkin).apply {
+                    yaw = mc.thePlayer.rotationYawHead
+                })
+            } else {
+                Dungeon.dungeonTeammates.forEach { (name, teammate) ->
+                    if (!teammate.dead) {
+                        RenderUtils.drawPlayerHead(name, teammate)
+                    }
                 }
             }
+        } catch (e: ConcurrentModificationException) {
+            Utils.modMessage("If you see this, ping me in supporter gen to fix map rendering.")
         }
     }
 
