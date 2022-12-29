@@ -1,19 +1,14 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.mc
-import funnymap.FunnyMap.Companion.scope
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
-import funnymap.utils.APIUtils
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
 import funnymap.utils.MapUtils.yaw
 import funnymap.utils.Utils
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import net.minecraft.client.network.NetworkPlayerInfo
-import net.minecraft.entity.player.EnumPlayerModelParts
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 import net.minecraft.util.StringUtils
@@ -36,15 +31,10 @@ object MapUpdate {
                 val name = StringUtils.stripControlCodes(second).trim().substringAfterLast("] ").split(" ")[0]
                 if (name != "") {
                     Dungeon.dungeonTeammates[name] = DungeonPlayer(first.locationSkin).apply {
-                        val player = mc.theWorld.getPlayerEntityByName(name)
-                        if (player != null) {
-                            playerLoaded = true
-                        }
+                        mc.theWorld.getPlayerEntityByName(name)?.let { setData(it) }
+                        colorPrefix = second.substringBefore(name, "f").last()
+                        this.name = name
                         icon = "icon-$iconNum"
-                        renderHat = mc.theWorld.getPlayerEntityByName(name)?.isWearing(EnumPlayerModelParts.HAT) == true
-                        renderHat = player?.isWearing(EnumPlayerModelParts.HAT) == true
-                        uuid = player?.uniqueID.toString()
-                        scope.launch(Dispatchers.IO) { startingSecrets = APIUtils.getSecrets(uuid) }
                     }
                     iconNum++
                 }
@@ -55,6 +45,7 @@ object MapUpdate {
     fun updatePlayers(tabEntries: List<Pair<NetworkPlayerInfo, String>>) {
         if (Dungeon.dungeonTeammates.isEmpty()) return
         // Update map icons
+        val time = System.currentTimeMillis() - Dungeon.Info.startTime
         var iconNum = 0
         for (i in listOf(5, 9, 13, 17, 1)) {
             val tabText = StringUtils.stripControlCodes(tabEntries[i].second).trim()
@@ -69,12 +60,17 @@ object MapUpdate {
                     iconNum++
                 }
                 if (!playerLoaded) {
-                    val player = mc.theWorld.getPlayerEntityByName(name)
-                    if (player != null) {
-                        renderHat = player.isWearing(EnumPlayerModelParts.HAT) == true
-                        uuid = player.uniqueID.toString()
-                        scope.launch(Dispatchers.IO) { startingSecrets = APIUtils.getSecrets(uuid) }
-                        playerLoaded = true
+                    mc.theWorld.getPlayerEntityByName(name)?.let { setData(it) }
+                }
+
+                val room = getCurrentRoom()
+                if (room != "Error" || time > 1000) {
+                    if (lastRoom == "") {
+                        lastRoom = room
+                    } else if (lastRoom != room) {
+                        roomVisits.add(Pair(time - lastTime, lastRoom))
+                        lastTime = time
+                        lastRoom = room
                     }
                 }
             }
@@ -84,12 +80,16 @@ object MapUpdate {
         Dungeon.dungeonTeammates.forEach { (name, player) ->
             if (name == mc.thePlayer.name) {
                 player.yaw = mc.thePlayer.rotationYawHead
-            } else {
-                decor.entries.find { (icon, _) -> icon == player.icon }?.let { (_, vec4b) ->
-                    player.mapX = vec4b.mapX
-                    player.mapZ = vec4b.mapZ
-                    player.yaw = vec4b.yaw
-                }
+                player.mapX =
+                    (MapUtils.startCorner.first - 2 + (mc.thePlayer.posX - DungeonScan.startX + 15) * MapUtils.coordMultiplier).toInt()
+                player.mapZ =
+                    (MapUtils.startCorner.second - 2 + (mc.thePlayer.posZ - DungeonScan.startZ + 15) * MapUtils.coordMultiplier).toInt()
+                return@forEach
+            }
+            decor.entries.find { (icon, _) -> icon == player.icon }?.let { (_, vec4b) ->
+                player.mapX = vec4b.mapX
+                player.mapZ = vec4b.mapZ
+                player.yaw = vec4b.yaw
             }
         }
     }
@@ -111,7 +111,7 @@ object MapUpdate {
 
                 val room = Dungeon.Info.dungeonList[z * 11 + x]
 
-                room.state = when (mapColors[(mapZ shl 7) + mapX].toInt()) {
+                val newState = when (mapColors[(mapZ shl 7) + mapX].toInt()) {
                     0, 85, 119 -> RoomState.UNDISCOVERED
                     18 -> if (room is Room) when (room.data.type) {
                         RoomType.BLOOD -> RoomState.DISCOVERED
@@ -126,6 +126,11 @@ object MapUpdate {
 
                     34 -> RoomState.CLEARED
                     else -> RoomState.DISCOVERED
+                }
+
+                if (newState != room.state) {
+                    PlayerTracker.roomStateChange(room, room.state, newState)
+                    room.state = newState
                 }
             }
         }

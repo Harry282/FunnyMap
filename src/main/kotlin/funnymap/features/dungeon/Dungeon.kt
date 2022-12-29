@@ -59,6 +59,7 @@ object Dungeon {
         ExtrasDungeon.reset()
         Info.reset()
         dungeonTeammates.clear()
+        PlayerTracker.roomClears.clear()
         MapUtils.calibrated = false
         DungeonScan.hasScanned = false
     }

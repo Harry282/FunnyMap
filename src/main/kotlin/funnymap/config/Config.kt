@@ -378,7 +378,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
 
     @Property(
         name = "Show Team Info",
-        description = "Shows team member secrets at end of run. Requires a valid API key.",
+        description = "Shows team member secrets and room times at end of run. Requires a valid API key.",
         type = PropertyType.SWITCH,
         category = "Other Features"
     )
