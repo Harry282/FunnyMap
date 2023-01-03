@@ -3,7 +3,6 @@ package funnymap.commands
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.display
 import funnymap.FunnyMap.Companion.mc
-import funnymap.core.RoomData
 import funnymap.features.dungeon.Dungeon
 import funnymap.features.dungeon.DungeonScan
 import funnymap.features.dungeon.ScanUtils
@@ -14,9 +13,12 @@ import net.minecraft.command.ICommandSender
 import net.minecraft.util.BlockPos
 
 class FunnyMapCommands : CommandBase() {
+
+    private val commands = listOf("help", "scan", "roomdata")
+
     override fun getCommandName(): String = "funnymap"
 
-    override fun getCommandAliases(): List<String> = listOf("fmap")
+    override fun getCommandAliases(): List<String> = listOf("fmap", "fm")
 
     override fun getCommandUsage(sender: ICommandSender): String = "/$commandName"
 
@@ -28,19 +30,33 @@ class FunnyMapCommands : CommandBase() {
             return
         }
         when (args[0]) {
+            // Help command
+            "help" -> {
+                UChat.chat(
+                    """
+                        #§b§l<§fFunnyMap Commands§b§l>
+                        #  §b/funnymap §9> §3Opens the main mod GUI. §7(Alias: fm, fmap)
+                        #  §b/§ffunnymap §bscan §9> §3Rescans the map.
+                        #  §b/§ffunnymap §broomdata §9> §3Copies current room data or room core to clipboard.
+                    """.trimMargin("#")
+                )
+            }
+            // Scans the dungeon
             "scan" -> {
                 Dungeon.reset()
                 DungeonScan.scan()
             }
-
-            "roomdata" -> ScanUtils.getRoomCentre(mc.thePlayer.posX.toInt(), mc.thePlayer.posZ.toInt()).let {
-                ScanUtils.getRoomData(it.first, it.second) ?: ScanUtils.getCore(it.first, it.second)
-            }.run {
-                GuiScreen.setClipboardString(this.toString())
-                Utils.modMessage(
-                    if (this is RoomData) "Copied room data to clipboard."
-                    else "Existing room data not found. Copied room core to clipboard."
-                )
+            // Copies room data or room core to clipboard
+            "roomdata" -> {
+                val pos = ScanUtils.getRoomCentre(mc.thePlayer.posX.toInt(), mc.thePlayer.posZ.toInt())
+                val data = ScanUtils.getRoomData(pos.first, pos.second)
+                if (data != null) {
+                    GuiScreen.setClipboardString(data.toString())
+                    Utils.modMessage("Copied room data to clipboard.")
+                } else {
+                    GuiScreen.setClipboardString(ScanUtils.getCore(pos.first, pos.second).toString())
+                    Utils.modMessage("Existing room data not found. Copied room core to clipboard.")
+                }
             }
         }
     }
@@ -51,7 +67,7 @@ class FunnyMapCommands : CommandBase() {
         pos: BlockPos,
     ): MutableList<String> {
         if (args.size == 1) {
-            return getListOfStringsMatchingLastWord(args, mutableListOf("scan", "roomdata"))
+            return getListOfStringsMatchingLastWord(args, commands)
         }
         return super.addTabCompletionOptions(sender, args, pos)
     }

@@ -15,7 +15,11 @@ import net.minecraft.util.ResourceLocation
 data class DungeonPlayer(val skin: ResourceLocation) {
 
     var name = ""
+
+    /** Minecraft formatting code for the player's name */
     var colorPrefix = 'f'
+
+    /** The player's name with formatting code */
     val formattedName: String
         get() = "§$colorPrefix$name"
 
@@ -23,17 +27,20 @@ data class DungeonPlayer(val skin: ResourceLocation) {
     var mapZ = 0
     var yaw = 0f
 
-    var renderHat = false
+    /** Has information from player entity been loaded */
+    var playerLoaded = false
     var icon = ""
+    var renderHat = false
     var dead = false
     var uuid = ""
-    var startingSecrets = 0
-    var playerLoaded = false
 
+    /** Stats for compiling player tracker information */
+    var startingSecrets = 0
     var lastRoom = ""
     var lastTime = 0L
     var roomVisits: MutableList<Pair<Long, String>> = mutableListOf()
 
+    /** Set player data that requires entity to be loaded */
     fun setData(player: EntityPlayer) {
         renderHat = player.isWearing(EnumPlayerModelParts.HAT)
         uuid = player.uniqueID.toString()
@@ -43,6 +50,7 @@ data class DungeonPlayer(val skin: ResourceLocation) {
         }
     }
 
+    /** Gets the player's room, used for room tracker */
     fun getCurrentRoom(): String {
         if (dead) return "Dead"
         if (LocationUtils.inBoss) return "Boss"
