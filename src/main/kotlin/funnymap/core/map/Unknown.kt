@@ -2,4 +2,7 @@ package funnymap.core.map
 
 import java.awt.Color
 
-class Unknown(x: Int, z: Int, override val color: Color = Color(255, 255, 255, 0)) : Tile(x, z)
+class Unknown(override val x: Int, override val z: Int) : Tile {
+    override val color: Color = Color(0, 0, 0, 0)
+    override var state: RoomState = RoomState.UNDISCOVERED
+}

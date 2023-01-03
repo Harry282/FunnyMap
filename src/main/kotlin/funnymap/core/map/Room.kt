@@ -4,12 +4,11 @@ import funnymap.FunnyMap.Companion.config
 import funnymap.core.RoomData
 import java.awt.Color
 
-class Room(x: Int, z: Int, var data: RoomData) : Tile(x, z) {
-
+class Room(override val x: Int, override val z: Int, var data: RoomData) : Tile {
     var core = 0
     var hasMimic = false
     var isSeparator = false
-
+    override var state: RoomState = RoomState.UNDISCOVERED
     override val color: Color
         get() = when (data.type) {
             RoomType.BLOOD -> config.colorBlood

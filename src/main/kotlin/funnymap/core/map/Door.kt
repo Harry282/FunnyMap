@@ -3,11 +3,10 @@ package funnymap.core.map
 import funnymap.FunnyMap.Companion.config
 import java.awt.Color
 
-class Door(x: Int, z: Int) : Tile(x, z) {
-
+class Door(override val x: Int, override val z: Int) : Tile {
     var type = DoorType.NONE
     var opened = false
-
+    override var state: RoomState = RoomState.UNDISCOVERED
     override val color: Color
         get() = when (this.type) {
             DoorType.BLOOD -> config.colorBloodDoor
