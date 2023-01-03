@@ -164,8 +164,8 @@ object MapRender {
 
         val connectorSize = mapRoomSize shr 2
         val checkmarkSize = when (config.mapCheckmark) {
-            1 -> 8 // default
-            else -> 10 // neu
+            1 -> 8.0 // default
+            else -> 10.0 // neu
         }
 
         for (y in 0..10 step 2) {
@@ -184,7 +184,7 @@ object MapRender {
                             GlStateManager.color(255f, 255f, 255f, 255f)
                             mc.textureManager.bindTexture(it)
 
-                            RenderUtils.drawTexturedModalRect(
+                            RenderUtils.drawTexturedQuad(
                                 xOffset + (mapRoomSize - checkmarkSize) / 2,
                                 yOffset + (mapRoomSize - checkmarkSize) / 2,
                                 checkmarkSize,
