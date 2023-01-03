@@ -77,7 +77,7 @@ object PlayerTracker {
                         if (players.size == 1) {
                             "§6${room.name}"
                         } else {
-                            "§6${room.name} §7with ${players.joinToString(separator = "§r, ")}"
+                            "§6${room.name} §7with ${players.filter { it != name }.joinToString(separator = "§r, ")}"
                         }
                     }
                 )))
