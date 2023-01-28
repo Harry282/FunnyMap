@@ -30,6 +30,7 @@ object RenderUtils {
 
     private fun postDraw() {
         GlStateManager.disableBlend()
+        GlStateManager.enableDepth()
         GlStateManager.enableTexture2D()
     }
 
