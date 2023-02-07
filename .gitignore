@@ -19,9 +19,12 @@ classes
 build
 .gradle
 
-#Netbeans
+# netbeans
 .nb-gradle
 .nb-gradle-properties
+
+# vscode
+.vscode
 
 # other
 run

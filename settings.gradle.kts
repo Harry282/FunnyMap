@@ -14,3 +14,6 @@ pluginManagement {
         }
     }
 }
+
+val modName: String by settings
+rootProject.name = modName
