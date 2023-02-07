@@ -1,6 +1,5 @@
 package funnymap.features.dungeon
 
-import funnymap.FunnyMap.Companion.extras
 import funnymap.FunnyMap.Companion.scope
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.Room
@@ -56,7 +55,6 @@ object Dungeon {
     }
 
     fun reset() {
-        ExtrasDungeon.reset()
         Info.reset()
         dungeonTeammates.clear()
         PlayerTracker.roomClears.clear()

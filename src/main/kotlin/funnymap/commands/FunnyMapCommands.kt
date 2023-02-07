@@ -7,6 +7,7 @@ import funnymap.features.dungeon.Dungeon
 import funnymap.features.dungeon.DungeonScan
 import funnymap.features.dungeon.ScanUtils
 import funnymap.utils.Utils
+import gg.essential.universal.UChat
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.command.CommandBase
 import net.minecraft.command.ICommandSender

@@ -1,12 +1,9 @@
 package funnymap.features.dungeon
 
-import funnymap.FunnyMap
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.map.*
 import funnymap.features.dungeon.DungeonScan.scan
-import funnymap.features.extras.ExtrasDungeon
-import funnymap.features.extras.ExtrasScan
 import funnymap.utils.LocationUtils.dungeonFloor
 import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
