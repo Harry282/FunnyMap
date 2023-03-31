@@ -2,7 +2,7 @@
   "minVersion": "0.6",
   "compatibilityLevel": "JAVA_8",
   "package": "funnymap.mixins",
-  "refmap": "mixins.funnymap.refmap.json",
+  "refmap": "mixins.${modid}.refmap.json",
   "client": [
     "MixinModList",
     "MixinNetworkManager"

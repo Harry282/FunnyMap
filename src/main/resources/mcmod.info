@@ -1,7 +1,7 @@
 [
   {
-    "modid": "funnymap",
-    "name": "Funny Map",
+    "modid": "${modid}",
+    "name": "${modname}",
     "description": "Dungeon map mod for Hypixel Skyblock. Open settings with `/fmap`. Big thanks to IllegalMap by UnclaimedBloom6.",
     "version": "${version}",
     "mcversion": "${mcversion}",
