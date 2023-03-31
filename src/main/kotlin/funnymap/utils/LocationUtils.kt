@@ -39,8 +39,7 @@ object LocationUtils {
             inDungeons = true
             dungeonFloor = 7
         } else {
-            inSkyblock = onHypixel && mc.theWorld.scoreboard?.getObjectiveInDisplaySlot(1)
-                ?.let { ScoreboardUtils.cleanSB(it.displayName).contains("SKYBLOCK") } ?: false
+            inSkyblock = onHypixel && mc.theWorld.scoreboard?.getObjectiveInDisplaySlot(1)?.name == "SBScoreboard"
 
             if (!inDungeons) {
                 val line = sidebarLines.find {
