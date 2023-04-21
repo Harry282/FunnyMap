@@ -29,6 +29,8 @@ object MapRender {
     private val defaultWhite = ResourceLocation("funnymap", "default/white_check.png")
     private val defaultCross = ResourceLocation("funnymap", "default/cross.png")
 
+    var dynamicRotation = 0f
+
     @SubscribeEvent
     fun onOverlay(event: RenderGameOverlayEvent.Pre) {
         if (event.type != RenderGameOverlayEvent.ElementType.ALL || !inDungeons || !config.mapEnabled) return
@@ -59,6 +61,8 @@ object MapRender {
         if (config.mapRotate) {
             GlStateManager.pushMatrix()
             setupRotate()
+        } else if (config.mapDynamicRotate) {
+            GlStateManager.rotate(dynamicRotation, 0f, 0f ,1f)
         }
 
         renderRooms()
@@ -68,6 +72,8 @@ object MapRender {
         if (config.mapRotate) {
             GL11.glDisable(GL11.GL_SCISSOR_TEST)
             GlStateManager.popMatrix()
+        } else if (config.mapDynamicRotate) {
+            GlStateManager.rotate(-dynamicRotation, 0f, 0f ,1f)
         }
 
         if (config.mapShowRunInformation) {

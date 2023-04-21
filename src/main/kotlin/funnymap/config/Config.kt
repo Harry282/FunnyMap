@@ -37,6 +37,15 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var mapCenter = false
 
     @Property(
+        name = "Dynamic Rotate",
+        type = PropertyType.SWITCH,
+        description = "Keeps the entrance room at the bottom. Does not work with rotate map.",
+        category = "Map",
+        subcategory = "Toggle"
+    )
+    var mapDynamicRotate = false
+
+    @Property(
         name = "Hide In Boss",
         type = PropertyType.SWITCH,
         description = "Hides the map in boss.",

@@ -106,6 +106,12 @@ object DungeonScan {
                         Dungeon.Info.cryptCount += data.crypts
                         Dungeon.Info.secretCount += data.secrets
                         when (data.type) {
+                            RoomType.ENTRANCE -> MapRender.dynamicRotation = when {
+                                row == 0 -> 180f
+                                column == 0 -> -90f
+                                column > row -> 90f
+                                else -> 0f
+                            }
                             RoomType.TRAP -> Dungeon.Info.trapType = data.name.split(" ")[0]
                             RoomType.PUZZLE -> Dungeon.Info.puzzles.add(data.name)
                             else -> {}
