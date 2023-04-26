@@ -36,9 +36,15 @@ object MapUtils {
         val (start, size) = findEntranceCorner()
         if (size.equalsOneOf(16, 18)) {
             mapRoomSize = size
-            val startX = start and 127
-            val startZ = start shr 7
-            startCorner = Pair(startX % (mapRoomSize + 4), startZ % (mapRoomSize + 4))
+            startCorner = when (LocationUtils.dungeonFloor) {
+                1 -> Pair(22, 11)
+                2, 3 -> Pair(11, 11)
+                else -> {
+                    val startX = start and 127
+                    val startZ = start shr 7
+                    Pair(startX % (mapRoomSize + 4), startZ % (mapRoomSize + 4))
+                }
+            }
             coordMultiplier = (mapRoomSize + 4.0) / DungeonScan.roomSize
             return true
         }
