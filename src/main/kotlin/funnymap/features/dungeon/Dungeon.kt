@@ -6,6 +6,7 @@ import funnymap.core.map.Room
 import funnymap.core.map.Tile
 import funnymap.core.map.Unknown
 import funnymap.events.ChatEvent
+import funnymap.utils.LocationUtils.currentRoom
 import funnymap.utils.LocationUtils.inDungeons
 import funnymap.utils.MapUtils
 import funnymap.utils.Utils
@@ -13,6 +14,7 @@ import kotlinx.coroutines.launch
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
+import java.util.regex.Pattern
 
 object Dungeon {
 
@@ -39,12 +41,28 @@ object Dungeon {
 
     @SubscribeEvent
     fun onChatPacket(event: ChatEvent) {
-        if (event.packet.type.toInt() == 2 || !inDungeons) return
-        when (event.text) {
-            "Dungeon starts in 4 seconds.", "Dungeon starts in 4 seconds. Get ready!" -> MapUpdate.preloadHeads()
-            "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> {
-                MapUpdate.getPlayers()
-                Info.startTime = System.currentTimeMillis()
+        if (!inDungeons) return
+        if (event.packet.type.toInt() == 2) {
+            if (currentRoom == null) return
+            val regex = Pattern.compile("(?<found>\\d)/(?<total>\\d) Secrets").matcher(event.text)
+            if (regex.find()) {
+                val secrets = regex.group("found").toInt()
+                val total = regex.group("total").toInt()
+                if (total != currentRoom?.data?.secrets) return
+                if (currentRoom?.secretsfound != secrets) {
+                    currentRoom?.secretsfound = secrets
+                    val room = Info.uniqueRooms.find { it.data.name == currentRoom?.data?.name } ?: return
+                    Info.uniqueRooms[Info.uniqueRooms.indexOf(room)].secretsfound = secrets
+                    ScoreCalc.calcScore()
+                }
+            }
+        } else {
+            when (event.text) {
+                "Dungeon starts in 4 seconds.", "Dungeon starts in 4 seconds. Get ready!" -> MapUpdate.preloadHeads()
+                "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> {
+                    MapUpdate.getPlayers()
+                    Info.startTime = System.currentTimeMillis()
+                }
             }
         }
     }
@@ -64,6 +82,7 @@ object Dungeon {
 
     object Info {
         // 6 x 6 room grid, 11 x 11 with connections
+        var rooms = 0
         val dungeonList = Array<Tile>(121) { Unknown(0, 0) }
         val uniqueRooms = mutableListOf<Room>()
         val puzzles = mutableListOf<String>()
@@ -76,6 +95,7 @@ object Dungeon {
 
         var startTime = 0L
         fun reset() {
+            rooms = 0
             dungeonList.fill(Unknown(0, 0))
             uniqueRooms.clear()
             puzzles.clear()

@@ -1,9 +1,17 @@
 package funnymap.config
 
 import funnymap.FunnyMap
+import funnymap.features.dungeon.Ghostblocks
 import funnymap.features.dungeon.MoveMapGui
+import funnymap.utils.LocationUtils
 import gg.essential.vigilance.Vigilant
 import gg.essential.vigilance.data.*
+import net.minecraft.client.gui.GuiChat
+import net.minecraft.client.gui.GuiControls
+import net.minecraft.event.ClickEvent
+import net.minecraft.event.HoverEvent
+import net.minecraft.util.ChatComponentText
+import net.minecraftforge.fml.client.FMLClientHandler
 import java.awt.Color
 import java.io.File
 
@@ -223,9 +231,19 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         type = PropertyType.SELECTOR,
         description = "Adds room checkmarks based on room state.",
         category = "Rooms",
-        options = ["None", "Default", "NEU"]
+        options = ["None", "Default", "NEU", "Triangle"]
     )
     var mapCheckmark = 1
+
+    @Property(
+        name = "Triangle Checkmark Scale",
+        type = PropertyType.DECIMAL_SLIDER,
+        description = "How large the triangle room state indicator should be.",
+        category = "Rooms",
+        minF = -0.5f,
+        maxF = 2f
+    )
+    var triangleScale = 1f
 
     @Property(
         name = "Room Opacity",
@@ -369,6 +387,52 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var colorTrap = Color(216, 127, 51)
 
     @Property(
+        name = "Triangle Discovered Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms"
+    )
+    var colorDiscovered = Color(0, 0, 0)
+
+    @Property(
+        name = "Triangle Failed Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms"
+    )
+    var colorFailed = Color(60, 60, 60)
+
+    @Property(
+        name = "Triangle Scale of Failed Rooms",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Colors",
+        subcategory = "Rooms",
+        minF =  1f,
+        maxF = 2.7f
+    )
+    var triangleFailedScale = 1f
+
+    @Property(
+        name = "Triangle Secret Start Gradient",
+        type = PropertyType.SELECTOR,
+        description = "At what color the secret gradient will start.",
+        category = "Colors",
+        subcategory = "Rooms",
+        options = ["red", "green", "blue"]
+    )
+    var colorTriangleStart = 0
+
+    @Property(
+        name = "Triangle Secret End Gradient",
+        type = PropertyType.SELECTOR,
+        description = "At what color the secrets found gradient will end and the color of completed rooms.",
+        category = "Colors",
+        subcategory = "Rooms",
+        options = ["red", "green", "blue"]
+    )
+    var colorTriangleEnd = 1
+
+    @Property(
         name = "Hypixel API Key",
         type = PropertyType.TEXT,
         category = "Other Features",
@@ -385,6 +449,266 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var teamInfo = false
 
     @Property(
+        name = "Send Mimic Found",
+        description = "Sends a message to party chat when mimic is found.",
+        type = PropertyType.SWITCH,
+        category = "Other Features"
+    )
+    var sendMimicFound = false
+
+    @Property(
+        name = "Mimic Message",
+        description = "Message to be sent when mimic is found.",
+        type = PropertyType.TEXT,
+        category = "Other Features"
+    )
+    var mimicMessage = "Mimic Killed!"
+
+    @Property(
+        name = "Show Score Calculation",
+        description = "Show Score estimate beneath map",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+    )
+    var scoreCalc = true
+
+    @Property(
+        name = "Minimum Secrets Required",
+        description = "Show Minimum amount of Secrets needed for score goal.",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+    )
+    var minSecrets = true
+
+    @Property(
+        name = "Deaths",
+        description = "Display Score lost through deaths",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+    )
+    var showDeaths = true
+
+    @Property(
+        name = "Score Messages",
+        description = "Display Notifications for 270/300 Score.",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+        subcategory = "Score Messages"
+    )
+    var scoreMessages = true
+
+    @Property(
+        name = "Score Notifications",
+        description = "How you will be notified for 270/300 score.",
+        type = PropertyType.SELECTOR,
+        category = "Score Calculation",
+        subcategory = "Score Messages",
+        options = ["None", "Title", "Chat message", "Both"]
+    )
+    var scoreNotifications = 1
+
+    @Property(
+        name = "Send Score Messages",
+        description = "Send score reached messages to party chat.",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+        subcategory = "Score Messages"
+    )
+    var sendScoreMessages = false
+
+    @Property(
+        name = "270 Score Message",
+        type = PropertyType.TEXT,
+        category = "Score Calculation",
+        subcategory = "Score Messages"
+    )
+    var lowerScoreMessage = "270 Score Reached!"
+
+    @Property(
+        name = "300 Score Message",
+        type = PropertyType.TEXT,
+        category = "Score Calculation",
+        subcategory = "Score Messages"
+
+    )
+    var higherScoreMessage = "300 Score Reached!"
+
+    @Property(
+        name = "Send Both Messages",
+        description = "By default only the max score of the floor will be sent.",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+        subcategory = "Score Messages"
+
+    )
+    var sendBothScores = false
+
+    @Property(
+        name = "Ghostblock toggle",
+        description = "Toggle all ghostblock features. Hold LCTRL -> ghost: override interactables / fake: place block in front of you",
+        type = PropertyType.SWITCH,
+        category = "Ghostblocks"
+    )
+    var GBToggle = false
+
+    @Property(
+        name = "Keybindings",
+        description = "Open Minecraft keybindings gui.",
+        type = PropertyType.BUTTON,
+        category = "Ghostblocks",
+        placeholder = "View"
+    )
+    fun onClick() {
+        Thread{FunnyMap.mc.addScheduledTask{FunnyMap.mc.displayGuiScreen(GuiControls(this.gui(), FunnyMap.mc.gameSettings))}}.start()
+    }
+
+    @Property(
+        name = "Single Ghostblock",
+        description = "Create a single // multiple ghostblocks - hold LALT -> always single",
+        type = PropertyType.SWITCH,
+        category = "Ghostblocks"
+    )
+    var GBSingle = true
+
+    @Property(
+        name = "Ghostblock Pickaxe",
+        description = "Create ghostblocks when using a pickaxe.",
+        type = PropertyType.SWITCH,
+        category = "Ghostblocks"
+    )
+    var GBPickaxe = false
+
+    @Property(
+        name = "Ghostblock Leap",
+        description = "Create ghostblocks when holding a leap.",
+        type = PropertyType.SWITCH,
+        category = "Ghostblocks"
+    )
+    var GBLeap = false
+
+    @Property(
+        name = "Fake Block",
+        description = "Block State of fake blocks.",
+        type = PropertyType.SELECTOR,
+        category = "Ghostblocks",
+        options = ["Air","Stone","Grass Block","Dirt","Cobblestone","Wood Planks","Saplings","Bedrock","Water",
+            "Stationary water","Lava","Stationary lava","Sand","Gravel","Gold Ore","Iron Ore","Coal Ore","Wood",
+            "Leaves","Sponge","Glass","Lapis Lazuli Ore","Lapis Lazuli Block","Dispenser","Sandstone","Note Block",
+            "Bed","Powered Rail","Detector Rail","Sticky Piston","Cobweb","Grass","Dead Bush","Piston","Piston Extension",
+            "Wool","Block moved by Piston","Dandelion","Poppy","Brown Mushroom","Red Mushroom","Block of Gold",
+            "Block of Iron","Double Stone Slab","Stone Slab","Bricks","TNT","Bookshelf","Moss Stone","Obsidian",
+            "Torch","Fire","Monster Spawner","Oak Wood Stairs","Chest","Redstone Wire","Diamond Ore","Block of Diamond",
+            "Crafting Table","Wheat","Farmland","Furnace","Burning Furnace","Sign Post","Wooden Door","Ladders","Rail",
+            "Cobblestone Stairs","Wall Sign","Lever","Stone Pressure Plate","Iron Door","Wooden Pressure Plate",
+            "Redstone Ore","Glowing Redstone Ore","Redstone Torch (inactive)","Redstone Torch (active)","Stone Button",
+            "Snow","Ice","Snow","Cactus","Clay","Sugar Cane","Jukebox","Fence","Pumpkin","Netherrack","Soul Sand",
+            "Glowstone","Nether Portal","Jack 'o' Lantern","Cake Block","Redstone Repeater (inactive)",
+            "Redstone Repeater (active)","Stained Glass","Trapdoor","Monster Egg","Stone Bricks","Huge Brown Mushroom",
+            "Huge Red Mushroom","Iron Bars","Glass Pane","Melon","Pumpkin Stem","Melon Stem","Vines","Fence Gate","Brick Stairs",
+            "Stone Brick Stairs","Mycelium","Lily Pad","Nether Brick","Nether Brick Fence","Nether Brick Stairs","Nether Wart",
+            "Enchantment Table","Brewing Stand","Cauldron","End Portal","End Portal Block","End Stone","Dragon Egg",
+            "Redstone Lamp (inactive)","Redstone Lamp (active)","Wooden Double Slab","Wooden Slab","Cocoa","Sandstone Stairs",
+            "Emerald Ore","Ender Chest","Tripwire Hook","Tripwire","Block of Emerald","Spruce Wood Stairs","Birch Wood Stairs",
+            "Jungle Wood Stairs","Command Block","Beacon","Cobblestone Wall","Flower Pot","Carrots","Potatoes","Wooden Button",
+            "Mob Head","Anvil","Trapped Chest","Weighted Pressure Plate (Light)","Weighted Pressure Plate (Heavy)",
+            "Redstone Comparator (both states)","Redstone Comparator (both states)","Daylight Sensor","Block of Redstone",
+            "Nether Quartz Ore","Hopper","Block of Quartz","Quartz Stairs","Activator Rail","Dropper","Stained Clay",
+            "Stained Glass Pane","(Acacia/Dark Oak)","(Acacia/Dark Oak)","Acacia Wood Stairs","Dark Oak Wood Stairs","Slime Block",
+            "Barrier","Iron Trapdoor","Prismarine","Lantern","Hay Block","Carpet","Hardened Clay","Block of Coal","Packed Ice","Large Flowers"]
+    )
+    var GBFakeState = 95
+
+    @Property(
+        name = "Fake Block Color",
+        description = "Color of certain fake blocks.",
+        type = PropertyType.SELECTOR,
+        category = "Ghostblocks",
+        options = ["black", "blue", "brown", "cyan", "gray", "green", "light blue", "lime", "magenta", "orange", "pink", "purple", "red", "white", "yellow"],
+    )
+    var GBFakeStateColor = 4
+
+    @Property(
+        name = "Save Ghostblocks",
+        description = "Saves ghostblocks to file.",
+        type = PropertyType.SWITCH,
+        category = "Ghostblocks"
+    )
+    var GBSave = true
+
+    @Property(
+        name = "Save Fake Blocks",
+        description = "Saves fake blocks to file.",
+        type = PropertyType.SWITCH,
+        category = "Ghostblocks"
+    )
+    var GBFakeSave = true
+
+
+    @Property(
+        name = "Load Ghostblocks",
+        description = "Load saved ghostblocks from files.",
+        type = PropertyType.SWITCH,
+        category = "Ghostblocks"
+    )
+    var loadGBs = true
+
+    @Property(
+        name = "Cancel Packets",
+        description = "Cancels packets that would override ghostblocks. May be performance intensive.",
+        type = PropertyType.SWITCH,
+        category = "Ghostblocks"
+    )
+    var cancelPackets = true
+
+    @Property(
+        name = "Cancel Packets Chunk Range",
+        description = "Range in chunks to the player where chunk updates will be overriden in boss.",
+        type = PropertyType.SLIDER,
+        category = "Ghostblocks",
+        hidden = true
+    )
+    var cancelPacketsRange = 2
+
+    @Property(
+        name = "Right click restore",
+        description = "Right click on blocks to 'restore' them, if cancel packets is enabled",
+        type = PropertyType.SELECTOR,
+        category = "Ghostblocks",
+        options = ["Off", "On", "In Trap"]
+    )
+    var rightClickReset = 0
+
+    @Property(
+        name = "Deletion Radius",
+        description = "Withing what radius of the player saved blocks will be deleted on keybinding use.",
+        type = PropertyType.SLIDER,
+        category = "Ghostblocks",
+        min = 0,
+        max = 30
+    )
+    var GBDelRadius = 5
+
+    @Property(
+        name = "Delete ghostblocks",
+        description = "Delete all ghostblocks in this room.",
+        type = PropertyType.BUTTON,
+        category = "Ghostblocks",
+        placeholder = "Delete"
+    )
+    fun deleteRoom() {
+        Ghostblocks.deleteStatus = LocationUtils.currentRoom ?: return
+        val yes = ChatComponentText("§4[YES]")
+        yes.setChatStyle(yes.chatStyle.setChatClickEvent(ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fmap delete yes"))
+            .setChatHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, ChatComponentText("§4confirm"))))
+        val no = ChatComponentText("§2[NO]")
+        no.setChatStyle(no.chatStyle.setChatClickEvent(ClickEvent(ClickEvent.Action.RUN_COMMAND, "/fmap delete no"))
+            .setChatHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, ChatComponentText("§2cancel"))))
+
+        FunnyMap.mc.thePlayer.addChatMessage(ChatComponentText("${FunnyMap.CHAT_PREFIX} Delete all ${Ghostblocks.currentAmount} ghostblocks in this room: ${Ghostblocks.deleteStatus?.data?.name}\n").appendSibling(yes).appendSibling(ChatComponentText("   ")).appendSibling(no))
+        FMLClientHandler.instance().client.displayGuiScreen(GuiChat())
+    }
+
+    @Property(
         name = "Force Skyblock",
         type = PropertyType.SWITCH,
         category = "Debug"
@@ -396,16 +720,21 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         setCategoryDescription(
             "Map", "&f&l Funny Map\n&7Big thanks to &lIllegalMap&r&7 by UnclaimedBloom"
         )
+        addDependency("mimicMessage", "sendMimicFound")
+        listOf("scoreNotifications", "sendScoreMessages", "lowerScoreMessage", "higherScoreMessage", "sendBothScores").forEach { addDependency(it, "scoreMessages") }
+
+        addDependency("rightClickReset", "cancelPackets")
+        //todo: !Ghostblocks.colorableIDs.contains(GBFakeState) -> hide GBFakeStateColor
     }
 
     private object CategorySorting : SortingBehavior() {
 
         private val configCategories = listOf(
-            "Map", "Rooms", "Colors", "Other Features", "Debug"
+            "Map", "Rooms", "Colors", "Other Features", "Score Calculation", "Ghostblocks", "Debug"
         )
 
         private val configSubcategories = listOf(
-            "Toggle", "Scanning", "Size", "Render"
+            "Toggle", "Scanning", "Size", "Render", "Score Messages"
         )
 
         override fun getCategoryComparator(): Comparator<in Category> = compareBy { configCategories.indexOf(it.name) }

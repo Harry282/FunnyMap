@@ -14,6 +14,12 @@ object Utils {
 
     fun modMessage(message: String) = UChat.chat("$CHAT_PREFIX $message")
 
+    fun showClientTitle(title: String, subtitle: String) {
+        mc.ingameGUI.displayTitle(null, null, 2, 40, 2)
+        mc.ingameGUI.displayTitle(null, subtitle, -1, -1, -1)
+        mc.ingameGUI.displayTitle(title, null, -1, -1, -1)
+    }
+
     val ItemStack.itemID: String
         get() = this.getSubCompound("ExtraAttributes", false)?.getString("id") ?: ""
 

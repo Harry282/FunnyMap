@@ -35,6 +35,7 @@ data class DungeonPlayer(val skin: ResourceLocation) {
     var uuid = ""
 
     /** Stats for compiling player tracker information */
+    var spiritPet = false
     var startingSecrets = 0
     var lastRoom = ""
     var lastTime = 0L
@@ -47,6 +48,7 @@ data class DungeonPlayer(val skin: ResourceLocation) {
         playerLoaded = true
         scope.launch(Dispatchers.IO) {
             startingSecrets = APIUtils.getSecrets(uuid)
+            spiritPet = APIUtils.getSpirit(uuid)
         }
     }
 

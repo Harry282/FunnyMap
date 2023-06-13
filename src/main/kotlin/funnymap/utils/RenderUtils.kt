@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.WorldRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import org.lwjgl.opengl.GL11.GL_QUADS
+import org.lwjgl.opengl.GL11.GL_TRIANGLES
 import java.awt.Color
 
 object RenderUtils {
@@ -48,6 +49,21 @@ object RenderUtils {
         worldRenderer.pos(x + width, y, 0.0).tex(1.0, 0.0).endVertex()
         worldRenderer.pos(x, y, 0.0).tex(0.0, 0.0).endVertex()
         tessellator.draw()
+    }
+
+    fun renderTriangle(x: Double, y: Double, w: Double, h: Double, color: Color) {
+        if (color.alpha == 0) return
+        preDraw()
+        GlStateManager.color(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
+
+        worldRenderer.begin(GL_TRIANGLES, DefaultVertexFormats.POSITION)
+        worldRenderer.pos(x, y + h, 0.0).endVertex()
+        worldRenderer.pos(x + w, y, 0.0).endVertex()
+        worldRenderer.pos(x, y, 0.0).endVertex()
+
+        tessellator.draw()
+
+        postDraw()
     }
 
     fun renderRect(x: Double, y: Double, w: Double, h: Double, color: Color) {
@@ -114,9 +130,9 @@ object RenderUtils {
             }
 
             // Handle player names
-            if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
+            if (name != mc.thePlayer.name && (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
                     "SPIRIT_LEAP", "INFINITE_SPIRIT_LEAP", "HAUNT_ABILITY"
-                )
+                ))
             ) {
                 GlStateManager.pushMatrix()
                 GlStateManager.scale(0.8, 0.8, 1.0)
@@ -152,5 +168,13 @@ object RenderUtils {
             e.printStackTrace()
         }
         GlStateManager.popMatrix()
+    }
+
+    fun setColor(color: Color, index: Int, value: Int) : Color {
+        return when (index) {
+            0 -> Color(value, color.green, color.blue, color.alpha)
+            1 -> Color(color.red, value, color.blue, color.alpha)
+            else -> Color(color.red, color.green, value, color.alpha)
+        }
     }
 }

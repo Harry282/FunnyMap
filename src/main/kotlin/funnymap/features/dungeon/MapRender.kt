@@ -19,6 +19,9 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import org.lwjgl.opengl.GL11
 import java.awt.Color
+import kotlin.math.max
+import kotlin.math.min
+import kotlin.math.round
 
 object MapRender {
 
@@ -43,15 +46,16 @@ object MapRender {
         GlStateManager.translate(config.mapX.toFloat(), config.mapY.toFloat(), 0f)
         GlStateManager.scale(config.mapScale, config.mapScale, 1f)
 
+        val height = (if (config.mapShowRunInformation) if (config.scoreCalc) 148.0 else 138.0 else 128.0)
         RenderUtils.renderRect(
-            0.0, 0.0, 128.0, if (config.mapShowRunInformation) 138.0 else 128.0, config.mapBackground
+            0.0, 0.0, 128.0, height, config.mapBackground
         )
 
         RenderUtils.renderRectBorder(
             0.0,
             0.0,
             128.0,
-            if (config.mapShowRunInformation) 138.0 else 128.0,
+            height,
             config.mapBorderWidth.toDouble(),
             config.mapBorder
         )
@@ -63,7 +67,7 @@ object MapRender {
 
         renderRooms()
         renderText()
-        renderPlayerHeads()
+        if (!inBoss) renderPlayerHeads()
 
         if (config.mapRotate) {
             GL11.glDisable(GL11.GL_SCISSOR_TEST)
@@ -111,11 +115,11 @@ object MapRender {
                 val tile = Dungeon.Info.dungeonList[y * 11 + x]
                 if (tile is Door && tile.type == DoorType.NONE) continue
 
-                val xOffset = (x shr 1) * (mapRoomSize + connectorSize)
-                val yOffset = (y shr 1) * (mapRoomSize + connectorSize)
-
                 val xEven = x and 1 == 0
                 val yEven = y and 1 == 0
+
+                val xOffset = (x shr 1) * (mapRoomSize + connectorSize)
+                val yOffset = (y shr 1) * (mapRoomSize + connectorSize)
 
                 val color = if (config.mapDarkenUndiscovered && tile.state == RoomState.UNDISCOVERED) {
                     tile.color.run {
@@ -174,23 +178,40 @@ object MapRender {
                 val tile = Dungeon.Info.dungeonList[y * 11 + x]
 
                 if (tile is Room && tile in Dungeon.Info.uniqueRooms) {
+                    val unique = Dungeon.Info.uniqueRooms.find { it.data.name == tile.data.name } //I did not want to search in dungeonList every time it updates secrets or gets LocationUtils.currentRoom
+                    if (unique != null) tile.secretsfound = unique.secretsfound
 
                     val xOffset = (x shr 1) * (mapRoomSize + connectorSize)
                     val yOffset = (y shr 1) * (mapRoomSize + connectorSize)
 
                     if (config.mapCheckmark != 0 && config.mapRoomSecrets != 2) {
-                        getCheckmark(tile.state, config.mapCheckmark)?.let {
-                            GlStateManager.enableAlpha()
-                            GlStateManager.color(255f, 255f, 255f, 255f)
-                            mc.textureManager.bindTexture(it)
+                        if (config.mapCheckmark == 3) {
+                            if (tile.data.type != RoomType.ENTRANCE) {
+                                val color: Color = when (tile.state) {
+                                    RoomState.UNDISCOVERED -> Color(0, 0, 0, 0)
+                                    RoomState.DISCOVERED -> config.colorDiscovered
+                                    RoomState.CLEARED -> getSecretGradient(tile)
+                                    RoomState.GREEN -> RenderUtils.setColor(Color.BLACK, config.colorTriangleEnd, 255)
+                                    RoomState.FAILED -> config.colorFailed
+                                }
+                                var size = (config.triangleScale * 6f).toDouble()
+                                if (tile.state == RoomState.FAILED) size = config.triangleFailedScale * 6.0
+                                RenderUtils.renderTriangle(xOffset.toDouble(), yOffset.toDouble(), size, size, color)
+                            }
+                        } else {
+                            getCheckmark(tile.state, config.mapCheckmark)?.let {
+                                GlStateManager.enableAlpha()
+                                GlStateManager.color(255f, 255f, 255f, 255f)
+                                mc.textureManager.bindTexture(it)
 
-                            RenderUtils.drawTexturedQuad(
-                                xOffset + (mapRoomSize - checkmarkSize) / 2,
-                                yOffset + (mapRoomSize - checkmarkSize) / 2,
-                                checkmarkSize,
-                                checkmarkSize
-                            )
-                            GlStateManager.disableAlpha()
+                                RenderUtils.drawTexturedQuad(
+                                    xOffset + (mapRoomSize - checkmarkSize) / 2,
+                                    yOffset + (mapRoomSize - checkmarkSize) / 2,
+                                    checkmarkSize,
+                                    checkmarkSize
+                                )
+                                GlStateManager.disableAlpha()
+                            }
                         }
                     }
 
@@ -200,13 +221,17 @@ object MapRender {
                         else -> 0xaaaaaa
                     } else 0xffffff
 
+                    var foundSecrets = tile.secretsfound.toString()
+                    if (foundSecrets != "0") foundSecrets += "/"
+                    else foundSecrets = ""
+
                     if (config.mapRoomSecrets == 2) {
                         GlStateManager.pushMatrix()
                         GlStateManager.translate(
                             xOffset + (mapRoomSize shr 1).toFloat(), yOffset + 2 + (mapRoomSize shr 1).toFloat(), 0f
                         )
                         GlStateManager.scale(2f, 2f, 1f)
-                        RenderUtils.renderCenteredText(listOf(tile.data.secrets.toString()), 0, 0, color)
+                        RenderUtils.renderCenteredText(listOf(foundSecrets + tile.data.secrets.toString()), 0, 0, color)
                         GlStateManager.popMatrix()
                     }
 
@@ -222,7 +247,7 @@ object MapRender {
                         name.addAll(tile.data.name.split(" "))
                     }
                     if (tile.data.type == RoomType.NORMAL && config.mapRoomSecrets == 1) {
-                        name.add(tile.data.secrets.toString())
+                        name.add(foundSecrets + tile.data.secrets.toString())
                     }
                     // Offset + half of roomsize
                     RenderUtils.renderCenteredText(
@@ -235,6 +260,14 @@ object MapRender {
             }
         }
         GlStateManager.popMatrix()
+    }
+
+    private fun getSecretGradient(tile: Room) : Color {
+        if (tile.data.secrets == 0) return Color(0, 255, 0)
+        val foundPercentage = ((tile.secretsfound.toFloat() / tile.data.secrets.toFloat()) * 100f).coerceIn(0f, 100f) //some rooms display e.g. 2/1
+        val first = min(255f, round(foundPercentage * 2f * 2.55f)).toInt() //first 50%
+        val second = 255 - max(0f, round((foundPercentage - 50) * 2f * 2.55f)).toInt() //last 50%
+        return RenderUtils.setColor(RenderUtils.setColor(Color(0,0,0), config.colorTriangleStart, second), config.colorTriangleEnd, first)
     }
 
     private fun getCheckmark(state: RoomState, type: Int): ResourceLocation? {
@@ -304,13 +337,22 @@ object MapRender {
         GlStateManager.translate(0f, 128f, 0f)
         GlStateManager.scale(0.66, 0.66, 1.0)
         mc.fontRendererObj.drawString(
-            "Secrets: ${RunInformation.secretCount}/${Dungeon.Info.secretCount}",
+            "Secrets: ${RunInformation.secretsFound}/${Dungeon.Info.secretCount}",
             5,
             0,
             0xffffff
         )
         mc.fontRendererObj.drawString("Crypts: ${RunInformation.cryptsCount}", 85, 0, 0xffffff)
         mc.fontRendererObj.drawString("Deaths: ${RunInformation.deathCount}", 140, 0, 0xffffff)
+        if (config.scoreCalc) {
+            if (config.minSecrets) {
+                val text = "Needed: ${ScoreCalc.minSecrets}" //56
+                mc.fontRendererObj.drawString(text, 42, 15, 0xffffff)
+            }
+            val scoreColor = if (ScoreCalc.score >= 300 || (!ScoreCalc.higherFloor && ScoreCalc.score >= 270)) 0x55ff55 else 0xffffff
+            val text = "Score: ${ScoreCalc.score}" //50
+            mc.fontRendererObj.drawString(text, if (config.minSecrets) 105 else 75, 15, scoreColor)
+        }
         GlStateManager.popMatrix()
     }
 }

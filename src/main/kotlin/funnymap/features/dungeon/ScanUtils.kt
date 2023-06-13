@@ -6,11 +6,14 @@ import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.RoomData
+import funnymap.core.map.Direction
 import funnymap.core.map.Room
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.block.Block
 import net.minecraft.util.BlockPos
 import net.minecraft.util.ResourceLocation
+import java.awt.Point
+import java.util.TreeSet
 import kotlin.math.roundToInt
 
 object ScanUtils {
@@ -43,8 +46,11 @@ object ScanUtils {
     }
 
     fun getRoomFromPos(pos: BlockPos): Room? {
-        val x = ((pos.x - DungeonScan.startX + 15) shr 5)
-        val z = ((pos.z - DungeonScan.startZ + 15) shr 5)
+        return getRoomFromPos(Pair(pos.x, pos.z))
+    }
+    fun getRoomFromPos(pos: Pair<Int, Int>): Room? {
+        val x = ((pos.first - DungeonScan.startX + 15) shr 5)
+        val z = ((pos.second - DungeonScan.startZ + 15) shr 5)
         val room = Dungeon.Info.dungeonList.getOrNull(x * 2 + z * 22)
         return if (room is Room) room else null
     }
@@ -58,5 +64,55 @@ object ScanUtils {
             }
         }
         return blocks.joinToString("").hashCode()
+    }
+
+    fun getPosCore(direction: Direction?, x: Int, z: Int, distance: Int): Int {
+        val rtp = Point(x, z)
+        when (direction) {
+            Direction.NW -> rtp.translate(-distance, -distance)
+            Direction.NE -> rtp.translate(distance, -distance)
+            Direction.SE -> rtp.translate(distance, distance)
+            Direction.SW -> rtp.translate(-distance, distance)
+            else -> { return 0 }
+        }
+        return getCore(rtp.x, rtp.y)
+    }
+
+    fun getDirection(x: Int, z: Int, data: RoomData, roomCore: Int): Direction? {
+        if (data.dirCores != null) {
+            val distance = data.distance?: 4
+            for (direction in Direction.values()) {
+                val core = getPosCore(direction, x, z, distance)
+                if (data.dirCores.contains(core) && core != 0) {
+                    val index = data.dirCores.indexOf(core)
+                    if (!data.strict || data.cores.indexOf(roomCore) == index) {
+                        if (data.turn != null) return Direction.values()[(Direction.values().indexOf(direction) + data.turn[index]) % 4]
+                        return direction
+                    }
+                }
+            }
+        }
+        return null
+    }
+
+    fun getCorner(direction: Direction?, name: String) : Point? { //does not check for amount of segments
+        val xSet: TreeSet<Int> = TreeSet()
+        val zSet: TreeSet<Int> = TreeSet()
+        Dungeon.Info.dungeonList.forEach {
+            if (it is Room) {
+                if (it.data.name == name) {
+                    xSet.add(it.x)
+                    zSet.add(it.z)
+                }
+            }
+        }
+        if (xSet.size < 1) return null
+        return when (direction) {
+            Direction.NW -> Point(xSet.first() - 15, zSet.first() - 15)
+            Direction.NE -> Point(xSet.last() + 15, zSet.first() - 15)
+            Direction.SE -> Point(xSet.last() + 15, zSet.last() + 15)
+            Direction.SW -> Point(xSet.first() - 15, zSet.last() + 15)
+            else -> null
+        }
     }
 }

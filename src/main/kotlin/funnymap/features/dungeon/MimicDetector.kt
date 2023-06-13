@@ -6,23 +6,24 @@ import funnymap.features.dungeon.ScanUtils.getRoomFromPos
 import net.minecraft.tileentity.TileEntityChest
 
 object MimicDetector {
-    fun findMimic(): String? {
-        val mimicRoom = getMimicRoom()
-        if (mimicRoom == "") return null
+    var roomName: String? = null
+
+    fun findMimic() {
+        if (roomName != null) return
+        roomName = getMimicRoom() ?: return
         Dungeon.Info.dungeonList.forEach {
-            if (it is Room && it.data.name == mimicRoom) {
+            if (it is Room && it.data.name == roomName) {
                 it.hasMimic = true
             }
         }
-        return mimicRoom
     }
 
-    private fun getMimicRoom(): String {
+    private fun getMimicRoom(): String? {
         mc.theWorld.loadedTileEntityList.filter { it is TileEntityChest && it.chestType == 1 }
             .groupingBy { getRoomFromPos(it.pos)?.data?.name }.eachCount().forEach { (room, trappedChests) ->
-                Dungeon.Info.uniqueRooms.find { it.data.name == room && it.data.trappedChests < trappedChests }
+                Dungeon.Info.uniqueRooms.toList().find { it.data.name == room && it.data.trappedChests < trappedChests }
                     ?.let { return it.data.name }
             }
-        return ""
+        return null
     }
 }

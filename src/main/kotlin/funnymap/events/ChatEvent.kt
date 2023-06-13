@@ -6,4 +6,5 @@ import net.minecraftforge.fml.common.eventhandler.Event
 
 class ChatEvent(val packet: S02PacketChat) : Event() {
     val text: String by lazy { StringUtils.stripControlCodes(packet.chatComponent.unformattedText) }
+    val formatted: String = packet.chatComponent.formattedText
 }

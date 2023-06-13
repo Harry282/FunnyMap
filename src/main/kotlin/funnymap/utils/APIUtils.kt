@@ -4,6 +4,7 @@ import com.google.gson.JsonParser
 import funnymap.FunnyMap.Companion.config
 import funnymap.events.ChatEvent
 import funnymap.features.dungeon.PlayerTracker
+import funnymap.features.dungeon.ScoreCalc
 import funnymap.utils.LocationUtils.inDungeons
 import net.minecraft.event.ClickEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -39,6 +40,22 @@ object APIUtils {
         }
     }
 
+    fun getMayor() {
+        val response = fetch("https://api.hypixel.net/resources/skyblock/election?key=${config.apiKey}")
+        val jsonObject = JsonParser().parse(response).asJsonObjectOrNull() ?: return
+        if (jsonObject.getAsJsonPrimitiveOrNull("success")?.asBoolean == true) {
+            jsonObject.getAsJsonObjectOrNull("mayor")?.let { mayor ->
+                if (mayor.get("name")?.asString == "Paul") {
+                    mayor.getAsJsonArray("perks")?.forEach { perk ->
+                        if (perk.asJsonObjectOrNull()?.get("name")?.asString == "EZPZ") {
+                            ScoreCalc.isPaul = true
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     fun getSecrets(uuid: String): Int {
         val response = fetch("https://api.hypixel.net/player?key=${config.apiKey}&uuid=${uuid}")
         val jsonObject = JsonParser().parse(response).asJsonObjectOrNull() ?: return 0
@@ -47,5 +64,23 @@ object APIUtils {
                 ?.getAsJsonPrimitiveOrNull("skyblock_treasure_hunter")?.asInt ?: return 0
         }
         return 0
+    }
+
+    fun getSpirit(id: String): Boolean {
+        val uuid = id.replace("-", "")
+        val response = fetch("https://api.hypixel.net/skyblock/profiles?key=${config.apiKey}&uuid=$uuid")
+        val jsonObject = JsonParser().parse(response).asJsonObjectOrNull() ?: return false
+        if (jsonObject.getAsJsonPrimitiveOrNull("success")?.asBoolean == true) {
+            jsonObject.getAsJsonArray("profiles")?.forEach { profile ->
+                profile.asJsonObjectOrNull()?.let {
+                    if (it.get("selected")?.asBoolean == true) {
+                        it.getAsJsonObjectOrNull("members")?.getAsJsonObjectOrNull(uuid)?.getAsJsonArray("pets")?.forEach {
+                            pet -> if(pet.asJsonObjectOrNull()?.get("type")?.asString.equals("SPIRIT")) return true
+                        }
+                    }
+                }
+            }
+        }
+        return false
     }
 }

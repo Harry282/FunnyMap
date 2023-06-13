@@ -5,8 +5,8 @@ import funnymap.FunnyMap.Companion.mc
 import funnymap.core.map.*
 import funnymap.features.dungeon.DungeonScan.scan
 import funnymap.utils.LocationUtils.dungeonFloor
+import funnymap.utils.LocationUtils.setCurrentRoom
 import funnymap.utils.Utils
-import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 
@@ -58,9 +58,11 @@ object DungeonScan {
                 }
             }
         }
+        setCurrentRoom()
 
         if (allChunksLoaded) {
             hasScanned = true
+            if (ScoreCalc.higherFloor) MimicDetector.findMimic()
 
             if (config.scanChatInfo) {
                 val lines = mutableListOf(
@@ -72,15 +74,10 @@ object DungeonScan {
                     "&7Total Crypts: &6${Dungeon.Info.cryptCount}",
                     "&7Total Secrets: &b${Dungeon.Info.secretCount}"
                 )
-                if (dungeonFloor.equalsOneOf(6, 7)) {
-                    MimicDetector.findMimic()?.let {
-                        lines.add("&7Mimic Room: &c$it")
-                    }
-                }
+                MimicDetector.roomName?.let { lines.add("&7Mimic Room: &c$it") }
                 Utils.modMessage(lines.joinToString(separator = "\n"))
             }
         }
-
         isScanning = false
     }
 
@@ -96,10 +93,11 @@ object DungeonScan {
             rowEven && columnEven -> {
                 val roomCore = ScanUtils.getCore(x, z)
                 Room(x, z, ScanUtils.getRoomData(roomCore) ?: return null).apply {
+                    Dungeon.Info.rooms++
                     core = roomCore
+                    direction = ScanUtils.getDirection(x, z, data, roomCore)
                     // Checks if a room with the same name has already been scanned.
                     val duplicateRoom = Dungeon.Info.uniqueRooms.firstOrNull { it.data.name == data.name }
-
                     if (duplicateRoom == null) {
                         // Adds room information if no duplicate was found
                         Dungeon.Info.uniqueRooms.add(this)
@@ -110,10 +108,13 @@ object DungeonScan {
                             RoomType.PUZZLE -> Dungeon.Info.puzzles.add(data.name)
                             else -> {}
                         }
-                    } else if (x < duplicateRoom.x || (x == duplicateRoom.x && z < duplicateRoom.z)) {
-                        // Ensures the room stored in uniqueRooms is the furthest south-east.
-                        Dungeon.Info.uniqueRooms.remove(duplicateRoom)
-                        Dungeon.Info.uniqueRooms.add(this)
+                    } else {
+                        if (direction == null) direction = duplicateRoom.direction
+                        if (x < duplicateRoom.x || (x == duplicateRoom.x && z < duplicateRoom.z)) {
+                            // Ensures the room stored in uniqueRooms is the furthest south-east.
+                            Dungeon.Info.uniqueRooms.remove(duplicateRoom)
+                            Dungeon.Info.uniqueRooms.add(this)
+                        }
                     }
                 }
             }

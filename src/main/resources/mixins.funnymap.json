@@ -5,6 +5,7 @@
   "refmap": "mixins.${modid}.refmap.json",
   "client": [
     "MixinModList",
+    "MixinNetHandlerPlayClient",
     "MixinNetworkManager"
   ]
 }

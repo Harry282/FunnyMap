@@ -100,6 +100,7 @@ object MapUpdate {
         val startX = MapUtils.startCorner.first + (MapUtils.mapRoomSize shr 1)
         val startZ = MapUtils.startCorner.second + (MapUtils.mapRoomSize shr 1)
         val increment = (MapUtils.mapRoomSize shr 1) + 2
+        var changed = false
 
         for (x in 0..10) {
             for (z in 0..10) {
@@ -129,11 +130,14 @@ object MapUpdate {
                 }
 
                 if (newState != room.state) {
+                    changed = true
                     PlayerTracker.roomStateChange(room, room.state, newState)
                     room.state = newState
+                    if (room is Room && newState == RoomState.GREEN) room.secretsfound = room.data.secrets
                 }
             }
         }
+        if (changed) ScoreCalc.calcScore()
     }
 
     fun updateDoors() {
