@@ -34,13 +34,13 @@ object LocationUtils {
     private var tickCount = 0
 
     private val entryMessages = listOf(
-        "[BOSS] Bonzo: Gratz for making it this far, but I’m basically unbeatable.",
+        "[BOSS] Bonzo: Gratz for making it this far, but I'm basically unbeatable.",
         "[BOSS] Scarf: This is where the journey ends for you, Adventurers.",
         "[BOSS] The Professor: I was burdened with terrible news recently...",
         "[BOSS] Thorn: Welcome Adventurers! I am Thorn, the Spirit! And host of the Vegan Trials!",
-        "[BOSS] Livid: Welcome, you arrive right on time. I am Livid, the Master of Shadows.",
+        "[BOSS] Livid: Welcome, you've arrived right on time. I am Livid, the Master of Shadows.",
         "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!",
-        "[BOSS] Maxor: WELL WELL WELL LOOK WHO'S HERE!"
+        "[BOSS] Maxor: WELL! WELL! WELL! LOOK WHO'S HERE!"
     )
 
     @SubscribeEvent
@@ -107,20 +107,20 @@ object LocationUtils {
             dungeonFloor - 5, 0) * 0.15f
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(receiveCanceled = true)
     fun onChat(event: ChatEvent) {
         if (event.packet.type.toInt() == 2 || !inDungeons) return
         val index = entryMessages.indexOf(event.text) + 1
         if (index != 0) {
-            ScoreCalc.calcScore()
             if (dungeonFloor != index) {
                 dungeonFloor = index
                 ScoreCalc.higherFloor = dungeonFloor.equalsOneOf(6, 7)
             }
             inBoss = true
             Ghostblocks.restored.clear()
-            currentRoom = Room(-1, -1, RoomData(index.toString(), RoomType.BOSS, emptyList(), 0, 0, 0, null, null, null, false))
+            currentRoom = Room(-1, -1, RoomData(dungeonFloor.toString(), RoomType.BOSS, emptyList(), 0, 0, 0, null, null, null, false))
             Ghostblocks.render()
+            ScoreCalc.calcScore()
         }
     }
 
