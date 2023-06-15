@@ -8,6 +8,7 @@ import funnymap.features.dungeon.Dungeon.Info.secretCount
 import funnymap.features.dungeon.RunInformation.completed
 import funnymap.features.dungeon.RunInformation.completedPuzzles
 import funnymap.features.dungeon.RunInformation.cryptsCount
+import funnymap.features.dungeon.RunInformation.firstDeath
 import funnymap.features.dungeon.RunInformation.secretsFound
 import funnymap.utils.APIUtils
 import funnymap.utils.LocationUtils
@@ -100,17 +101,13 @@ object ScoreCalc {
 
     @SubscribeEvent(receiveCanceled = true)
     fun onChatMessage(event: ChatEvent) {
-        val death = Pattern.compile("^§r§c ☠ §r§7§\\S((\\[\\S+\\]\\s)?)(?<member>\\S+)").matcher(event.formatted)
-
         if (event.formatted.startsWith("§r§r§9Party §8>") && mimicRegexes.contains(event.text.lowercase())) mimicKilled = true
-        else if (death.find() && event.formatted.contains("and became a ghost§r§7")) {
-            if (RunInformation.deathCount == 0) {
-                var player = death.group("member") ?: return
-                if (player.lowercase() == "you") player = mc.thePlayer.name
-                if (Dungeon.dungeonTeammates[player]?.spiritPet == true) {
+        else if (event.formatted.startsWith("§r§c ☠ §r§7You") && event.formatted.contains("and became a ghost§r§7.")) {
+            if (!firstDeath && started > 0) {
+                if (Dungeon.dungeonTeammates[mc.thePlayer.name]?.spiritPet == true) {
                     firstDeathHadSpirit = true
-                    Utils.modMessage("Had Spirit pet, -1 score")
                 }
+                firstDeath = true
             }
         } else if (Pattern.compile("Elections for year \\d+ have ended").matcher(event.formatted).find()) {
             if (!isPaul) {
@@ -153,5 +150,6 @@ object ScoreCalc {
         minSecrets = 0
 
         MimicDetector.roomName = null
+        firstDeath = false
     }
 }

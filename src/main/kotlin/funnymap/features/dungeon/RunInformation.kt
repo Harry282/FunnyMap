@@ -9,6 +9,7 @@ object RunInformation {
     var cryptsCount = 0
     var completed = 0
     var completedPuzzles = 0
+    var firstDeath = false
 
     private val deathsPattern = Regex("§r§a§lDeaths: §r§f\\((?<deaths>\\d+)\\)§r")
     private val secretsFoundPattern = Regex("§r Secrets Found: §r§b(?<secrets>\\d+)§r")

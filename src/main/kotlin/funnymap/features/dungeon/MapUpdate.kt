@@ -3,6 +3,9 @@ package funnymap.features.dungeon
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
+import funnymap.features.dungeon.RunInformation.firstDeath
+import funnymap.utils.LocationUtils
+import funnymap.utils.LocationUtils.started
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
@@ -55,6 +58,12 @@ object MapUpdate {
                 dead = tabText.contains("(DEAD)")
                 if (dead) {
                     icon = ""
+                    if (!firstDeath && started > 0) {
+                        if (spiritPet) {
+                            ScoreCalc.firstDeathHadSpirit = true
+                        }
+                        firstDeath = true
+                    }
                 } else {
                     icon = "icon-$iconNum"
                     iconNum++
