@@ -76,7 +76,7 @@ class FunnyMapCommands : CommandBase() {
             }
             "runstats" -> {
                 Utils.modMessage("Master: ${LocationUtils.masterMode} ${LocationUtils.dungeonFloor} First death spirit: ${ScoreCalc.firstDeathHadSpirit} Paul: ${ScoreCalc.isPaul} Rooms: ${Dungeon.Info.rooms}\n" +
-                        "Secrets ${100f * RunInformation.secretsFound / Dungeon.Info.secretCount} Needed: ${ScoreCalc.secretsPercentNeeded * 100f}\n" +
+                        "Secrets ${100f * RunInformation.secretsFound / Dungeon.Info.secretCount} Needed: ${ScoreCalc.secretsPercentNeeded * 100f} Mimic: ${ScoreCalc.mimicKilled}\n" +
                         "Skill ${ScoreCalc.skillScore} Exploration ${ScoreCalc.explorationScore} Speed ${ScoreCalc.speedScore} Bonus ${ScoreCalc.bonusScore}")
             }
             "delete" -> {

@@ -996,7 +996,8 @@
     "cores": [
       -1643528240
     ],
-    "secrets": 3
+    "secrets": 3,
+    "dircores": [-1856227849]
   },
   {
     "name": "Rare Pillars",

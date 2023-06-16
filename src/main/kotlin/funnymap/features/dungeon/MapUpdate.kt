@@ -4,7 +4,6 @@ import funnymap.FunnyMap.Companion.mc
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
 import funnymap.features.dungeon.RunInformation.firstDeath
-import funnymap.utils.LocationUtils
 import funnymap.utils.LocationUtils.started
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
@@ -131,7 +130,9 @@ object MapUpdate {
 
                     30 -> if (room is Room) when (room.data.type) {
                         RoomType.ENTRANCE -> RoomState.DISCOVERED
-                        else -> RoomState.GREEN
+                        else -> {
+                            RoomState.GREEN.apply { if (room.hasMimic) ScoreCalc.mimicKilled = true }
+                        }
                     } else room.state
 
                     34 -> RoomState.CLEARED

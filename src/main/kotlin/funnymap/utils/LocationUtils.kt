@@ -1,5 +1,6 @@
 package funnymap.utils
 
+import funnymap.FunnyMap
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.RoomData
@@ -12,11 +13,13 @@ import funnymap.features.dungeon.ScanUtils
 import funnymap.features.dungeon.ScoreCalc
 import funnymap.utils.ScoreboardUtils.sidebarLines
 import funnymap.utils.Utils.equalsOneOf
+import net.minecraft.client.gui.GuiControls
 import net.minecraftforge.event.entity.living.LivingEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.network.FMLNetworkEvent
+import java.util.*
 import kotlin.math.max
 import kotlin.math.min
 
@@ -119,7 +122,11 @@ object LocationUtils {
             inBoss = true
             Ghostblocks.restored.clear()
             currentRoom = Room(-1, -1, RoomData(dungeonFloor.toString(), RoomType.BOSS, emptyList(), 0, 0, 0, null, null, null, false))
-            Ghostblocks.render()
+            Timer().schedule(object : TimerTask() {
+                override fun run() {
+                    Ghostblocks.render()
+                }
+            }, 1000)
             ScoreCalc.calcScore()
         }
     }

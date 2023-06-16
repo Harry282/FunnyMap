@@ -441,6 +441,14 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var apiKey = ""
 
     @Property(
+        name = "Small Titles",
+        description = "If e.g. score titles should be small.",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+    )
+    var smallTitles = false
+
+    @Property(
         name = "Show Team Info",
         description = "Shows team member secrets and room times at end of run. Requires a valid API key.",
         type = PropertyType.SWITCH,
@@ -522,7 +530,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         category = "Score Calculation",
         subcategory = "Score Messages"
     )
-    var lowerScoreMessage = "270 Score Reached!"
+    var lowerScoreMessage = "&b270 Score Reached!"
 
     @Property(
         name = "300 Score Message",
@@ -531,7 +539,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         subcategory = "Score Messages"
 
     )
-    var higherScoreMessage = "300 Score Reached!"
+    var higherScoreMessage = "&b300 Score Reached!"
 
     @Property(
         name = "Send Both Messages",
@@ -707,6 +715,8 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         FunnyMap.mc.thePlayer.addChatMessage(ChatComponentText("${FunnyMap.CHAT_PREFIX} Delete all ${Ghostblocks.currentAmount} ghostblocks in this room: ${Ghostblocks.deleteStatus?.data?.name}\n").appendSibling(yes).appendSibling(ChatComponentText("   ")).appendSibling(no))
         FMLClientHandler.instance().client.displayGuiScreen(GuiChat())
     }
+
+
 
     @Property(
         name = "Force Skyblock",

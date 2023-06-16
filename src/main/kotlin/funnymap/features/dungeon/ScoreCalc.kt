@@ -94,8 +94,9 @@ object ScoreCalc {
     }
 
     fun notifyScore(message: String) {
-        if (Config.scoreNotifications == 1 || Config.scoreNotifications == 3) Utils.showClientTitle("", message.replace("&", "§"))
-        if (Config.scoreNotifications >= 2) Utils.modMessage(message.replace("&", "§"))
+        val replaced = message.replace("&", "§")
+        if (Config.scoreNotifications == 1 || Config.scoreNotifications == 3) Utils.showClientTitle(if (Config.smallTitles) "" else replaced, if (Config.smallTitles) replaced else "")
+        if (Config.scoreNotifications >= 2) Utils.modMessage(replaced)
         if (Config.sendScoreMessages) mc.thePlayer.sendChatMessage("/pc ${message.replace(Regex("&\\S"), "")}")
     }
 

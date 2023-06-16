@@ -45,6 +45,8 @@ object Ghostblocks {
     var deleteStatus:Room? = null
     var stopRendering = false
 
+    var wasdown = false
+
     fun loadData() {
         blocks.clear()
         var count = 0
@@ -67,6 +69,7 @@ object Ghostblocks {
         if (Keyboard.getEventKeyState()) {
             val kc = Keyboard.getEventKey()
             if (keybindings[0].keyCode == kc && (!Config.GBSingle || Keyboard.isKeyDown(Keyboard.KEY_LMENU))) makeGB(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+
             if (keybindings[1].keyCode == kc && (!Config.GBSingle || Keyboard.isKeyDown(Keyboard.KEY_LMENU))) makeFakeGB(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
             if (keybindings[2].keyCode == kc) deleteRadius()
             if (keybindings[3].keyCode == kc) reload()
@@ -75,23 +78,18 @@ object Ghostblocks {
     }
 
     @SubscribeEvent
-    fun onMouse(event: InputEvent.MouseInputEvent) {
-        if (mc.thePlayer == null || !Config.GBToggle ||! Keyboard.isCreated()) return
-        if (mc.thePlayer.heldItem != null) {
-            if (((mc.gameSettings.keyBindAttack.isKeyDown && Config.GBSingle && !Keyboard.isKeyDown(Keyboard.KEY_LMENU)) || (mc.gameSettings.keyBindAttack.isPressed && (!Config.GBSingle || Keyboard.isKeyDown(
-                    Keyboard.KEY_LMENU
-                )))) &&
-                ((mc.thePlayer.heldItem.item is ItemPickaxe && Config.GBPickaxe) || (mc.thePlayer.heldItem.displayName.lowercase()
-                    .contains("leap") && Config.GBLeap))
-            ) makeGB(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
-        }
-    }    //todo:keybindattack.ispressed cancels all leftclick inputs when holding an item (if singleGB)
-
-    @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || !Keyboard.isCreated() || mc.thePlayer == null || Keyboard.isKeyDown(Keyboard.KEY_LMENU) || !Config.GBToggle) return
         if (keybindings[0].isKeyDown && Config.GBSingle) makeGB(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
         if (keybindings[1].isKeyDown && Config.GBSingle) makeFakeGB(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+        wasdown = if (mc.gameSettings.keyBindAttack.isKeyDown) {
+            if (mc.thePlayer.heldItem != null) {
+                if (((Config.GBSingle && !Keyboard.isKeyDown(Keyboard.KEY_LMENU)) || (!wasdown && (!Config.GBSingle || Keyboard.isKeyDown(Keyboard.KEY_LMENU)))) &&
+                    ((mc.thePlayer.heldItem.item is ItemPickaxe && Config.GBPickaxe) || (mc.thePlayer.heldItem.displayName.lowercase().contains("leap") && Config.GBLeap)))
+                    makeGB(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
+            }
+            true
+        } else false
     }
 
     private fun makeGB(key: Boolean) {
