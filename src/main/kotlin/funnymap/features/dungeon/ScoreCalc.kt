@@ -26,7 +26,7 @@ import java.util.regex.Pattern
 import kotlin.math.*
 
 object ScoreCalc {
-    private val mimicRegexes = listOf("\$skytils-dungeon-score-mimic$", "mimic killed!", "mimic dead!")
+    private val mimicRegexes = listOf("\$skytils-dungeon-score-mimic\$", "mimic killed!", "mimic dead!")
     private val speedNeeded = mapOf(
         "F1" to 600, "F2" to 600, "F3" to 600, "F4" to 720, "F5" to 600, "F6" to 720, "F7" to 840,
         "M1" to 480, "M2" to 480, "M3" to 480, "M4" to 480, "M5" to 480, "M6" to 600, "M7" to 840
@@ -54,6 +54,8 @@ object ScoreCalc {
         if (!LocationUtils.inDungeons ||! Config.scoreCalc) return
 
         val deaths = max(RunInformation.deathCount * 2 - (if (firstDeathHadSpirit) 1 else 0), 0)
+        if (!mimicKilled && higherFloor && secretsFound.toFloat() / secretCount == 100f) mimicKilled = true
+        else if (mimicKilled &&! higherFloor) mimicKilled = false
 
         minSecrets = ceil(ceil(secretCount * secretsPercentNeeded) * ((40 - (if (isPaul) 10 else 0) - min(cryptsCount, 5) - (if (mimicKilled) 2 else 0) + deaths) / 40f).coerceIn(0f, 40f)).toInt()
         val completedRooms = completed + if (!inBoss) 1 else 0 + if (bloodThing) 1 else 0
@@ -102,7 +104,7 @@ object ScoreCalc {
 
     @SubscribeEvent(receiveCanceled = true)
     fun onChatMessage(event: ChatEvent) {
-        if (event.formatted.startsWith("§r§r§9Party §8>") && mimicRegexes.contains(event.text.lowercase())) mimicKilled = true
+        if (event.formatted.startsWith("§r§9Party §8>") && mimicRegexes.any { event.text.lowercase().contains(it) }) mimicKilled = true
         else if (event.formatted.startsWith("§r§c ☠ §r§7You") && event.formatted.contains("and became a ghost§r§7.")) {
             if (!firstDeath && started > 0) {
                 if (Dungeon.dungeonTeammates[mc.thePlayer.name]?.spiritPet == true) {
@@ -150,7 +152,6 @@ object ScoreCalc {
         scoresSent = 0
         minSecrets = 0
 
-        MimicDetector.roomName = null
         firstDeath = false
     }
 }

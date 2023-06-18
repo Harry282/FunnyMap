@@ -716,8 +716,6 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         FMLClientHandler.instance().client.displayGuiScreen(GuiChat())
     }
 
-
-
     @Property(
         name = "Force Skyblock",
         type = PropertyType.SWITCH,

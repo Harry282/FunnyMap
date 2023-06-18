@@ -62,7 +62,7 @@ object DungeonScan {
 
         if (allChunksLoaded) {
             hasScanned = true
-            if (ScoreCalc.higherFloor) MimicDetector.findMimic()
+            val mimic = MimicDetector.findMimic()
 
             if (config.scanChatInfo) {
                 val lines = mutableListOf(
@@ -74,7 +74,7 @@ object DungeonScan {
                     "&7Total Crypts: &6${Dungeon.Info.cryptCount}",
                     "&7Total Secrets: &b${Dungeon.Info.secretCount}"
                 )
-                MimicDetector.roomName?.let { lines.add("&7Mimic Room: &c$it") }
+                mimic?.let { lines.add("&7Mimic Room: &c$it") }
                 Utils.modMessage(lines.joinToString(separator = "\n"))
             }
         }

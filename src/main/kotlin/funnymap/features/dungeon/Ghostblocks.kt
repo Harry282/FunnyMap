@@ -69,7 +69,6 @@ object Ghostblocks {
         if (Keyboard.getEventKeyState()) {
             val kc = Keyboard.getEventKey()
             if (keybindings[0].keyCode == kc && (!Config.GBSingle || Keyboard.isKeyDown(Keyboard.KEY_LMENU))) makeGB(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
-
             if (keybindings[1].keyCode == kc && (!Config.GBSingle || Keyboard.isKeyDown(Keyboard.KEY_LMENU))) makeFakeGB(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL))
             if (keybindings[2].keyCode == kc) deleteRadius()
             if (keybindings[3].keyCode == kc) reload()
@@ -141,9 +140,9 @@ object Ghostblocks {
         val name = getName()
         if (category != "NONE" && name != "NONE" && name != "-1") {
             pos = relativeOfActual(pos) ?: return
-            val re1 = GhostblockData(emptySet(), emptySet())
-            blocks[category]?.get(name)?.placed?.forEach { list -> if (list.size == 3 && pos.distanceTo(Vec3(listToPos(list))) > Config.GBDelRadius) re1.placed = re1.placed?.plusElement(list) }
-            blocks[category]?.get(name)?.ghost?.forEach { list -> if (list.size == 3 && pos.distanceTo(Vec3(listToPos(list))) > Config.GBDelRadius) re1.ghost = re1.ghost?.plusElement(list) }
+            val re1 = GhostblockData(mutableSetOf(), mutableSetOf())
+            blocks[category]?.get(name)?.placed?.forEach { list -> if (list.size == 3 && pos.distanceTo(Vec3(listToPos(list))) > Config.GBDelRadius) re1.placed?.add(list) }
+            blocks[category]?.get(name)?.ghost?.forEach { list -> if (list.size == 3 && pos.distanceTo(Vec3(listToPos(list))) > Config.GBDelRadius) re1.ghost?.add(list) }
             blocks[category]?.put(name, re1)
             writeData(File("$dir${category}/${name}.json"), re1)
         }
@@ -211,10 +210,12 @@ object Ghostblocks {
     }
 
     fun backupBlock(pos: BlockPos, c: Int) {
-        val name = getName()
-        if (oldBlocks[name]?.find { pos == it.pos } == null)  {
-            if (oldBlocks[name] == null) oldBlocks[name] = mutableListOf()
-            oldBlocks[name]?.add(Backup(pos, c))
+        if (!LocationUtils.inBoss || mc.theWorld.getChunkFromChunkCoords(pos.x shr 4, pos.z shr 4).isLoaded) { //to ensure not loaded blocks are not saved, this "never" happens during clear
+            val name = getName()
+            if (oldBlocks[name]?.toMutableList()?.find { pos == it.pos } == null) {
+                if (oldBlocks[name] == null) oldBlocks[name] = mutableListOf()
+                oldBlocks[name]?.add(Backup(pos, c))
+            }
         }
     }
 
@@ -225,9 +226,9 @@ object Ghostblocks {
         if (category != "NONE" && name != "NONE" && name != "-1") {
             val list = posToList(BlockPos(relativeOfActual(pos) ?: return))
             if (list.size != 3) return
-            val re = blocks.getOrDefault(category, HashMap()).getOrDefault(name, GhostblockData(emptySet(), emptySet()))
-            if (c == 0) re.ghost = re.ghost?.plusElement(list)
-            else re.placed = re.placed?.plusElement(list)
+            val re = blocks.getOrDefault(category, HashMap()).getOrDefault(name, GhostblockData(mutableSetOf(), mutableSetOf()))
+            if (c == 0) re.ghost?.add(list)
+            else re.placed?.add(list)
             val re1 = blocks.getOrDefault(category, HashMap())
             re1[name] = re
             blocks[category] = re1
@@ -241,19 +242,8 @@ object Ghostblocks {
         val name = getName()
         if (category != "NONE" && name != "NONE" && name != "-1") {
             val list = posToList(BlockPos(relativeOfActual(pos) ?: return))
-            var removed = false
-            if (c == 0) {
-                if (blocks[category]?.get(name)?.ghost?.contains(list) == true) {
-                    removed = true
-                    blocks[category]?.get(name)?.ghost = blocks[category]?.get(name)?.ghost?.minusElement(list)
-                }
-            } else {
-                if (blocks[category]?.get(name)?.placed?.contains(list) == true) {
-                    removed = true
-                    blocks[category]?.get(name)?.placed = blocks[category]?.get(name)?.placed?.minusElement(list)
-                }
-            }
-            if (removed) {
+            if ((if (c == 0) blocks[category]?.get(name)?.ghost?.remove(list)
+                else blocks[category]?.get(name)?.placed?.remove(list)) == true) {
                 writeData(File("$dir${category}/${name}.json"), blocks[category]?.get(name)!!)
             }
         }

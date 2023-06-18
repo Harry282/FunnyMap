@@ -44,7 +44,7 @@ object Dungeon {
         if (!inDungeons) return
         if (event.packet.type.toInt() == 2) {
             if (currentRoom == null) return
-            val regex = Pattern.compile("(?<found>\\d)/(?<total>\\d) Secrets").matcher(event.text)
+            val regex = Pattern.compile("(?<found>\\d+)/(?<total>\\d+) Secrets").matcher(event.text)
             if (regex.find()) {
                 val secrets = regex.group("found").toInt()
                 val total = regex.group("total").toInt()
