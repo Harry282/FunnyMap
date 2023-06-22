@@ -49,6 +49,7 @@ object APIUtils {
                     mayor.getAsJsonArray("perks")?.forEach { perk ->
                         if (perk.asJsonObjectOrNull()?.get("name")?.asString == "EZPZ") {
                             ScoreCalc.isPaul = true
+                            return
                         }
                     }
                 }
@@ -72,10 +73,12 @@ object APIUtils {
         val jsonObject = JsonParser().parse(response).asJsonObjectOrNull() ?: return false
         if (jsonObject.getAsJsonPrimitiveOrNull("success")?.asBoolean == true) {
             jsonObject.getAsJsonArray("profiles")?.forEach { profile ->
-                profile.asJsonObjectOrNull()?.let {
-                    if (it.get("selected")?.asBoolean == true) {
-                        it.getAsJsonObjectOrNull("members")?.getAsJsonObjectOrNull(uuid)?.getAsJsonArray("pets")?.forEach {
-                            pet -> if(pet.asJsonObjectOrNull()?.get("type")?.asString.equals("SPIRIT")) return true
+                profile.asJsonObjectOrNull()?.let {profileData ->
+                    if (profileData.get("selected")?.asBoolean == true) {
+                        profileData.getAsJsonObjectOrNull("members")?.getAsJsonObjectOrNull(uuid)?.getAsJsonArray("pets")?.forEach {
+                            pet -> pet.asJsonObjectOrNull()?.let {
+                                if (it.get("type")?.asString == "SPIRIT" && it.get("tier")?.asString == "LEGENDARY") return true
+                            }
                         }
                     }
                 }

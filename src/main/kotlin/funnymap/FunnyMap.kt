@@ -62,6 +62,7 @@ class FunnyMap {
                     }
                 })
         }
+        APIUtils.getMayor()
     }
 
     @SubscribeEvent
