@@ -98,9 +98,7 @@ object Ghostblocks {
 
     private fun makeFakeGB(key: Boolean) {
         if (stopRendering ||! mc.objectMouseOver.typeOfHit.equals(MovingObjectPosition.MovingObjectType.BLOCK)) return
-        var pos = mc.objectMouseOver.blockPos
-        if (key) pos = pos.offset(mc.objectMouseOver.sideHit)
-        makeFakeGB(pos)
+        makeFakeGB(mc.objectMouseOver.blockPos.let { if (key) it.offset(mc.objectMouseOver.sideHit) else it })
     }
 
     fun makeGB(pos: BlockPos, key: Boolean) {
@@ -202,20 +200,24 @@ object Ghostblocks {
     }
 
     fun placeblock(pos: BlockPos) {
-        var state = Block.getStateById(Config.GBFakeState)
-        if (colorableIDs.contains(Config.GBFakeState)) state =
-            state.withProperty(BlockColored.COLOR, colors[Config.GBFakeStateColor])
         backupBlock(pos, 1)
-        mc.theWorld?.setBlockState(pos, state)
+        mc.theWorld?.setBlockState(pos, placedBlockState())
+    }
+
+    fun placedBlockState() : IBlockState {
+        return Block.getStateById(Config.GBFakeState).let {
+            if (colorableIDs.contains(Config.GBFakeState))
+                it.withProperty(BlockColored.COLOR, colors[Config.GBFakeStateColor])
+            else it
+        }
     }
 
     fun backupBlock(pos: BlockPos, c: Int) {
         if (!LocationUtils.inBoss || mc.theWorld.getChunkFromChunkCoords(pos.x shr 4, pos.z shr 4).isLoaded) { //to ensure not loaded blocks are not saved, this "never" happens during clear
             val name = getName()
-            if (oldBlocks[name]?.toMutableList()?.find { pos == it.pos } == null) {
-                if (oldBlocks[name] == null) oldBlocks[name] = mutableListOf()
-                oldBlocks[name]?.add(Backup(pos, c))
-            }
+            if (oldBlocks[name] == null) oldBlocks[name] = mutableListOf()
+            if (oldBlocks[name]?.toMutableList()?.find { pos == it.pos } == null)
+                oldBlocks[name]?.add(Backup(pos, c, mc.theWorld.getBlockState(pos).block.getActualState(mc.theWorld.getBlockState(pos), mc.theWorld, pos)))
         }
     }
 
@@ -262,7 +264,7 @@ object Ghostblocks {
         return ((LocationUtils.currentRoom?.data?.type) ?: "NONE").toString()
     }
 
-    class Backup (val pos: BlockPos, val c: Int? = null, val state: IBlockState = mc.theWorld.getBlockState(pos).block.getActualState(mc.theWorld.getBlockState(pos), mc.theWorld, pos))
+    class Backup (val pos: BlockPos, val c: Int? = null, var state: IBlockState)
 
     fun listToPos(list: List<Int>) : BlockPos? {
         if (list.size == 3) {

@@ -678,6 +678,15 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var cancelPacketsRange = 2
 
     @Property(
+        name = "Cancel Packets Unlimited Chunk Range",
+        description = "Override chunk updates with saved ghostblocks without range or room name checks.",
+        type = PropertyType.SWITCH,
+        category = "Ghostblocks",
+        hidden = true
+    )
+    var alwaysCancelChunkPackets = false
+
+    @Property(
         name = "Right click restore",
         description = "Right click on blocks to 'restore' them, if cancel packets is enabled",
         type = PropertyType.SELECTOR,
@@ -733,6 +742,8 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
 
         addDependency("rightClickReset", "cancelPackets")
         //todo: !Ghostblocks.colorableIDs.contains(GBFakeState) -> hide GBFakeStateColor
+
+        registerListener("GBFakeState") { _: Boolean -> Ghostblocks.render() }
     }
 
     private object CategorySorting : SortingBehavior() {
