@@ -25,8 +25,7 @@ object LocationUtils {
         "[BOSS] The Professor: I was burdened with terrible news recently...",
         "[BOSS] Thorn: Welcome Adventurers! I am Thorn, the Spirit! And host of the Vegan Trials!",
         "[BOSS] Livid: Welcome, you arrive right on time. I am Livid, the Master of Shadows.",
-        "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!",
-        "[BOSS] Maxor: WELL! WELL! WELL! LOOK WHO'S HERE!"
+        "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!"
     )
 
     @SubscribeEvent
@@ -55,6 +54,7 @@ object LocationUtils {
     @SubscribeEvent
     fun onChat(event: ChatEvent) {
         if (event.packet.type.toInt() == 2 || !inDungeons) return
+        if (event.text.startsWith("[BOSS] Maxor: ")) inBoss = true
         if (entryMessages.any { it == event.text }) inBoss = true
     }
 
