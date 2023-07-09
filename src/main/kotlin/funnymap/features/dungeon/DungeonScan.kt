@@ -6,7 +6,6 @@ import funnymap.core.map.*
 import funnymap.features.dungeon.DungeonScan.scan
 import funnymap.utils.LocationUtils.dungeonFloor
 import funnymap.utils.Utils
-import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 
@@ -60,8 +59,6 @@ object DungeonScan {
         }
 
         if (allChunksLoaded) {
-            hasScanned = true
-
             if (config.scanChatInfo) {
                 val lines = mutableListOf(
                     "&aScan Finished!",
@@ -72,13 +69,9 @@ object DungeonScan {
                     "&7Total Crypts: &6${Dungeon.Info.cryptCount}",
                     "&7Total Secrets: &b${Dungeon.Info.secretCount}"
                 )
-                if (dungeonFloor.equalsOneOf(6, 7)) {
-                    MimicDetector.findMimic()?.let {
-                        lines.add("&7Mimic Room: &c$it")
-                    }
-                }
                 Utils.modMessage(lines.joinToString(separator = "\n"))
             }
+            hasScanned = true
         }
 
         isScanning = false

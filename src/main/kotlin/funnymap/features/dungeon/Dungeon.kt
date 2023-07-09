@@ -6,9 +6,12 @@ import funnymap.core.map.Room
 import funnymap.core.map.Tile
 import funnymap.core.map.Unknown
 import funnymap.events.ChatEvent
+import funnymap.utils.LocationUtils
 import funnymap.utils.LocationUtils.inDungeons
 import funnymap.utils.MapUtils
 import funnymap.utils.Utils
+import funnymap.utils.Utils.equalsOneOf
+import gg.essential.universal.UChat
 import kotlinx.coroutines.launch
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -21,19 +24,30 @@ object Dungeon {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || !inDungeons) return
+
         if (DungeonScan.shouldScan) {
             scope.launch { DungeonScan.scan() }
         }
-        if (!DungeonScan.isScanning) {
-            if (!MapUtils.calibrated) {
-                MapUtils.calibrated = MapUtils.calibrateMap()
+
+        if (DungeonScan.isScanning) return
+
+        if (shouldSearchMimic()) {
+            MimicDetector.findMimic()?.let {
+                UChat.chat("&7Mimic Room: &c$it")
+                Info.mimicFound = true
             }
-            MapUpdate.updateRooms()
-            MapUpdate.updateDoors()
-            Utils.dungeonTabList?.let {
-                MapUpdate.updatePlayers(it)
-                RunInformation.updateRunInformation(it)
-            }
+        }
+
+        if (!MapUtils.calibrated) {
+            MapUtils.calibrated = MapUtils.calibrateMap()
+        }
+
+        MapUpdate.updateRooms()
+        MapUpdate.updateDoors()
+
+        Utils.dungeonTabList?.let {
+            MapUpdate.updatePlayers(it)
+            RunInformation.updateRunInformation(it)
         }
     }
 
@@ -61,6 +75,8 @@ object Dungeon {
         MapUtils.calibrated = false
         DungeonScan.hasScanned = false
     }
+
+    fun shouldSearchMimic() = DungeonScan.hasScanned && !Info.mimicFound && LocationUtils.dungeonFloor.equalsOneOf(6, 7)
 
     object Info {
         // 6 x 6 room grid, 11 x 11 with connections
