@@ -12,6 +12,7 @@ import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 import net.minecraft.util.StringUtils
+import kotlin.math.roundToInt
 
 object MapUpdate {
     fun preloadHeads() {
@@ -81,9 +82,9 @@ object MapUpdate {
             if (name == mc.thePlayer.name) {
                 player.yaw = mc.thePlayer.rotationYawHead
                 player.mapX =
-                    (MapUtils.startCorner.first - 2 + (mc.thePlayer.posX - DungeonScan.startX + 15) * MapUtils.coordMultiplier).toInt()
+                    ((mc.thePlayer.posX - DungeonScan.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first).roundToInt()
                 player.mapZ =
-                    (MapUtils.startCorner.second - 2 + (mc.thePlayer.posZ - DungeonScan.startZ + 15) * MapUtils.coordMultiplier).toInt()
+                    ((mc.thePlayer.posZ - DungeonScan.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second).roundToInt()
                 return@forEach
             }
             decor.entries.find { (icon, _) -> icon == player.icon }?.let { (_, vec4b) ->

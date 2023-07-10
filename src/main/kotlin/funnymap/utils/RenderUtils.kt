@@ -105,8 +105,8 @@ object RenderUtils {
             // Translates to the player's location which is updated every tick.
             if (name == mc.thePlayer.name && player.mapX == 0 && player.mapZ == 0) {
                 GlStateManager.translate(
-                    (mc.thePlayer.posX - DungeonScan.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first - 2,
-                    (mc.thePlayer.posZ - DungeonScan.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second - 2,
+                    (mc.thePlayer.posX - DungeonScan.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first,
+                    (mc.thePlayer.posZ - DungeonScan.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second,
                     0.0
                 )
             } else {
