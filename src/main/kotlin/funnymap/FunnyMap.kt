@@ -67,7 +67,7 @@ class FunnyMap {
     companion object {
         const val MOD_ID = "funnymap"
         const val MOD_NAME = "Funny Map"
-        const val MOD_VERSION = "0.7.0"
+        const val MOD_VERSION = "0.7.1"
         const val CHAT_PREFIX = "§b§l<§fFunny Map§b§l>§r"
 
         val mc: Minecraft = Minecraft.getMinecraft()
