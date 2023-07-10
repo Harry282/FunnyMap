@@ -4,6 +4,7 @@ import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.DungeonPlayer
 import funnymap.features.dungeon.DungeonScan
+import funnymap.features.dungeon.MapRender
 import funnymap.utils.Utils.equalsOneOf
 import funnymap.utils.Utils.itemID
 import net.minecraft.client.gui.Gui
@@ -83,6 +84,10 @@ object RenderUtils {
         GlStateManager.translate(x.toFloat(), y.toFloat(), 0f)
         GlStateManager.scale(config.textScale, config.textScale, 1f)
 
+        if (config.mapDynamicRotate) {
+            GlStateManager.rotate(-MapRender.dynamicRotation, 0f, 0f, 1f)
+        }
+
         val fontHeight = mc.fontRendererObj.FONT_HEIGHT + 1
         val yTextOffset = text.size * fontHeight / -2f
 
@@ -94,6 +99,10 @@ object RenderUtils {
                 color,
                 true
             )
+        }
+
+        if (config.mapDynamicRotate) {
+            GlStateManager.rotate(MapRender.dynamicRotation, 0f, 0f, 1f)
         }
 
         GlStateManager.popMatrix()

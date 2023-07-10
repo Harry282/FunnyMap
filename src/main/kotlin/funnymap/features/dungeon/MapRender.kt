@@ -62,7 +62,9 @@ object MapRender {
             GlStateManager.pushMatrix()
             setupRotate()
         } else if (config.mapDynamicRotate) {
+            GlStateManager.translate(64.0, 64.0, 0.0)
             GlStateManager.rotate(dynamicRotation, 0f, 0f ,1f)
+            GlStateManager.translate(-64.0, -64.0, 0.0)
         }
 
         renderRooms()
@@ -73,7 +75,9 @@ object MapRender {
             GL11.glDisable(GL11.GL_SCISSOR_TEST)
             GlStateManager.popMatrix()
         } else if (config.mapDynamicRotate) {
+            GlStateManager.translate(64.0, 64.0, 0.0)
             GlStateManager.rotate(-dynamicRotation, 0f, 0f ,1f)
+            GlStateManager.translate(-64.0, -64.0, 0.0)
         }
 
         if (config.mapShowRunInformation) {
