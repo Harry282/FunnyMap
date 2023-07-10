@@ -3,8 +3,8 @@ import dev.architectury.pack200.java.Pack200Adapter
 import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-    kotlin("jvm") version "1.8.10"
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    kotlin("jvm") version "1.9.0"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("dev.architectury.architectury-pack200") version "0.1.3"
     id("gg.essential.loom") version "0.10.0.+"
     idea
@@ -72,12 +72,14 @@ tasks {
         inputs.property("mcversion", "1.8.9")
 
         filesMatching(listOf("mcmod.info", "mixins.${modID}.json")) {
-            expand(mapOf(
+            expand(
+                mapOf(
                 "modname" to modName,
                 "modid" to modID,
                 "version" to project.version,
                 "mcversion" to "1.8.9"
-            ))
+                )
+            )
         }
         dependsOn(compileJava)
     }
