@@ -7,11 +7,16 @@ import funnymap.features.dungeon.DungeonScan
 import funnymap.features.dungeon.MapRender
 import funnymap.utils.Utils.equalsOneOf
 import funnymap.utils.Utils.itemID
+import gg.essential.elementa.utils.withAlpha
 import net.minecraft.client.gui.Gui
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.WorldRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.entity.Entity
+import net.minecraft.util.AxisAlignedBB
+import org.lwjgl.opengl.GL11
+import org.lwjgl.opengl.GL11.GL_LINE_STRIP
 import org.lwjgl.opengl.GL11.GL_QUADS
 import java.awt.Color
 
@@ -51,10 +56,25 @@ object RenderUtils {
         tessellator.draw()
     }
 
+    fun drawBox(aabb: AxisAlignedBB, color: Color, outline: Float, fill: Float, ignoreDepth: Boolean) {
+        GlStateManager.pushMatrix()
+        preDraw()
+        GlStateManager.depthMask(!ignoreDepth)
+        GL11.glLineWidth(outline)
+
+        drawOutlinedAABB(aabb, color.withAlpha(outline))
+
+        drawFilledAABB(aabb, color.withAlpha(fill))
+
+        GlStateManager.depthMask(true)
+        postDraw()
+        GlStateManager.popMatrix()
+    }
+
     fun renderRect(x: Double, y: Double, w: Double, h: Double, color: Color) {
         if (color.alpha == 0) return
         preDraw()
-        GlStateManager.color(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
+        color.bind()
 
         worldRenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION)
         addQuadVertices(x, y, w, h)
@@ -66,7 +86,7 @@ object RenderUtils {
     fun renderRectBorder(x: Double, y: Double, w: Double, h: Double, thickness: Double, color: Color) {
         if (color.alpha == 0) return
         preDraw()
-        GlStateManager.color(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
+        color.bind()
 
         worldRenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION)
         addQuadVertices(x - thickness, y, thickness, h)
@@ -161,5 +181,105 @@ object RenderUtils {
             e.printStackTrace()
         }
         GlStateManager.popMatrix()
+    }
+
+    fun Color.bind() {
+        GlStateManager.color(this.red / 255f, this.green / 255f, this.blue / 255f, this.alpha / 255f)
+    }
+
+    fun Entity.getInterpolatedPosition(partialTicks: Float): Triple<Double, Double, Double> {
+        return Triple(
+            this.lastTickPosX + (this.posX - this.lastTickPosX) * partialTicks,
+            this.lastTickPosY + (this.posY - this.lastTickPosY) * partialTicks,
+            this.lastTickPosZ + (this.posZ - this.lastTickPosZ) * partialTicks
+        )
+    }
+
+    fun drawFilledAABB(aabb: AxisAlignedBB, color: Color) {
+        color.bind()
+
+        worldRenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION)
+
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex()
+
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex()
+
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex()
+
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex()
+
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex()
+
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex()
+        tessellator.draw()
+    }
+
+    fun drawOutlinedAABB(aabb: AxisAlignedBB, color: Color) {
+        color.bind()
+
+        worldRenderer.begin(GL_LINE_STRIP, DefaultVertexFormats.POSITION)
+
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.minZ).endVertex()
+
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.minZ).endVertex()
+
+        worldRenderer.pos(aabb.minX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.minX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.maxZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.maxY, aabb.minZ).endVertex()
+        worldRenderer.pos(aabb.maxX, aabb.minY, aabb.minZ).endVertex()
+
+        tessellator.draw()
     }
 }
