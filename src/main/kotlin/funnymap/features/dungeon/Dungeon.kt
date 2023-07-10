@@ -2,6 +2,7 @@ package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.scope
 import funnymap.core.DungeonPlayer
+import funnymap.core.map.Door
 import funnymap.core.map.Room
 import funnymap.core.map.Tile
 import funnymap.core.map.Unknown
@@ -20,6 +21,7 @@ import net.minecraftforge.fml.common.gameevent.TickEvent
 object Dungeon {
 
     val dungeonTeammates = mutableMapOf<String, DungeonPlayer>()
+    val espDoors = mutableListOf<Door>()
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {

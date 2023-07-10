@@ -8,6 +8,7 @@ import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
 import funnymap.utils.MapUtils.yaw
 import funnymap.utils.Utils
+import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
@@ -138,13 +139,15 @@ object MapUpdate {
     }
 
     fun updateDoors() {
+        Dungeon.espDoors.clear()
         Dungeon.Info.dungeonList.filterIsInstance<Door>().forEach { door ->
-            if (!door.opened && door.type == DoorType.WITHER && mc.theWorld.getChunkFromChunkCoords(
-                    door.x shr 4, door.z shr 4
-                ).isLoaded
+            if (!door.opened && door.type.equalsOneOf(DoorType.WITHER, DoorType.BLOOD) &&
+                mc.theWorld.getChunkFromChunkCoords(door.x shr 4, door.z shr 4).isLoaded
             ) {
                 if (mc.theWorld.getBlockState(BlockPos(door.x, 69, door.z)).block == Blocks.air) {
                     door.opened = true
+                } else {
+                    Dungeon.espDoors.add(door)
                 }
             }
         }

@@ -394,6 +394,40 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var teamInfo = false
 
     @Property(
+        name = "Wither Door ESP",
+        description = "Boxes unopened wither doors.",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+        subcategory = "Wither Door"
+    )
+    var witherDoorESP = false
+
+    @Property(
+        name = "Color",
+        type = PropertyType.COLOR,
+        category = "Other Features",
+        subcategory = "Wither Door",
+        allowAlpha = true
+    )
+    var witherDoorESPColor = Color(0, 0, 0)
+
+    @Property(
+        name = "Outline Opacity",
+        type = PropertyType.PERCENT_SLIDER,
+        category = "Other Features",
+        subcategory = "Wither Door"
+    )
+    var witherDoorOutline = 1f
+
+    @Property(
+        name = "Fill Opacity",
+        type = PropertyType.PERCENT_SLIDER,
+        category = "Other Features",
+        subcategory = "Wither Door"
+    )
+    var witherDoorFill = 0.25f
+
+    @Property(
         name = "Force Skyblock",
         type = PropertyType.SWITCH,
         category = "Debug"
