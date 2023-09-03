@@ -57,7 +57,7 @@ object Dungeon {
     fun onChatPacket(event: ChatEvent) {
         if (event.packet.type.toInt() == 2 || !inDungeons) return
         when (event.text) {
-            "Dungeon starts in 4 seconds.", "Dungeon starts in 4 seconds. Get ready!" -> MapUpdate.preloadHeads()
+            "Starting in 4 seconds." -> MapUpdate.preloadHeads()
             "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> {
                 MapUpdate.getPlayers()
                 Info.startTime = System.currentTimeMillis()
