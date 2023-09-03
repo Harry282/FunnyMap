@@ -70,6 +70,6 @@ class FunnyMapCommands : CommandBase() {
         if (args.size == 1) {
             return getListOfStringsMatchingLastWord(args, commands)
         }
-        return super.addTabCompletionOptions(sender, args, pos)
+        return mutableListOf()
     }
 }
