@@ -14,14 +14,6 @@ import org.apache.http.util.EntityUtils
 object APIUtils {
     @SubscribeEvent
     fun onChatPacket(event: ChatEvent) {
-        if (event.packet.type.toInt() == 2) return
-        if (event.text.startsWith("Your new API key is ") && event.packet.chatComponent.siblings.size >= 1) {
-            val apiKey = event.packet.chatComponent.siblings[0].chatStyle.chatClickEvent.value
-            config.apiKey = apiKey
-            config.markDirty()
-            Utils.modMessage("Updated API key to $apiKey.")
-            return
-        }
         if (!inDungeons || !config.teamInfo) return
         if (event.packet.chatComponent.siblings.any {
                 it.chatStyle?.chatClickEvent?.run {
