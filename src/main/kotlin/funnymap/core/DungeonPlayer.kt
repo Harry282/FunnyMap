@@ -4,7 +4,7 @@ import funnymap.FunnyMap.Companion.scope
 import funnymap.core.map.Room
 import funnymap.features.dungeon.Dungeon
 import funnymap.utils.APIUtils
-import funnymap.utils.LocationUtils
+import funnymap.utils.Location
 import funnymap.utils.MapUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +53,7 @@ data class DungeonPlayer(val skin: ResourceLocation) {
     /** Gets the player's room, used for room tracker */
     fun getCurrentRoom(): String {
         if (dead) return "Dead"
-        if (LocationUtils.inBoss) return "Boss"
+        if (Location.inBoss) return "Boss"
         val x = (mapX - MapUtils.startCorner.first) / (MapUtils.mapRoomSize + 4)
         val z = (mapZ - MapUtils.startCorner.second) / (MapUtils.mapRoomSize + 4)
         return (Dungeon.Info.dungeonList.getOrNull(x * 2 + z * 22) as? Room)?.data?.name ?: "Error"

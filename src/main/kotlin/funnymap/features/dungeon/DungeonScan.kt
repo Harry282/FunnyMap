@@ -4,7 +4,7 @@ import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.map.*
 import funnymap.features.dungeon.DungeonScan.scan
-import funnymap.utils.LocationUtils.dungeonFloor
+import funnymap.utils.Location.dungeonFloor
 import funnymap.utils.Utils
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos

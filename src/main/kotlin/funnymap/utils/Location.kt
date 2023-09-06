@@ -3,18 +3,18 @@ package funnymap.utils
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.events.ChatEvent
-import funnymap.utils.ScoreboardUtils.sidebarLines
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.network.FMLNetworkEvent
 
-object LocationUtils {
+object Location {
 
     private var onHypixel = false
     var inSkyblock = false
     var inDungeons = false
     var dungeonFloor = -1
+    var masterMode = false
     var inBoss = false
 
     private var tickCount = 0
@@ -41,11 +41,15 @@ object LocationUtils {
             inSkyblock = onHypixel && mc.theWorld.scoreboard?.getObjectiveInDisplaySlot(1)?.name == "SBScoreboard"
 
             if (!inDungeons) {
-                val line = sidebarLines.find {
-                    ScoreboardUtils.cleanSB(it).run { contains("The Catacombs (") && !contains("Queue") }
-                } ?: return
-                inDungeons = true
-                dungeonFloor = line.substringBefore(")").lastOrNull()?.digitToIntOrNull() ?: 0
+                Scoreboard.getLines().find {
+                    Scoreboard.cleanLine(it).run {
+                        contains("The Catacombs (") && !contains("Queue")
+                    }
+                }?.let {
+                    inDungeons = true
+                    dungeonFloor = it.substringBefore(")").lastOrNull()?.digitToIntOrNull() ?: 0
+                    masterMode = it[it.length - 2] == 'M'
+                }
             }
         }
         tickCount = 0

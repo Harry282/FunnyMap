@@ -6,7 +6,7 @@ import funnymap.features.dungeon.Dungeon
 import funnymap.features.dungeon.MapRender
 import funnymap.features.dungeon.WitherDoorESP
 import funnymap.utils.APIUtils
-import funnymap.utils.LocationUtils
+import funnymap.utils.Location
 import funnymap.utils.UpdateChecker
 import gg.essential.api.EssentialAPI
 import kotlinx.coroutines.CoroutineScope
@@ -39,7 +39,7 @@ class FunnyMap {
     fun onInit(event: FMLInitializationEvent) {
         ClientCommandHandler.instance.registerCommand((FunnyMapCommands()))
         listOf(
-            this, APIUtils, Dungeon, LocationUtils, MapRender, WitherDoorESP
+            this, APIUtils, Dungeon, Location, MapRender, WitherDoorESP
         ).forEach(MinecraftForge.EVENT_BUS::register)
     }
 

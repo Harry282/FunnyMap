@@ -7,7 +7,7 @@ import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
 import funnymap.utils.MapUtils.yaw
-import funnymap.utils.Utils
+import funnymap.utils.TabList
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.init.Blocks
@@ -17,7 +17,7 @@ import kotlin.math.roundToInt
 
 object MapUpdate {
     fun preloadHeads() {
-        val tabEntries = Utils.dungeonTabList ?: return
+        val tabEntries = TabList.getDungeonTabList() ?: return
         for (i in listOf(5, 9, 13, 17, 1)) {
             // Accessing the skin locations to load in skin
             tabEntries[i].first.locationSkin
@@ -25,7 +25,7 @@ object MapUpdate {
     }
 
     fun getPlayers() {
-        val tabEntries = Utils.dungeonTabList ?: return
+        val tabEntries = TabList.getDungeonTabList() ?: return
         Dungeon.dungeonTeammates.clear()
         var iconNum = 0
         for (i in listOf(5, 9, 13, 17, 1)) {

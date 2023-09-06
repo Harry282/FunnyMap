@@ -4,8 +4,8 @@ import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
-import funnymap.utils.LocationUtils.inBoss
-import funnymap.utils.LocationUtils.inDungeons
+import funnymap.utils.Location.inBoss
+import funnymap.utils.Location.inDungeons
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapRoomSize
 import funnymap.utils.RenderUtils

@@ -2,7 +2,7 @@ package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
-import funnymap.utils.LocationUtils.inDungeons
+import funnymap.utils.Location.inDungeons
 import funnymap.utils.RenderUtils
 import funnymap.utils.RenderUtils.getInterpolatedPosition
 import net.minecraft.util.AxisAlignedBB

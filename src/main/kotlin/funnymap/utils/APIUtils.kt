@@ -4,7 +4,7 @@ import com.google.gson.JsonParser
 import funnymap.FunnyMap.Companion.config
 import funnymap.events.ChatEvent
 import funnymap.features.dungeon.PlayerTracker
-import funnymap.utils.LocationUtils.inDungeons
+import funnymap.utils.Location.inDungeons
 import net.minecraft.event.ClickEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import org.apache.http.client.methods.HttpGet
