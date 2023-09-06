@@ -37,6 +37,7 @@ object MapUtils {
         if (size.equalsOneOf(16, 18)) {
             mapRoomSize = size
             startCorner = when (LocationUtils.dungeonFloor) {
+                0 -> Pair(22, 22)
                 1 -> Pair(22, 11)
                 2, 3 -> Pair(11, 11)
                 else -> {
