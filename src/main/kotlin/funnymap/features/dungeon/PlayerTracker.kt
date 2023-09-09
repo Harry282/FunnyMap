@@ -69,7 +69,8 @@ object PlayerTracker {
             chatStyle =
                 ChatStyle().setChatHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, ChatComponentText(
                     roomClears.entries.filter {
-                        !it.key.type.equalsOneOf(RoomType.BLOOD, RoomType.ENTRANCE, RoomType.FAIRY)
+                        !it.key.type.equalsOneOf(RoomType.BLOOD, RoomType.ENTRANCE, RoomType.FAIRY) &&
+                                it.value.contains(name)
                     }.joinToString(
                         separator = "\n",
                         prefix = "$name's §eRooms Cleared:\n"
