@@ -5,14 +5,14 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.google.gson.JsonPrimitive
 
-fun JsonElement.asJsonArrayOrNull(): JsonArray? = this as? JsonArray
+fun JsonElement.toJsonArray(): JsonArray? = this as? JsonArray
 
-fun JsonElement.asJsonObjectOrNull(): JsonObject? = this as? JsonObject
+fun JsonElement.toJsonObject(): JsonObject? = this as? JsonObject
 
-fun JsonElement.asJsonPrimitiveOrNull(): JsonPrimitive? = this as? JsonPrimitive
+fun JsonElement.toJsonPrimitive(): JsonPrimitive? = this as? JsonPrimitive
 
-fun JsonObject.getAsJsonArrayOrNull(member: String): JsonArray? = this.get(member)?.asJsonArrayOrNull()
+fun JsonObject.getJsonArray(member: String): JsonArray? = this.get(member)?.toJsonArray()
 
-fun JsonObject.getAsJsonObjectOrNull(member: String): JsonObject? = this.get(member)?.asJsonObjectOrNull()
+fun JsonObject.getJsonObject(member: String): JsonObject? = this.get(member)?.toJsonObject()
 
-fun JsonObject.getAsJsonPrimitiveOrNull(member: String): JsonPrimitive? = this.get(member)?.asJsonPrimitiveOrNull()
+fun JsonObject.getJsonPrimitive(member: String): JsonPrimitive? = this.get(member)?.toJsonPrimitive()

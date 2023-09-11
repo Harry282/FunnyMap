@@ -16,10 +16,10 @@ object APIUtils {
 
     fun getSecrets(uuid: String): Int {
         val response = fetch("https://api.hypixel.net/player?key=${config.apiKey}&uuid=${uuid}")
-        val jsonObject = JsonParser().parse(response).asJsonObjectOrNull() ?: return 0
-        if (jsonObject.getAsJsonPrimitiveOrNull("success")?.asBoolean == true) {
-            return jsonObject.getAsJsonObjectOrNull("player")?.getAsJsonObjectOrNull("achievements")
-                ?.getAsJsonPrimitiveOrNull("skyblock_treasure_hunter")?.asInt ?: return 0
+        val jsonObject = JsonParser().parse(response).toJsonObject() ?: return 0
+        if (jsonObject.getJsonPrimitive("success")?.asBoolean == true) {
+            return jsonObject.getJsonObject("player")?.getJsonObject("achievements")
+                ?.getJsonPrimitive("skyblock_treasure_hunter")?.asInt ?: return 0
         }
         return 0
     }
