@@ -14,6 +14,7 @@ import funnymap.utils.TabList
 import funnymap.utils.Utils.equalsOneOf
 import gg.essential.universal.UChat
 import kotlinx.coroutines.launch
+import net.minecraft.event.ClickEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
@@ -56,6 +57,13 @@ object Dungeon {
     @SubscribeEvent
     fun onChatPacket(event: ChatEvent) {
         if (event.packet.type.toInt() == 2 || !inDungeons) return
+        if (event.packet.chatComponent.siblings.any {
+                it.chatStyle?.chatClickEvent?.run {
+                    action == ClickEvent.Action.RUN_COMMAND && value == "/showextrastats"
+                } == true
+            }) {
+            PlayerTracker.onDungeonEnd()
+        }
         when (event.text) {
             "Starting in 4 seconds." -> MapUpdate.preloadHeads()
             "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> {

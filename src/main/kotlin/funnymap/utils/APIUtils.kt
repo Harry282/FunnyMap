@@ -2,28 +2,11 @@ package funnymap.utils
 
 import com.google.gson.JsonParser
 import funnymap.FunnyMap.Companion.config
-import funnymap.events.ChatEvent
-import funnymap.features.dungeon.PlayerTracker
-import funnymap.utils.Location.inDungeons
-import net.minecraft.event.ClickEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
 
 object APIUtils {
-    @SubscribeEvent
-    fun onChatPacket(event: ChatEvent) {
-        if (!inDungeons || !config.teamInfo) return
-        if (event.packet.chatComponent.siblings.any {
-                it.chatStyle?.chatClickEvent?.run {
-                    action == ClickEvent.Action.RUN_COMMAND && value == "/showextrastats"
-                } == true
-            }) {
-            PlayerTracker.onDungeonEnd()
-        }
-    }
-
     fun fetch(uri: String): String {
         HttpClients.createMinimal().use {
             val httpGet = HttpGet(uri)
