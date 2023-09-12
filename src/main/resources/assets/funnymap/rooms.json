@@ -182,7 +182,7 @@
   },
   {
     "name": "Carpets",
-    "type": "RARE",
+    "type": "NORMAL",
     "cores": [
       988444684,
       1890757664,
@@ -962,7 +962,8 @@
     "name": "Redstone Crypt",
     "type": "NORMAL",
     "cores": [
-      -1054702517
+      -1054702517,
+      127199896
     ],
     "secrets": 3
   },
