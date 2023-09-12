@@ -1,5 +1,6 @@
 package funnymap.features.dungeon
 
+import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.scope
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.Door
@@ -62,7 +63,9 @@ object Dungeon {
                     action == ClickEvent.Action.RUN_COMMAND && value == "/showextrastats"
                 } == true
             }) {
-            PlayerTracker.onDungeonEnd()
+            if (config.teamInfo) {
+                PlayerTracker.onDungeonEnd()
+            }
         }
         when (event.text) {
             "Starting in 4 seconds." -> MapUpdate.preloadHeads()
