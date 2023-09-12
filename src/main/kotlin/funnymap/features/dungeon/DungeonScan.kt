@@ -6,6 +6,7 @@ import funnymap.core.map.*
 import funnymap.features.dungeon.DungeonScan.scan
 import funnymap.utils.Location.dungeonFloor
 import funnymap.utils.Utils
+import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
 
@@ -125,7 +126,8 @@ object DungeonScan {
             }
 
             // Doorway between rooms
-            height == 74 -> {
+            // Old trap has a single block at 82
+            height.equalsOneOf(74, 82) -> {
                 Door(x, z).apply {
                     // Finds door type from door block
                     type = when (mc.theWorld.getBlockState(BlockPos(x, 69, z)).block) {
