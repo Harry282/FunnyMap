@@ -47,8 +47,9 @@ object Location {
                     }
                 }?.let {
                     inDungeons = true
-                    dungeonFloor = it.substringBefore(")").lastOrNull()?.digitToIntOrNull() ?: 0
-                    masterMode = it[it.length - 2] == 'M'
+                    val line = it.substringBefore(")")
+                    dungeonFloor = line.lastOrNull()?.digitToIntOrNull() ?: 0
+                    masterMode = line[line.length - 2] == 'M'
                 }
             }
         }
