@@ -38,7 +38,7 @@ dependencies {
 }
 
 sourceSets.main {
-    output.resourcesDir = file("${layout.buildDirectory}/classes/kotlin/main")
+    output.resourcesDir = file(layout.buildDirectory.file("/classes/kotlin/main"))
 }
 
 loom {
@@ -72,10 +72,10 @@ tasks {
         filesMatching(listOf("mcmod.info", "mixins.${modID}.json")) {
             expand(
                 mapOf(
-                "modname" to modName,
-                "modid" to modID,
-                "version" to project.version,
-                "mcversion" to "1.8.9"
+                    "modname" to modName,
+                    "modid" to modID,
+                    "version" to project.version,
+                    "mcversion" to "1.8.9"
                 )
             )
         }
