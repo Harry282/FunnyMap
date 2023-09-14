@@ -1,9 +1,7 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import dev.architectury.pack200.java.Pack200Adapter
-import net.fabricmc.loom.task.RemapJarTask
 
 plugins {
-    kotlin("jvm") version "1.9.0"
+    kotlin("jvm") version "1.9.10"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("dev.architectury.architectury-pack200") version "0.1.3"
     id("gg.essential.loom") version "0.10.0.+"
@@ -36,11 +34,11 @@ dependencies {
     compileOnly("org.spongepowered:mixin:0.8.5")
 
     packageLib("gg.essential:loader-launchwrapper:1.1.3")
-    implementation("gg.essential:essential-1.8.9-forge:11640+g7f637cfee")
+    implementation("gg.essential:essential-1.8.9-forge:12132+g6e2bf4dc5")
 }
 
 sourceSets.main {
-    output.setResourcesDir(file("${buildDir}/classes/kotlin/main"))
+    output.resourcesDir = file("${layout.buildDirectory}/classes/kotlin/main")
 }
 
 loom {
@@ -83,7 +81,7 @@ tasks {
         }
         dependsOn(compileJava)
     }
-    named<Jar>("jar") {
+    jar {
         manifest.attributes(
             "FMLCorePluginContainsFMLMod" to true,
             "FMLCorePlugin" to "${modID}.forge.FMLLoadingPlugin",
@@ -96,11 +94,11 @@ tasks {
         dependsOn(shadowJar)
         enabled = false
     }
-    named<RemapJarTask>("remapJar") {
+    remapJar {
         archiveBaseName.set(modName)
         input.set(shadowJar.get().archiveFile)
     }
-    named<ShadowJar>("shadowJar") {
+    shadowJar {
         archiveBaseName.set(modName)
         archiveClassifier.set("dev")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
