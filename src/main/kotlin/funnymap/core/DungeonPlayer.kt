@@ -1,9 +1,12 @@
 package funnymap.core
 
+import com.google.gson.JsonObject
 import funnymap.FunnyMap.Companion.scope
 import funnymap.core.map.Room
 import funnymap.features.dungeon.Dungeon
-import funnymap.utils.APIUtils
+import funnymap.utils.APIUtils.getSecrets
+import funnymap.utils.APIUtils.getSpirit
+import funnymap.utils.APIUtils.loadPlayerData
 import funnymap.utils.Location
 import funnymap.utils.MapUtils
 import kotlinx.coroutines.Dispatchers
@@ -35,10 +38,15 @@ data class DungeonPlayer(val skin: ResourceLocation) {
     var uuid = ""
 
     /** Stats for compiling player tracker information */
+    private var playerData: JsonObject? = null
     var startingSecrets = 0
+    var spiritPet = false
     var lastRoom = ""
     var lastTime = 0L
     var roomVisits: MutableList<Pair<Long, String>> = mutableListOf()
+    var levers = 0
+    var terminals = 0
+    var devices = 0
 
     /** Set player data that requires entity to be loaded */
     fun setData(player: EntityPlayer) {
@@ -46,7 +54,10 @@ data class DungeonPlayer(val skin: ResourceLocation) {
         uuid = player.uniqueID.toString()
         playerLoaded = true
         scope.launch(Dispatchers.IO) {
-            startingSecrets = APIUtils.getSecrets(uuid)
+            playerData = loadPlayerData(uuid)?.apply {
+                startingSecrets = getSecrets(this)
+                spiritPet = getSpirit(this, uuid)
+            }
         }
     }
 

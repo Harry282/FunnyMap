@@ -5,6 +5,7 @@ import funnymap.FunnyMap.Companion.mc
 import funnymap.core.map.*
 import funnymap.features.dungeon.DungeonScan.scan
 import funnymap.utils.Location.dungeonFloor
+import funnymap.utils.Location.setCurrentRoom
 import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.init.Blocks
@@ -58,6 +59,7 @@ object DungeonScan {
                 }
             }
         }
+        setCurrentRoom(ScanUtils.getRoomCentre(mc.thePlayer.posX.toInt(), mc.thePlayer.posZ.toInt()))
 
         if (allChunksLoaded) {
             if (config.scanChatInfo) {
@@ -90,7 +92,11 @@ object DungeonScan {
             rowEven && columnEven -> {
                 val roomCore = ScanUtils.getCore(x, z)
                 Room(x, z, ScanUtils.getRoomData(roomCore) ?: return null).apply {
+                    Dungeon.Info.rooms++
                     core = roomCore
+                    direction = ScanUtils.getDirection(x, z, data, roomCore)
+                    if (data.type == RoomType.FAIRY) Dungeon.Info.fairyPos = Pair(x, z)
+
                     // Checks if a room with the same name has already been scanned.
                     val duplicateRoom = Dungeon.Info.uniqueRooms.firstOrNull { it.data.name == data.name }
 
@@ -110,10 +116,13 @@ object DungeonScan {
                             RoomType.PUZZLE -> Dungeon.Info.puzzles.add(data.name)
                             else -> {}
                         }
-                    } else if (x < duplicateRoom.x || (x == duplicateRoom.x && z < duplicateRoom.z)) {
-                        // Ensures the room stored in uniqueRooms is the furthest south-east.
-                        Dungeon.Info.uniqueRooms.remove(duplicateRoom)
-                        Dungeon.Info.uniqueRooms.add(this)
+                    } else {
+                        if (direction == null) direction = duplicateRoom.direction
+                        if (x < duplicateRoom.x || (x == duplicateRoom.x && z < duplicateRoom.z)) {
+                            // Ensures the room stored in uniqueRooms is the furthest south-east.
+                            Dungeon.Info.uniqueRooms.remove(duplicateRoom)
+                            Dungeon.Info.uniqueRooms.add(this)
+                        }
                     }
                 }
             }

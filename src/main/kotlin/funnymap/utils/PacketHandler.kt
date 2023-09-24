@@ -1,12 +1,8 @@
 package funnymap.utils
 
 import funnymap.events.ChatEvent
-import funnymap.events.ScoreboardEvent
-import funnymap.events.TabListEvent
 import net.minecraft.network.Packet
-import net.minecraft.network.play.server.S02PacketChat
-import net.minecraft.network.play.server.S38PacketPlayerListItem
-import net.minecraft.network.play.server.S3EPacketTeams
+import net.minecraft.network.play.server.*
 import net.minecraftforge.common.MinecraftForge
 
 object PacketHandler {
@@ -15,13 +11,11 @@ object PacketHandler {
             is S02PacketChat -> {
                 MinecraftForge.EVENT_BUS.post(ChatEvent(packet))
             }
-
             is S3EPacketTeams -> {
-                MinecraftForge.EVENT_BUS.post(ScoreboardEvent(packet))
+                Scoreboard.onScoreboard(packet)
             }
-
             is S38PacketPlayerListItem -> {
-                MinecraftForge.EVENT_BUS.post(TabListEvent(packet))
+                TabList.handlePacket(packet)
             }
         }
     }

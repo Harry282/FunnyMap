@@ -133,7 +133,7 @@ class MoveMapGui : GuiScreen() {
         val w: Double
             get() = 128.0
         val h: Double
-            get() = (if (config.mapShowRunInformation) 138.0 else 128.0)
+            get() = (if (config.mapShowRunInformation) if (config.scoreCalc) 148.0 else 138.0 else 128.0)
         var hovered = false
 
         fun draw(mouseX: Int, mouseY: Int) {

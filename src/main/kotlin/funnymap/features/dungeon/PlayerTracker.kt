@@ -1,6 +1,7 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap
+import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.FunnyMap.Companion.scope
 import funnymap.core.DungeonPlayer
@@ -10,13 +11,16 @@ import funnymap.core.map.RoomState
 import funnymap.core.map.RoomType
 import funnymap.core.map.Tile
 import funnymap.utils.APIUtils
+import funnymap.utils.Location
 import funnymap.utils.Utils.equalsOneOf
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import net.minecraft.event.ClickEvent
 import net.minecraft.event.HoverEvent
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.ChatStyle
+import net.minecraft.util.StringUtils
 import kotlin.time.Duration.Companion.milliseconds
 
 object PlayerTracker {
@@ -33,6 +37,13 @@ object PlayerTracker {
         }
     }
 
+
+    fun onTerminalPhaseEnd() {
+        Dungeon.dungeonTeammates.forEach {
+            sendTerminalsMessage(it.value.formattedName, it.value)
+        }
+    }
+
     fun onDungeonEnd() {
         val time = System.currentTimeMillis() - Dungeon.Info.startTime
         Dungeon.dungeonTeammates.forEach {
@@ -45,7 +56,7 @@ object PlayerTracker {
                     Triple(
                         player.formattedName,
                         player,
-                        APIUtils.getSecrets(player.uuid)
+                        APIUtils.loadPlayerData(player.uuid)?.let { APIUtils.getSecrets(it) } ?: 0
                     )
                 }
             }.forEach {
@@ -55,7 +66,7 @@ object PlayerTracker {
         }
     }
 
-    fun sendStatMessage(name: String, player: DungeonPlayer, secrets: Int) {
+    private fun sendStatMessage(name: String, player: DungeonPlayer, secrets: Int) {
         val secretsComponent = ChatComponentText("§b${secrets - player.startingSecrets} §3secrets")
 
         val allClearedRooms = roomClears.filter { it.value.contains(name) }
@@ -111,12 +122,65 @@ object PlayerTracker {
             )))
         }
 
+        val terminalComponent =
+            if (config.teamInfoTerminals && Location.dungeonFloor == 7) ChatComponentText("§3Terminals: ${calculateTerminalRating(player)}").apply {
+                chatStyle = ChatStyle().setChatHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, ChatComponentText(
+                    """$name's §eTerminals:
+                        #§6Devices §b${player.devices}
+                        #§6Terminals §b${player.terminals}
+                        #§6Levers §b${player.levers}""".trimMargin("#")
+                )))
+            }
+            else ChatComponentText("")
+
+        val nameComponent = ChatComponentText(name).apply {
+            chatStyle = ChatStyle().setChatHoverEvent(
+                HoverEvent(
+                    HoverEvent.Action.SHOW_TEXT, ChatComponentText(
+                        "Click to paste in chat"
+                    )
+                )
+            ).setChatClickEvent(ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, StringUtils.stripControlCodes(ChatComponentText("$name > ").appendSibling(secretsComponent)
+                .appendText(" | ").appendSibling(roomComponent).appendText(" | ").appendSibling(terminalComponent).unformattedText)))
+        }
+
         mc.thePlayer.addChatMessage(
-            ChatComponentText("${FunnyMap.CHAT_PREFIX} §3$name §f> ")
+            ChatComponentText("${FunnyMap.CHAT_PREFIX} §3").appendSibling(nameComponent).appendText(" §f> ")
                 .appendSibling(secretsComponent).appendText(" §6| ")
-                .appendSibling(roomComponent).appendText(" §6| ")
-                .appendSibling(splitsComponent).appendText(" §6| ")
-                .appendSibling(roomTimeComponent)
+                    .appendSibling(roomComponent).appendText(" §6| ")
+                    .appendSibling(splitsComponent).appendText(" §6| ")
+                    .appendSibling(roomTimeComponent).appendText(" §6| ")
+                    .appendSibling(terminalComponent)
         )
+    }
+
+    private fun sendTerminalsMessage(name: String, player: DungeonPlayer) {
+        val terminals = ChatComponentText("§b${player.devices} §3Devices §6| §b${player.terminals} §3Terminals §6| §b${player.levers} §3Levers")
+
+        val nameComponent = ChatComponentText(name).apply {
+            chatStyle = ChatStyle().setChatHoverEvent(
+                HoverEvent(
+                    HoverEvent.Action.SHOW_TEXT, ChatComponentText(
+                        "Click to paste in chat"
+                    )
+                )
+            ).setChatClickEvent(ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, StringUtils.stripControlCodes("$name > ${terminals.unformattedText}")))
+        }
+
+        mc.thePlayer.addChatMessage(
+            ChatComponentText("${FunnyMap.CHAT_PREFIX} §3").appendSibling(nameComponent).appendText(" §f> ")
+                .appendSibling(terminals)
+        )
+    }
+
+    private fun calculateTerminalRating(player: DungeonPlayer) : String {
+        val score = (player.devices * config.deviceValue + player.terminals * config.terminalValue + player.levers * config.leverValue) * Dungeon.dungeonTeammates.size / 5f
+        return when {
+            score <= config.atrociousThreshold -> "§8Atrocious§4!"
+            score <= config.badThreshold -> "§cBad"
+            score <= config.alrightThreshold -> "§eAlright"
+            score <= config.goodThreshold -> "§aGood"
+            else -> "§6Excellent"
+        }
     }
 }

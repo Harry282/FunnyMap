@@ -13,17 +13,29 @@ import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.client.renderer.Tessellator
 import net.minecraft.client.renderer.WorldRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
+import net.minecraft.inventory.Slot
+import net.minecraft.util.BlockPos
+import net.minecraft.util.ResourceLocation
+import net.minecraft.util.StringUtils
 import net.minecraft.entity.Entity
 import net.minecraft.util.AxisAlignedBB
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.GL_LINE_STRIP
 import org.lwjgl.opengl.GL11.GL_QUADS
+import org.lwjgl.opengl.GL11.GL_TRIANGLES
 import java.awt.Color
 
 object RenderUtils {
 
     private val tessellator: Tessellator = Tessellator.getInstance()
     private val worldRenderer: WorldRenderer = tessellator.worldRenderer
+    private val playerPattern = Regex("(?:\\[.+?] )?(?<player>\\w+)")
+    var selectedItem: Slot? = null
+        set(value) {
+            field = value
+            hoveredPlayerName = value?.stack?.let { playerPattern.find(StringUtils.stripControlCodes(it.displayName))?.groups?.get("player")?.value }
+        }
+    private var hoveredPlayerName: String? = null
 
     private fun preDraw() {
         GlStateManager.enableAlpha()
@@ -56,11 +68,26 @@ object RenderUtils {
         tessellator.draw()
     }
 
-    fun drawBox(aabb: AxisAlignedBB, color: Color, outline: Float, fill: Float, ignoreDepth: Boolean) {
+    fun renderTriangle(x: Double, y: Double, w: Double, h: Double, color: Color) {
+        if (color.alpha == 0) return
+        preDraw()
+        GlStateManager.color(color.red / 255f, color.green / 255f, color.blue / 255f, color.alpha / 255f)
+
+        worldRenderer.begin(GL_TRIANGLES, DefaultVertexFormats.POSITION)
+        worldRenderer.pos(x, y + h, 0.0).endVertex()
+        worldRenderer.pos(x + w, y, 0.0).endVertex()
+        worldRenderer.pos(x, y, 0.0).endVertex()
+
+        tessellator.draw()
+
+        postDraw()
+    }
+
+    fun drawBox(aabb: AxisAlignedBB, color: Color, outline: Float, outlineThickness: Float, fill: Float, ignoreDepth: Boolean) {
         GlStateManager.pushMatrix()
         preDraw()
         GlStateManager.depthMask(!ignoreDepth)
-        GL11.glLineWidth(outline)
+        GL11.glLineWidth(outlineThickness)
 
         drawOutlinedAABB(aabb, color.withAlpha(outline))
 
@@ -131,6 +158,7 @@ object RenderUtils {
     fun drawPlayerHead(name: String, player: DungeonPlayer) {
         GlStateManager.pushMatrix()
         try {
+            val selectedPlayer = name == hoveredPlayerName
             // Translates to the player's location which is updated every tick.
             if (name == mc.thePlayer.name && player.mapX == 0 && player.mapZ == 0) {
                 GlStateManager.translate(
@@ -143,9 +171,9 @@ object RenderUtils {
             }
 
             // Handle player names
-            if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
+            if (name != mc.thePlayer.name && (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
                     "SPIRIT_LEAP", "INFINITE_SPIRIT_LEAP", "HAUNT_ABILITY"
-                )
+                ))
             ) {
                 GlStateManager.pushMatrix()
                 GlStateManager.scale(0.8, 0.8, 1.0)
@@ -161,9 +189,10 @@ object RenderUtils {
             // Apply head rotation and scaling
             GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
             GlStateManager.scale(config.playerHeadScale, config.playerHeadScale, 1f)
+            if (selectedPlayer) GlStateManager.scale(1.35f, 1.35f, 1f)
 
             // Render black border around the player head
-            renderRectBorder(-6.0, -6.0, 12.0, 12.0, 1.0, Color(0, 0, 0, 255))
+            renderRectBorder(-6.0, -6.0, 12.0, 12.0, 1.0, Color(0, if (selectedPlayer) 255 else 0, 0, 255))
 
             preDraw()
             GlStateManager.enableTexture2D()
@@ -181,6 +210,39 @@ object RenderUtils {
             e.printStackTrace()
         }
         GlStateManager.popMatrix()
+    }
+
+    fun drawTextureAtPos(pos: BlockPos, location: ResourceLocation, size: Double, border: Boolean) {
+        GlStateManager.pushMatrix()
+        try {
+            GlStateManager.translate(
+                (pos.x - DungeonScan.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first - 2,
+                (pos.z - DungeonScan.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second - 2,
+                0.0
+            )
+            if (border) renderRectBorder(-size / 2.0, -size / 2.0, size, size, 1.0, Color(0, 0, 0, 255))
+
+            preDraw()
+            GlStateManager.enableTexture2D()
+            GlStateManager.color(1f, 1f, 1f, 1f)
+
+            mc.textureManager.bindTexture(location)
+
+            drawTexturedQuad(-size / 2.0, -size / 2.0, size, size)
+
+            postDraw()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        GlStateManager.popMatrix()
+    }
+
+    fun setColor(color: Color, index: Int, value: Int) : Color {
+        return when (index) {
+            0 -> Color(value, color.green, color.blue, color.alpha)
+            1 -> Color(color.red, value, color.blue, color.alpha)
+            else -> Color(color.red, color.green, value, color.alpha)
+        }
     }
 
     fun Color.bind() {
