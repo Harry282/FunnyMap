@@ -63,7 +63,7 @@ object MapRender {
             setupRotate()
         } else if (config.mapDynamicRotate) {
             GlStateManager.translate(64.0, 64.0, 0.0)
-            GlStateManager.rotate(dynamicRotation, 0f, 0f ,1f)
+            GlStateManager.rotate(dynamicRotation, 0f, 0f, 1f)
             GlStateManager.translate(-64.0, -64.0, 0.0)
         }
 
@@ -76,7 +76,7 @@ object MapRender {
             GlStateManager.popMatrix()
         } else if (config.mapDynamicRotate) {
             GlStateManager.translate(64.0, 64.0, 0.0)
-            GlStateManager.rotate(-dynamicRotation, 0f, 0f ,1f)
+            GlStateManager.rotate(-dynamicRotation, 0f, 0f, 1f)
             GlStateManager.translate(-64.0, -64.0, 0.0)
         }
 
