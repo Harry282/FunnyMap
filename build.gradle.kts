@@ -38,7 +38,7 @@ dependencies {
 }
 
 sourceSets.main {
-    output.resourcesDir = file(layout.buildDirectory.file("/classes/kotlin/main"))
+    output.resourcesDir = file("${layout.buildDirectory.asFile.get()}/classes/kotlin/main")
 }
 
 loom {
