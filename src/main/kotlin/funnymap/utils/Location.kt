@@ -67,22 +67,14 @@ object Location {
     fun setCurrentRoom(pos: Pair<Int, Int>) {
         val data = ScanUtils.getRoomFromPos(pos)?.data?: return
         val room: Room = Dungeon.Info.uniqueRooms.toList().find { data.name == it.data.name }?: return
-        var modified = false
         if (room.direction == null) {
             room.direction = ScanUtils.getDirection(pos.first, pos.second, data, room.core)
-            modified = true
         }
         if (room.corner == null && room.direction != null) {
             room.corner = ScanUtils.getCorner(room.direction, room.data.name)
-            modified = true
-        }
-        if (modified) {
-            Dungeon.Info.uniqueRooms.remove(room)
-            Dungeon.Info.uniqueRooms.add(room)
         }
         if (room != currentRoom || (currentRoom?.direction == null || currentRoom?.corner == null)) {
             currentRoom = room
-            ScoreCalc.calcScore()
         }
     }
 
