@@ -9,6 +9,7 @@ plugins {
     id("gg.essential.loom") version "0.10.0.+"
     idea
     java
+    `maven-publish`
 }
 
 val modName: String by project
@@ -40,7 +41,7 @@ dependencies {
 }
 
 sourceSets.main {
-    output.setResourcesDir(file("${buildDir}/classes/kotlin/main"))
+    resources.destinationDirectory = file("${buildDir}/classes/kotlin/main")
 }
 
 loom {
@@ -83,6 +84,7 @@ tasks {
         }
         dependsOn(compileJava)
     }
+
     named<Jar>("jar") {
         manifest.attributes(
             "FMLCorePluginContainsFMLMod" to true,
@@ -109,6 +111,20 @@ tasks {
     }
     withType<JavaCompile> {
         options.encoding = "UTF-8"
+    }
+    publishing {
+        publications {
+            create<MavenPublication>("maven") {
+                groupId = "FunnyMap"
+                artifactId = modID
+                version = project.version.toString()
+                artifact(remapJar)
+                artifact(shadowJar)
+            }
+        }
+        repositories {
+            mavenLocal()
+        }
     }
 }
 
