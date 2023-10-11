@@ -141,7 +141,7 @@ object PlayerTracker {
                     )
                 )
             ).setChatClickEvent(ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, StringUtils.stripControlCodes(ChatComponentText("$name > ").appendSibling(secretsComponent)
-                .appendText(" | ").appendSibling(roomComponent).appendText(" | ").appendSibling(terminalComponent).unformattedText)))
+                .appendText(" | ").appendSibling(roomComponent).apply { if (Location.dungeonFloor == 7) appendText(" | ").appendSibling(terminalComponent) }.unformattedText)))
         }
 
         mc.thePlayer.addChatMessage(
@@ -149,8 +149,9 @@ object PlayerTracker {
                 .appendSibling(secretsComponent).appendText(" §6| ")
                     .appendSibling(roomComponent).appendText(" §6| ")
                     .appendSibling(splitsComponent).appendText(" §6| ")
-                    .appendSibling(roomTimeComponent).appendText(" §6| ")
-                    .appendSibling(terminalComponent)
+                    .appendSibling(roomTimeComponent).apply {
+                    if (Location.dungeonFloor == 7) appendText(" §6| ").appendSibling(terminalComponent)
+                }
         )
     }
 
