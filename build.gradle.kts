@@ -40,8 +40,10 @@ dependencies {
     implementation("gg.essential:essential-1.8.9-forge:11640+g7f637cfee")
 }
 
-sourceSets.main {
-    resources.destinationDirectory = file("${buildDir}/classes/kotlin/main")
+sourceSets {
+    main {
+        output.setResourcesDir("${buildDir}/classes/kotlin/main")
+    }
 }
 
 loom {
@@ -113,17 +115,16 @@ tasks {
         options.encoding = "UTF-8"
     }
     publishing {
+        this@tasks.named("jar") {
+            enabled = true
+        }
         publications {
             create<MavenPublication>("maven") {
                 groupId = "FunnyMap"
                 artifactId = modID
                 version = project.version.toString()
-                artifact(remapJar)
-                artifact(shadowJar)
+                from(getComponents().getByName("java"))
             }
-        }
-        repositories {
-            mavenLocal()
         }
     }
 }
