@@ -53,7 +53,7 @@ object ScanUtils {
         val blocks = arrayListOf<Int>()
         for (y in 140 downTo 12) {
             val id = Block.getIdFromBlock(mc.theWorld.getBlockState(BlockPos(x, y, z)).block)
-            if (!id.equalsOneOf(5, 54)) {
+            if (!id.equalsOneOf(5, 54, 146)) {
                 blocks.add(id)
             }
         }
