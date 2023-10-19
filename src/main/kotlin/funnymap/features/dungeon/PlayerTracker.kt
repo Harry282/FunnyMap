@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import net.minecraft.event.HoverEvent
 import net.minecraft.util.ChatComponentText
 import net.minecraft.util.ChatStyle
+import net.minecraft.util.IChatComponent
 import kotlin.time.Duration.Companion.milliseconds
 
 object PlayerTracker {
@@ -48,14 +49,16 @@ object PlayerTracker {
                         APIUtils.getSecrets(player.uuid)
                     )
                 }
-            }.forEach {
+            }.map {
                 val (name, player, secrets) = it.await()
-                sendStatMessage(name, player, secrets)
+                getStatMessage(name, player, secrets)
+            }.forEach {
+                mc.thePlayer.addChatMessage(it)
             }
         }
     }
 
-    fun sendStatMessage(name: String, player: DungeonPlayer, secrets: Int) {
+    fun getStatMessage(name: String, player: DungeonPlayer, secrets: Int): IChatComponent {
         val secretsComponent = ChatComponentText("§b${secrets - player.startingSecrets} §3secrets")
 
         val allClearedRooms = roomClears.filter { it.value.contains(name) }
@@ -78,7 +81,9 @@ object PlayerTracker {
                         if (players.size == 1) {
                             "§6${room.name}"
                         } else {
-                            "§6${room.name} §7with ${players.filter { it != name }.joinToString(separator = "§r, ")}"
+                            "§6${room.name} §7with ${
+                                players.filter { it != name }.joinToString(separator = "§r, ")
+                            }"
                         }
                     }
                 )))
@@ -111,12 +116,10 @@ object PlayerTracker {
             )))
         }
 
-        mc.thePlayer.addChatMessage(
-            ChatComponentText("${FunnyMap.CHAT_PREFIX} §3$name §f> ")
-                .appendSibling(secretsComponent).appendText(" §6| ")
-                .appendSibling(roomComponent).appendText(" §6| ")
-                .appendSibling(splitsComponent).appendText(" §6| ")
-                .appendSibling(roomTimeComponent)
-        )
+        return ChatComponentText("${FunnyMap.CHAT_PREFIX} §3$name §f> ")
+            .appendSibling(secretsComponent).appendText(" §6| ")
+            .appendSibling(roomComponent).appendText(" §6| ")
+            .appendSibling(splitsComponent).appendText(" §6| ")
+            .appendSibling(roomTimeComponent)
     }
 }
