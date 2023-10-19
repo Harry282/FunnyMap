@@ -97,7 +97,7 @@ object MapRender {
             (128 * scale * config.mapScale).toInt()
         )
         GlStateManager.translate(64.0, 64.0, 0.0)
-        GlStateManager.rotate(-mc.thePlayer.rotationYawHead + 180f, 0f, 0f, 1f)
+        GlStateManager.rotate(-mc.thePlayer.rotationYaw + 180f, 0f, 0f, 1f)
 
         if (config.mapCenter) {
             GlStateManager.translate(
@@ -271,7 +271,7 @@ object MapRender {
         try {
             if (Dungeon.dungeonTeammates.isEmpty()) {
                 RenderUtils.drawPlayerHead(mc.thePlayer.name, DungeonPlayer(mc.thePlayer.locationSkin).apply {
-                    yaw = mc.thePlayer.rotationYawHead
+                    yaw = mc.thePlayer.rotationYaw
                 })
             } else {
                 Dungeon.dungeonTeammates.forEach { (name, teammate) ->

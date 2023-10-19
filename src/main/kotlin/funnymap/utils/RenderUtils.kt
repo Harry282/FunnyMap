@@ -104,7 +104,9 @@ object RenderUtils {
         GlStateManager.translate(x.toFloat(), y.toFloat(), 0f)
         GlStateManager.scale(config.textScale, config.textScale, 1f)
 
-        if (config.mapDynamicRotate) {
+        if (config.mapRotate) {
+            GlStateManager.rotate(mc.thePlayer.rotationYaw + 180f, 0f, 0f, 1f)
+        } else if (config.mapDynamicRotate) {
             GlStateManager.rotate(-MapRender.dynamicRotation, 0f, 0f, 1f)
         }
 
@@ -150,7 +152,7 @@ object RenderUtils {
                 GlStateManager.pushMatrix()
                 GlStateManager.scale(0.8, 0.8, 1.0)
                 if (config.mapRotate) {
-                    GlStateManager.rotate(mc.thePlayer.rotationYawHead + 180f, 0f, 0f, 1f)
+                    GlStateManager.rotate(mc.thePlayer.rotationYaw + 180f, 0f, 0f, 1f)
                 }
                 mc.fontRendererObj.drawString(
                     name, mc.fontRendererObj.getStringWidth(name) / -2f, 10f, 0xffffff, true
