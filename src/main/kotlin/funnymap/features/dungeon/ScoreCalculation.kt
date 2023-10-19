@@ -14,7 +14,7 @@ import kotlin.time.DurationUnit
 import kotlin.time.toDuration
 
 object ScoreCalculation {
-    private val paul = APIUtils.hasBonusPaulScore()
+    val paul = APIUtils.hasBonusPaulScore()
         get() = field || config.paulBonus
     var score = 0
     var message300 = false

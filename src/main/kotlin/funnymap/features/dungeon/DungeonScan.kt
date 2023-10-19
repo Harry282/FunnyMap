@@ -9,6 +9,7 @@ import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.init.Blocks
 import net.minecraft.util.BlockPos
+import kotlin.math.ceil
 
 /**
  * Handles everything related to scanning the dungeon. Running [scan] will update the instance of [Dungeon].
@@ -61,6 +62,12 @@ object DungeonScan {
 
         if (allChunksLoaded) {
             if (config.scanChatInfo) {
+                val maxSecrets = ceil(RunInformation.secretTotal * ScoreCalculation.getSecretPercent())
+                var maxBonus = 5
+                if (dungeonFloor.equalsOneOf(6, 7)) maxBonus += 2
+                if (ScoreCalculation.paul) maxBonus += 10
+                val minSecrets = ceil(maxSecrets * (40 - maxBonus) / 40).toInt()
+
                 val lines = mutableListOf(
                     "&aScan Finished!",
                     "&aPuzzles (&c${Dungeon.Info.puzzles.size}&a):",
@@ -71,7 +78,8 @@ object DungeonScan {
                     "&6Trap: &a${Dungeon.Info.trapType}",
                     "&8Wither Doors: &7${Dungeon.Info.witherDoors - 1}",
                     "&7Total Crypts: &6${Dungeon.Info.cryptCount}",
-                    "&7Total Secrets: &b${Dungeon.Info.secretCount}"
+                    "&7Total Secrets: &b${Dungeon.Info.secretCount}",
+                    "&7Minimum Secrets: &e${minSecrets}"
                 )
                 Utils.modMessage(lines.joinToString(separator = "\n"))
             }

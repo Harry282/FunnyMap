@@ -450,7 +450,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         type = PropertyType.SELECTOR,
         category = "Score",
         subcategory = "Elements",
-        options = ["Off", "Total", "Total and Minimum"]
+        options = ["Off", "Total", "Total and Missing"]
     )
     var scoreSecrets = 1
 
@@ -542,7 +542,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         type = PropertyType.SELECTOR,
         category = "Run Information",
         subcategory = "Elements",
-        options = ["Off", "Total", "Total and Minimum"]
+        options = ["Off", "Total", "Total and Missing"]
     )
     var runInformationSecrets = 1
 

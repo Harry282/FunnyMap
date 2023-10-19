@@ -76,7 +76,10 @@ class ScoreElement : MovableGuiElement() {
 
             when (config.scoreSecrets) {
                 1 -> list.add("§7Secrets: §b${RunInformation.secretsFound}§7/§c${RunInformation.secretTotal}")
-                2 -> list.add("§7Secrets: §b${RunInformation.secretsFound}§7/§e${RunInformation.minSecrets}§7/§c${RunInformation.secretTotal}")
+                2 -> {
+                    val missing = (RunInformation.minSecrets - RunInformation.secretsFound).coerceAtLeast(0)
+                    list.add("§7Secrets: §b${RunInformation.secretsFound}§7/§e${missing}§7/§c${RunInformation.secretTotal}")
+                }
             }
 
             if (config.scoreCrypts) {
@@ -114,7 +117,10 @@ class ScoreElement : MovableGuiElement() {
 
             when (config.runInformationSecrets) {
                 1 -> list.add("§7Secrets: §b${RunInformation.secretsFound}§7/§c${RunInformation.secretTotal}")
-                2 -> list.add("§7Secrets: §b${RunInformation.secretsFound}§7/§e${RunInformation.minSecrets}§7/§c${RunInformation.secretTotal}")
+                2 -> {
+                    val missing = (RunInformation.minSecrets - RunInformation.secretsFound).coerceAtLeast(0)
+                    list.add("§7Secrets: §b${RunInformation.secretsFound}§7/§e${missing}§7/§c${RunInformation.secretTotal}")
+                }
             }
 
             list.add("split")
