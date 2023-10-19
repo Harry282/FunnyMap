@@ -15,6 +15,7 @@ import net.minecraft.client.renderer.WorldRenderer
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats
 import net.minecraft.entity.Entity
 import net.minecraft.util.AxisAlignedBB
+import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.GL_LINE_STRIP
 import org.lwjgl.opengl.GL11.GL_QUADS
@@ -24,6 +25,7 @@ object RenderUtils {
 
     private val tessellator: Tessellator = Tessellator.getInstance()
     private val worldRenderer: WorldRenderer = tessellator.worldRenderer
+    private val mapIcons = ResourceLocation("funnymap", "marker.png")
 
     private fun preDraw() {
         GlStateManager.enableAlpha()
@@ -134,7 +136,7 @@ object RenderUtils {
         GlStateManager.pushMatrix()
         try {
             // Translates to the player's location which is updated every tick.
-            if (name == mc.thePlayer.name && player.mapX == 0 && player.mapZ == 0) {
+            if (player.isPlayer || name == mc.thePlayer.name) {
                 GlStateManager.translate(
                     (mc.thePlayer.posX - DungeonScan.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first,
                     (mc.thePlayer.posZ - DungeonScan.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second,
@@ -144,41 +146,53 @@ object RenderUtils {
                 GlStateManager.translate(player.mapX.toFloat(), player.mapZ.toFloat(), 0f)
             }
 
+            // Apply head rotation and scaling
+            GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
+            GlStateManager.scale(config.playerHeadScale, config.playerHeadScale, 1f)
+
+            if (config.mapVanillaMarker) {
+                GlStateManager.rotate(180f, 0f, 0f, 1f)
+                mc.textureManager.bindTexture(mapIcons)
+                worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX)
+                worldRenderer.pos(-6.0, 6.0, 0.0).tex(0.0, 0.0).endVertex()
+                worldRenderer.pos(6.0, 6.0, 0.0).tex(1.0, 0.0).endVertex()
+                worldRenderer.pos(6.0, -6.0, 0.0).tex(1.0, 1.0).endVertex()
+                worldRenderer.pos(-6.0, -6.0, 0.0).tex(0.0, 1.0).endVertex()
+                tessellator.draw()
+                GlStateManager.rotate(-180f, 0f, 0f, 1f)
+            } else {
+                // Render black border around the player head
+                renderRectBorder(-6.0, -6.0, 12.0, 12.0, 1.0, Color(0, 0, 0, 255))
+
+                preDraw()
+                GlStateManager.enableTexture2D()
+                GlStateManager.color(1f, 1f, 1f, 1f)
+
+                mc.textureManager.bindTexture(player.skin)
+
+                Gui.drawScaledCustomSizeModalRect(-6, -6, 8f, 8f, 8, 8, 12, 12, 64f, 64f)
+                if (player.renderHat) {
+                    Gui.drawScaledCustomSizeModalRect(-6, -6, 40f, 8f, 8, 8, 12, 12, 64f, 64f)
+                }
+
+                postDraw()
+            }
+
             // Handle player names
             if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
                     "SPIRIT_LEAP", "INFINITE_SPIRIT_LEAP", "HAUNT_ABILITY"
                 )
             ) {
-                GlStateManager.pushMatrix()
-                GlStateManager.scale(0.8, 0.8, 1.0)
-                if (config.mapRotate) {
-                    GlStateManager.rotate(mc.thePlayer.rotationYaw + 180f, 0f, 0f, 1f)
+                if (!config.mapRotate) {
+                    GlStateManager.rotate(-player.yaw + 180f, 0f, 0f, 1f)
                 }
+                GlStateManager.translate(0f, 10f, 0f)
+                GlStateManager.scale(config.playerNameScale, config.playerNameScale, 1f)
                 mc.fontRendererObj.drawString(
-                    name, mc.fontRendererObj.getStringWidth(name) / -2f, 10f, 0xffffff, true
+                    name, -mc.fontRendererObj.getStringWidth(name) / 2f, 0f, 0xffffff, true
                 )
-                GlStateManager.popMatrix()
             }
 
-            // Apply head rotation and scaling
-            GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
-            GlStateManager.scale(config.playerHeadScale, config.playerHeadScale, 1f)
-
-            // Render black border around the player head
-            renderRectBorder(-6.0, -6.0, 12.0, 12.0, 1.0, Color(0, 0, 0, 255))
-
-            preDraw()
-            GlStateManager.enableTexture2D()
-            GlStateManager.color(1f, 1f, 1f, 1f)
-
-            mc.textureManager.bindTexture(player.skin)
-
-            Gui.drawScaledCustomSizeModalRect(-6, -6, 8f, 8f, 8, 8, 12, 12, 64f, 64f)
-            if (player.renderHat) {
-                Gui.drawScaledCustomSizeModalRect(-6, -6, 40f, 8f, 8, 8, 12, 12, 64f, 64f)
-            }
-
-            postDraw()
         } catch (e: Exception) {
             e.printStackTrace()
         }

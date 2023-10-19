@@ -33,6 +33,7 @@ data class DungeonPlayer(val skin: ResourceLocation) {
     var renderHat = false
     var dead = false
     var uuid = ""
+    var isPlayer = false
 
     /** Stats for compiling player tracker information */
     var startingSecrets = 0

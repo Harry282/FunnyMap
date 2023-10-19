@@ -74,6 +74,15 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var playerHeads = 0
 
     @Property(
+        name = "Vanilla Head Marker",
+        type = PropertyType.SWITCH,
+        description = "Uses the vanilla head marker for yourself.",
+        category = "Map",
+        subcategory = "Toggle"
+    )
+    var mapVanillaMarker = false
+
+    @Property(
         name = "Auto Scan",
         type = PropertyType.SWITCH,
         description = "Automatically scans when entering dungeon. Manual scan can be done with \"/fmap scan\"",
@@ -165,6 +174,17 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         decimalPlaces = 2
     )
     var playerHeadScale = 1f
+
+    @Property(
+        name = "Player Name Scale",
+        type = PropertyType.DECIMAL_SLIDER,
+        description = "Scale of player names relative to head size.",
+        category = "Map",
+        subcategory = "Size",
+        maxF = 2f,
+        decimalPlaces = 2
+    )
+    var playerNameScale = .8f
 
     @Property(
         name = "Map Background Color",

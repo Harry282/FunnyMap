@@ -89,6 +89,7 @@ object MapUpdate {
                 return@forEach
             }
             decor.entries.find { (icon, _) -> icon == player.icon }?.let { (_, vec4b) ->
+                player.isPlayer = vec4b.func_176110_a().toInt() == 1
                 player.mapX = vec4b.mapX
                 player.mapZ = vec4b.mapZ
                 player.yaw = vec4b.yaw
