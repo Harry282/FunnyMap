@@ -30,7 +30,9 @@ object MimicDetector {
         if (System.currentTimeMillis() - mimicOpenTime < 1500) return
         if (mc.thePlayer.getDistanceSq(mimicPos) < 400) {
             if (mc.theWorld.loadedEntityList.none {
-                    isMimic(it)
+                    it is EntityZombie && it.isChild && it.getCurrentArmor(3)
+                        ?.getSubCompound("SkullOwner", false)
+                        ?.getString("Id") == "bcb486a4-0cb5-35db-93f0-039fbdde03f0"
                 }) {
                 setMimicKilled()
             }
