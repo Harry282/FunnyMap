@@ -58,47 +58,32 @@ class ScoreElement : MovableGuiElement() {
 
         fun getScoreLines(): List<String> {
             val list: MutableList<String> = mutableListOf()
-            val scoreColor = when {
-                ScoreCalculation.score < 270 -> "§c"
-                ScoreCalculation.score < 300 -> "§e"
-                else -> "§a"
-            }
+
             when (config.scoreTotalScore) {
-                1 -> list.add("§7Score: §7($scoreColor${ScoreCalculation.score}§7)")
-                2 -> list.add(
-                    "§7Score: §b${ScoreCalculation.getSkillScore()}§7/" +
-                            "§a${ScoreCalculation.getExplorationScore()}§7/" +
-                            "§3${ScoreCalculation.getSpeedScore(RunInformation.timeElapsed)}§7/" +
-                            "§d${ScoreCalculation.getBonusScore()} §7: " +
-                            "§7($scoreColor${ScoreCalculation.score}§7)"
-                )
+                1 -> list.add(getScore(false))
+                2 -> list.add(getScore(true))
             }
 
             when (config.scoreSecrets) {
-                1 -> list.add("§7Secrets: §b${RunInformation.secretsFound}§7/§c${RunInformation.secretTotal}")
-                2 -> {
-                    val missing = (RunInformation.minSecrets - RunInformation.secretsFound).coerceAtLeast(0)
-                    list.add("§7Secrets: §b${RunInformation.secretsFound}§7/§e${missing}§7/§c${RunInformation.secretTotal}")
-                }
+                1 -> list.add(getSecrets(false))
+                2 -> list.add(getSecrets(true))
             }
 
             if (config.scoreCrypts) {
-                val color = if (RunInformation.cryptsCount >= 5) "§a" else "§c"
-                list.add("§7Crypts: $color${RunInformation.cryptsCount}")
+                list.add(getCrypts())
             }
 
             if (config.scoreMimic) {
-                list.add("§7Mimic:${if (RunInformation.mimicKilled) "§a ✔" else "§c ✘"}")
+                list.add(getMimic())
             }
 
             if (config.scoreDeaths) {
-                list.add("§7Deaths: §c${RunInformation.deathCount}")
+                list.add(getDeaths())
             }
 
-            val completedPuzzles = RunInformation.totalPuzzles - RunInformation.missingPuzzles
             when (config.scorePuzzles) {
-                1 -> list.add("§7Puzzles: §c$completedPuzzles")
-                2 -> list.add("§7Puzzles: §c$completedPuzzles§7/§c${RunInformation.totalPuzzles}")
+                1 -> list.add(getPuzzles(false))
+                2 -> list.add(getPuzzles(true))
             }
 
             return list
@@ -106,39 +91,87 @@ class ScoreElement : MovableGuiElement() {
 
         fun runInformationLines(): List<String> {
             val list: MutableList<String> = mutableListOf()
-            val scoreColor = when {
-                ScoreCalculation.score < 270 -> "§c"
-                ScoreCalculation.score < 300 -> "§e"
-                else -> "§a"
-            }
+
             if (config.runInformationScore) {
-                list.add("§7Score: §7($scoreColor${ScoreCalculation.score}§7)")
+                list.add(getScore(false))
             }
 
             when (config.runInformationSecrets) {
-                1 -> list.add("§7Secrets: §b${RunInformation.secretsFound}§7/§c${RunInformation.secretTotal}")
-                2 -> {
-                    val missing = (RunInformation.minSecrets - RunInformation.secretsFound).coerceAtLeast(0)
-                    list.add("§7Secrets: §b${RunInformation.secretsFound}§7/§e${missing}§7/§c${RunInformation.secretTotal}")
-                }
+                1 -> list.add(getSecrets(false))
+                2 -> list.add(getSecrets(true))
             }
 
             list.add("split")
 
             if (config.runInformationCrypts) {
-                val color = if (RunInformation.cryptsCount >= 5) "§a" else "§c"
-                list.add("§7Crypts: $color${RunInformation.cryptsCount}")
+                list.add(getCrypts())
             }
 
             if (config.runInformationMimic) {
-                list.add("§7Mimic:${if (RunInformation.mimicKilled) "§a ✔" else "§c ✘"}")
+                list.add(getMimic())
             }
 
             if (config.runInformationDeaths) {
-                list.add("§7Deaths: §c${RunInformation.deathCount}")
+                list.add(getDeaths())
             }
 
             return list
+        }
+
+        private fun getScore(expanded: Boolean): String {
+            val scoreColor = when {
+                ScoreCalculation.score < 270 -> "§c"
+                ScoreCalculation.score < 300 -> "§e"
+                else -> "§a"
+            }
+            var line = if (config.scoreMinimizedName) "" else "§7Score: "
+            if (expanded) {
+                line += "§b${ScoreCalculation.getSkillScore()}§7/" +
+                        "§a${ScoreCalculation.getExplorationScore()}§7/" +
+                        "§3${ScoreCalculation.getSpeedScore(RunInformation.timeElapsed)}§7/" +
+                        "§d${ScoreCalculation.getBonusScore()} §7: "
+            }
+            line += "§7($scoreColor${ScoreCalculation.score}§7)"
+
+            return line
+        }
+
+        private fun getSecrets(missing: Boolean): String {
+            var line = if (config.scoreMinimizedName) "" else "§7Secrets: "
+            line += "§b${RunInformation.secretsFound}§7/"
+            if (missing) {
+                val missingSecrets = (RunInformation.minSecrets - RunInformation.secretsFound).coerceAtLeast(0)
+                line += "§e${missingSecrets}§7/"
+            }
+            line += "§c${RunInformation.secretTotal}"
+
+            return line
+        }
+
+        private fun getCrypts(): String {
+            var line = if (config.scoreMinimizedName) "§7C: " else "§7Crypts: "
+            line += if (RunInformation.cryptsCount >= 5) "§a${RunInformation.cryptsCount}" else "§c${RunInformation.cryptsCount}"
+            return line
+        }
+
+        private fun getMimic(): String {
+            var line = if (config.scoreMinimizedName) "§7M: " else "§7Mimic: "
+            line += if (RunInformation.mimicKilled) "§a✔" else "§c✘"
+            return line
+        }
+
+        private fun getDeaths(): String {
+            var line = if (config.scoreMinimizedName) "§7D: " else "§7Deaths: "
+            line += "§c${RunInformation.deathCount}"
+            return line
+        }
+
+        private fun getPuzzles(total: Boolean): String {
+            val completedPuzzles = RunInformation.totalPuzzles - RunInformation.missingPuzzles
+            var line = if (config.scoreMinimizedName) "§7P: " else "§7Puzzles: "
+            line += "§c$completedPuzzles"
+            if (total) line += "§7/§c${RunInformation.totalPuzzles}"
+            return line
         }
     }
 }

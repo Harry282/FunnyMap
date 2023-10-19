@@ -398,6 +398,15 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var scoreElementEnabled = false
 
     @Property(
+        name = "Minimized Text",
+        description = "Shortens description for score elements.",
+        type = PropertyType.SWITCH,
+        category = "Score",
+        subcategory = "Toggle"
+    )
+    var scoreMinimizedName = false
+
+    @Property(
         name = "Hide in Boss",
         type = PropertyType.SWITCH,
         category = "Score",
