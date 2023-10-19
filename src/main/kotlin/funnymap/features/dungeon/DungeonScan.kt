@@ -62,7 +62,7 @@ object DungeonScan {
 
         if (allChunksLoaded) {
             if (config.scanChatInfo) {
-                val maxSecrets = ceil(RunInformation.secretTotal * ScoreCalculation.getSecretPercent())
+                val maxSecrets = ceil(Dungeon.Info.secretCount * ScoreCalculation.getSecretPercent())
                 var maxBonus = 5
                 if (dungeonFloor.equalsOneOf(6, 7)) maxBonus += 2
                 if (ScoreCalculation.paul) maxBonus += 10
