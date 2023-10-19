@@ -80,7 +80,8 @@ object MapUpdate {
 
         val decor = MapUtils.getMapData()?.mapDecorations ?: return
         Dungeon.dungeonTeammates.forEach { (name, player) ->
-            if (name == mc.thePlayer.name) {
+            if (player.isPlayer || name == mc.thePlayer.name) {
+                player.isPlayer = true
                 player.yaw = mc.thePlayer.rotationYaw
                 player.mapX =
                     ((mc.thePlayer.posX - DungeonScan.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first).roundToInt()
