@@ -1,5 +1,6 @@
 package funnymap.core
 
+import funnymap.FunnyMap.Companion.mc
 import funnymap.FunnyMap.Companion.scope
 import funnymap.core.map.Room
 import funnymap.features.dungeon.Dungeon
@@ -33,6 +34,7 @@ data class DungeonPlayer(val skin: ResourceLocation) {
     var renderHat = false
     var dead = false
     var uuid = ""
+        get() = if (isPlayer || mc.thePlayer.name == name) mc.thePlayer.uniqueID.toString() else field
     var isPlayer = false
 
     /** Stats for compiling player tracker information */
