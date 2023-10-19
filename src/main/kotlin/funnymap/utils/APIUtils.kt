@@ -7,15 +7,19 @@ import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
 
 object APIUtils {
-    fun fetch(uri: String): String {
+    fun fetch(uri: String): String? {
         HttpClients.createMinimal().use {
-            val httpGet = HttpGet(uri)
-            return EntityUtils.toString(it.execute(httpGet).entity)
+            try {
+                val httpGet = HttpGet(uri)
+                return EntityUtils.toString(it.execute(httpGet).entity)
+            } catch (e: Exception) {
+                return null
+            }
         }
     }
 
     fun getSecrets(uuid: String): Int {
-        val response = fetch("https://api.hypixel.net/player?key=${config.apiKey}&uuid=${uuid}")
+        val response = fetch("https://api.hypixel.net/player?key=${config.apiKey}&uuid=${uuid}") ?: return 0
         val jsonObject = JsonParser().parse(response).toJsonObject() ?: return 0
         if (jsonObject.getJsonPrimitive("success")?.asBoolean == true) {
             return jsonObject.getJsonObject("player")?.getJsonObject("achievements")
