@@ -4,6 +4,7 @@ import funnymap.commands.FunnyMapCommands
 import funnymap.config.Config
 import funnymap.features.dungeon.Dungeon
 import funnymap.features.dungeon.MapRender
+import funnymap.features.dungeon.RunInformation
 import funnymap.features.dungeon.WitherDoorESP
 import funnymap.ui.GuiRenderer
 import funnymap.utils.Location
@@ -39,7 +40,7 @@ class FunnyMap {
     fun onInit(event: FMLInitializationEvent) {
         ClientCommandHandler.instance.registerCommand((FunnyMapCommands()))
         listOf(
-            this, Dungeon, GuiRenderer, Location, MapRender, WitherDoorESP
+            this, Dungeon, GuiRenderer, Location, MapRender, RunInformation, WitherDoorESP
         ).forEach(MinecraftForge.EVENT_BUS::register)
     }
 

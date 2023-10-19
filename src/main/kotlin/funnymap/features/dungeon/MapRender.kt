@@ -4,6 +4,7 @@ import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
+import funnymap.ui.ScoreElement
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapRoomSize
 import funnymap.utils.RenderUtils
@@ -29,14 +30,14 @@ object MapRender {
 
     fun renderMap() {
         RenderUtils.renderRect(
-            0.0, 0.0, 128.0, if (config.mapShowRunInformation) 138.0 else 128.0, config.mapBackground
+            0.0, 0.0, 128.0, if (config.mapShowRunInformation) 142.0 else 128.0, config.mapBackground
         )
 
         RenderUtils.renderRectBorder(
             0.0,
             0.0,
             128.0,
-            if (config.mapShowRunInformation) 138.0 else 128.0,
+            if (config.mapShowRunInformation) 142.0 else 128.0,
             config.mapBorderWidth.toDouble(),
             config.mapBorder
         )
@@ -292,16 +293,16 @@ object MapRender {
 
     private fun renderRunInformation() {
         GlStateManager.pushMatrix()
-        GlStateManager.translate(0f, 128f, 0f)
-        GlStateManager.scale(0.66, 0.66, 1.0)
-        mc.fontRendererObj.drawString(
-            "Secrets: ${RunInformation.secretCount}/${Dungeon.Info.secretCount}",
-            5,
-            0,
-            0xffffff
-        )
-        mc.fontRendererObj.drawString("Crypts: ${RunInformation.cryptsCount}", 85, 0, 0xffffff)
-        mc.fontRendererObj.drawString("Deaths: ${RunInformation.deathCount}", 140, 0, 0xffffff)
+        GlStateManager.translate(64f, 128f, 0f)
+        GlStateManager.scale(2.0 / 3.0, 2.0 / 3.0, 1.0)
+        val lines = ScoreElement.runInformationLines()
+
+        val lineOne = lines.takeWhile { it != "split" }.joinToString(separator = "    ")
+        val lineTwo = lines.takeLastWhile { it != "split" }.joinToString(separator = "    ")
+
+        mc.fontRendererObj.drawString(lineOne, -mc.fontRendererObj.getStringWidth(lineOne) / 2f, 0f, 0xffffff, true)
+        mc.fontRendererObj.drawString(lineTwo, -mc.fontRendererObj.getStringWidth(lineTwo) / 2f, 9f, 0xffffff, true)
+
         GlStateManager.popMatrix()
     }
 }

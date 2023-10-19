@@ -55,15 +55,6 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var mapHideInBoss = false
 
     @Property(
-        name = "Show Run Information",
-        type = PropertyType.SWITCH,
-        description = "Shows run information under map.",
-        category = "Map",
-        subcategory = "Toggle"
-    )
-    var mapShowRunInformation = false
-
-    @Property(
         name = "Show Player Names",
         type = PropertyType.SELECTOR,
         description = "Show player name under player head",
@@ -149,7 +140,8 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         subcategory = "Size",
         minF = 0.1f,
         maxF = 4f,
-        decimalPlaces = 2
+        decimalPlaces = 2,
+        hidden = true
     )
     var mapScale = 1.25f
 
@@ -398,6 +390,187 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var colorTrap = Color(216, 127, 51)
 
     @Property(
+        name = "Show Score",
+        type = PropertyType.SWITCH,
+        category = "Score",
+        subcategory = "Toggle"
+    )
+    var scoreElementEnabled = false
+
+    @Property(
+        name = "Hide in Boss",
+        type = PropertyType.SWITCH,
+        category = "Score",
+        subcategory = "Toggle"
+    )
+    var scoreHideInBoss = false
+
+    @Property(
+        name = "Score Calc X",
+        type = PropertyType.NUMBER,
+        category = "Score",
+        subcategory = "Size",
+        hidden = true
+    )
+    var scoreX = 10
+
+    @Property(
+        name = "Score Calc Y",
+        type = PropertyType.NUMBER,
+        category = "Score",
+        subcategory = "Size",
+        hidden = true
+    )
+    var scoreY = 10
+
+    @Property(
+        name = "Score Calc Size",
+        type = PropertyType.DECIMAL_SLIDER,
+        description = "Scale of score calc.",
+        category = "Score",
+        subcategory = "Size",
+        minF = 0.1f,
+        maxF = 4f,
+        decimalPlaces = 2,
+        hidden = true
+    )
+    var scoreScale = 1f
+
+    @Property(
+        name = "Score",
+        type = PropertyType.SELECTOR,
+        category = "Score",
+        subcategory = "Elements",
+        options = ["Off", "On", "Separate"]
+    )
+    var scoreTotalScore = 2
+
+    @Property(
+        name = "Secrets",
+        type = PropertyType.SELECTOR,
+        category = "Score",
+        subcategory = "Elements",
+        options = ["Off", "Total", "Total and Minimum"]
+    )
+    var scoreSecrets = 1
+
+    @Property(
+        name = "Crypts",
+        type = PropertyType.SWITCH,
+        category = "Score",
+        subcategory = "Elements"
+    )
+    var scoreCrypts = false
+
+    @Property(
+        name = "Mimic",
+        type = PropertyType.SWITCH,
+        category = "Score",
+        subcategory = "Elements"
+    )
+    var scoreMimic = false
+
+    @Property(
+        name = "Deaths",
+        type = PropertyType.SWITCH,
+        category = "Score",
+        subcategory = "Elements"
+    )
+    var scoreDeaths = false
+
+    @Property(
+        name = "Puzzles",
+        type = PropertyType.SELECTOR,
+        category = "Score",
+        subcategory = "Elements",
+        options = ["Off", "Total", "Completed and Total"]
+    )
+    var scorePuzzles = 0
+
+    @Property(
+        name = "Score Messages",
+        type = PropertyType.SELECTOR,
+        category = "Score",
+        subcategory = "Message",
+        options = ["Off", "300", "270 and 300"]
+    )
+    var scoreMessage = 0
+
+    @Property(
+        name = "270 Message",
+        type = PropertyType.TEXT,
+        category = "Score",
+        subcategory = "Message"
+    )
+    var message270 = "270 Score"
+
+    @Property(
+        name = "300 Message",
+        type = PropertyType.TEXT,
+        category = "Score",
+        subcategory = "Message"
+    )
+    var message300 = "300 Score"
+
+    @Property(
+        name = "300 Time",
+        type = PropertyType.SWITCH,
+        category = "Score",
+        subcategory = "Message"
+    )
+    var timeTo300 = false
+
+    @Property(
+        name = "Show Run Information",
+        type = PropertyType.SWITCH,
+        description = "Shows run information under map.",
+        category = "Run Information",
+        subcategory = "Toggle"
+    )
+    var mapShowRunInformation = true
+
+    @Property(
+        name = "Score",
+        type = PropertyType.SWITCH,
+        category = "Run Information",
+        subcategory = "Elements"
+    )
+    var runInformationScore = true
+
+    @Property(
+        name = "Secrets",
+        type = PropertyType.SELECTOR,
+        category = "Run Information",
+        subcategory = "Elements",
+        options = ["Off", "Total", "Total and Minimum"]
+    )
+    var runInformationSecrets = 1
+
+    @Property(
+        name = "Crypts",
+        type = PropertyType.SWITCH,
+        category = "Run Information",
+        subcategory = "Elements"
+    )
+    var runInformationCrypts = true
+
+    @Property(
+        name = "Mimic",
+        type = PropertyType.SWITCH,
+        category = "Run Information",
+        subcategory = "Elements"
+    )
+    var runInformationMimic = true
+
+    @Property(
+        name = "Deaths",
+        type = PropertyType.SWITCH,
+        category = "Run Information",
+        subcategory = "Elements"
+    )
+    var runInformationDeaths = true
+
+    @Property(
         name = "Hypixel API Key",
         type = PropertyType.TEXT,
         category = "Other Features",
@@ -454,6 +627,14 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     )
     var forceSkyblock = false
 
+    @Property(
+        name = "Paul Score",
+        description = "Assumes paul perk is active to give 10 bonus score.",
+        type = PropertyType.SWITCH,
+        category = "Debug"
+    )
+    var paulBonus = false
+
     init {
         initialize()
         setCategoryDescription(
@@ -464,11 +645,11 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     private object CategorySorting : SortingBehavior() {
 
         private val configCategories = listOf(
-            "Map", "Rooms", "Colors", "Other Features", "Debug"
+            "Map", "Rooms", "Run Information", "Score", "Colors", "Other Features", "Debug"
         )
 
         private val configSubcategories = listOf(
-            "Toggle", "Scanning", "Size", "Render"
+            "Toggle", "Elements", "Scanning", "Size", "Render"
         )
 
         override fun getCategoryComparator(): Comparator<in Category> = compareBy { configCategories.indexOf(it.name) }

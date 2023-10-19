@@ -64,7 +64,10 @@ object DungeonScan {
                 val lines = mutableListOf(
                     "&aScan Finished!",
                     "&aPuzzles (&c${Dungeon.Info.puzzles.size}&a):",
-                    Dungeon.Info.puzzles.joinToString(separator = "\n&b- &d", prefix = "&b- &d"),
+                    Dungeon.Info.puzzles.entries.joinToString(
+                        separator = "\n&b- &d",
+                        prefix = "&b- &d"
+                    ) { it.key.roomDataName },
                     "&6Trap: &a${Dungeon.Info.trapType}",
                     "&8Wither Doors: &7${Dungeon.Info.witherDoors - 1}",
                     "&7Total Crypts: &6${Dungeon.Info.cryptCount}",
@@ -72,6 +75,7 @@ object DungeonScan {
                 )
                 Utils.modMessage(lines.joinToString(separator = "\n"))
             }
+            Dungeon.Info.roomCount = Dungeon.Info.dungeonList.filter { it is Room && !it.isSeparator }.size
             hasScanned = true
         }
 
@@ -107,7 +111,9 @@ object DungeonScan {
                                 else -> 0f
                             }
                             RoomType.TRAP -> Dungeon.Info.trapType = data.name.split(" ")[0]
-                            RoomType.PUZZLE -> Dungeon.Info.puzzles.add(data.name)
+                            RoomType.PUZZLE -> Puzzle.fromName(data.name)
+                                ?.let { Dungeon.Info.puzzles.putIfAbsent(it, false) }
+
                             else -> {}
                         }
                     } else if (x < duplicateRoom.x || (x == duplicateRoom.x && z < duplicateRoom.z)) {

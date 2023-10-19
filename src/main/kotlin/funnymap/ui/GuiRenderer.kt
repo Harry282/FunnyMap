@@ -9,7 +9,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 object GuiRenderer {
     val elements = mutableListOf(
-        MapElement()
+        MapElement(),
+        ScoreElement()
     )
 
     @SubscribeEvent

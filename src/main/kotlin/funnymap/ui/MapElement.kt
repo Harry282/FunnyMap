@@ -16,7 +16,7 @@ class MapElement : MovableGuiElement() {
             config.mapY = value
         }
     override val h: Int
-        get() = if (config.mapShowRunInformation) 138 else 128
+        get() = if (config.mapShowRunInformation) 142 else 128
     override val w: Int
         get() = 128
     override var x2: Int = (x + w * scale).toInt()

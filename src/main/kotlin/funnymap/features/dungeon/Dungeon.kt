@@ -3,10 +3,7 @@ package funnymap.features.dungeon
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.scope
 import funnymap.core.DungeonPlayer
-import funnymap.core.map.Door
-import funnymap.core.map.Room
-import funnymap.core.map.Tile
-import funnymap.core.map.Unknown
+import funnymap.core.map.*
 import funnymap.events.ChatEvent
 import funnymap.utils.Location
 import funnymap.utils.Location.inDungeons
@@ -48,10 +45,10 @@ object Dungeon {
 
         MapUpdate.updateRooms()
         MapUpdate.updateDoors()
+        ScoreCalculation.updateScore()
 
         TabList.getDungeonTabList()?.let {
             MapUpdate.updatePlayers(it)
-            RunInformation.updateRunInformation(it)
         }
     }
 
@@ -73,6 +70,8 @@ object Dungeon {
                 MapUpdate.getPlayers()
                 Info.startTime = System.currentTimeMillis()
             }
+
+            "[BOSS] The Watcher: You have proven yourself. You may pass." -> RunInformation.bloodDone = true
         }
     }
 
@@ -87,6 +86,7 @@ object Dungeon {
         PlayerTracker.roomClears.clear()
         MapUtils.calibrated = false
         DungeonScan.hasScanned = false
+        RunInformation.reset()
     }
 
     fun shouldSearchMimic() = DungeonScan.hasScanned && !Info.mimicFound && Location.dungeonFloor.equalsOneOf(6, 7)
@@ -95,7 +95,8 @@ object Dungeon {
         // 6 x 6 room grid, 11 x 11 with connections
         val dungeonList = Array<Tile>(121) { Unknown(0, 0) }
         val uniqueRooms = mutableListOf<Room>()
-        val puzzles = mutableListOf<String>()
+        var roomCount = 0
+        val puzzles = mutableMapOf<Puzzle, Boolean>()
 
         var trapType = ""
         var witherDoors = 0
@@ -106,6 +107,7 @@ object Dungeon {
         var startTime = 0L
         fun reset() {
             dungeonList.fill(Unknown(0, 0))
+            roomCount = 0
             uniqueRooms.clear()
             puzzles.clear()
 
