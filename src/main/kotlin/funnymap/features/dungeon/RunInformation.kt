@@ -3,6 +3,7 @@ package funnymap.features.dungeon
 import funnymap.events.ChatEvent
 import funnymap.events.ScoreboardEvent
 import funnymap.events.TabListEvent
+import funnymap.features.dungeon.MimicDetector.setMimicKilled
 import funnymap.features.dungeon.ScoreCalculation.getBonusScore
 import funnymap.utils.Location
 import funnymap.utils.Location.inDungeons
@@ -73,6 +74,9 @@ object RunInformation {
 
         ScoreCalculation.message270 = false
         ScoreCalculation.message300 = false
+
+        MimicDetector.mimicPos = null
+        MimicDetector.mimicOpenTime = 0L
     }
 
     @SubscribeEvent
@@ -125,12 +129,9 @@ object RunInformation {
     @SubscribeEvent
     fun onEntityDeath(event: LivingDeathEvent) {
         if (!inDungeons || event.entity !is EntityZombie || mimicKilled) return
-        val entity = event.entity as EntityZombie
-        if (!entity.isChild) return
-        for (i in 0..3) {
-            if (entity.getCurrentArmor(i) != null) return
+        if (MimicDetector.isMimic(event.entity)) {
+            setMimicKilled()
         }
-        mimicKilled = true
     }
 
     @SubscribeEvent

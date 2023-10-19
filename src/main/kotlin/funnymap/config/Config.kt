@@ -587,6 +587,22 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var teamInfo = false
 
     @Property(
+        name = "Mimic Message",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+        subcategory = "Mimic Message"
+    )
+    var mimicMessageEnabled = false
+
+    @Property(
+        name = "Mimic Message Text",
+        type = PropertyType.TEXT,
+        category = "Other Features",
+        subcategory = "Mimic Message"
+    )
+    var mimicMessage = "Mimic Killed!"
+
+    @Property(
         name = "Wither Door ESP",
         description = "Boxes unopened wither doors.",
         type = PropertyType.SWITCH,

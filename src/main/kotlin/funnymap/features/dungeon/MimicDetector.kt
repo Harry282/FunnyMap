@@ -1,11 +1,57 @@
 package funnymap.features.dungeon
 
+import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.map.Room
 import funnymap.features.dungeon.ScanUtils.getRoomFromPos
+import gg.essential.universal.UChat
+import net.minecraft.block.state.IBlockState
+import net.minecraft.entity.Entity
+import net.minecraft.entity.monster.EntityZombie
+import net.minecraft.init.Blocks
 import net.minecraft.tileentity.TileEntityChest
+import net.minecraft.util.BlockPos
 
 object MimicDetector {
+
+    var mimicOpenTime = 0L
+    var mimicPos: BlockPos? = null
+
+    fun onBlockChange(pos: BlockPos, old: IBlockState, new: IBlockState) {
+        if (old.block == Blocks.trapped_chest && new.block == Blocks.air) {
+            mimicOpenTime = System.currentTimeMillis()
+            mimicPos = pos
+        }
+    }
+
+    fun checkMimicDead() {
+        if (RunInformation.mimicKilled) return
+        if (mimicOpenTime == 0L) return
+        if (System.currentTimeMillis() - mimicOpenTime < 500) return
+        if (mc.thePlayer.getDistanceSq(mimicPos) < 400) {
+            if (mc.theWorld.loadedEntityList.none {
+                    isMimic(it)
+                }) {
+                setMimicKilled()
+            }
+        }
+    }
+
+    fun setMimicKilled() {
+        RunInformation.mimicKilled = true
+        if (config.mimicMessageEnabled) UChat.say("/pc ${config.mimicMessage}")
+    }
+
+    fun isMimic(entity: Entity): Boolean {
+        if (entity is EntityZombie && entity.isChild) {
+            for (i in 0..3) {
+                if (entity.getCurrentArmor(i) != null) return false
+            }
+            return true
+        }
+        return false
+    }
+
     fun findMimic(): String? {
         val mimicRoom = getMimicRoom()
         if (mimicRoom == "") return null
