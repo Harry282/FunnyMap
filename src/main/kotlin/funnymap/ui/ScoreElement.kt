@@ -60,30 +60,30 @@ class ScoreElement : MovableGuiElement() {
             val list: MutableList<String> = mutableListOf()
 
             when (config.scoreTotalScore) {
-                1 -> list.add(getScore(false))
-                2 -> list.add(getScore(true))
+                1 -> list.add(getScore(config.scoreMinimizedName, false))
+                2 -> list.add(getScore(config.scoreMinimizedName, true))
             }
 
             when (config.scoreSecrets) {
-                1 -> list.add(getSecrets(false))
-                2 -> list.add(getSecrets(true))
+                1 -> list.add(getSecrets(config.scoreMinimizedName, false))
+                2 -> list.add(getSecrets(config.scoreMinimizedName, true))
             }
 
             if (config.scoreCrypts) {
-                list.add(getCrypts())
+                list.add(getCrypts(config.scoreMinimizedName))
             }
 
             if (config.scoreMimic) {
-                list.add(getMimic())
+                list.add(getMimic(config.scoreMinimizedName))
             }
 
             if (config.scoreDeaths) {
-                list.add(getDeaths())
+                list.add(getDeaths(config.scoreMinimizedName))
             }
 
             when (config.scorePuzzles) {
-                1 -> list.add(getPuzzles(false))
-                2 -> list.add(getPuzzles(true))
+                1 -> list.add(getPuzzles(config.scoreMinimizedName, false))
+                2 -> list.add(getPuzzles(config.scoreMinimizedName, true))
             }
 
             return list
@@ -93,12 +93,12 @@ class ScoreElement : MovableGuiElement() {
             val list: MutableList<String> = mutableListOf()
 
             if (config.runInformationScore) {
-                list.add(getScore(false))
+                list.add(getScore(minimized = false, expanded = false))
             }
 
             when (config.runInformationSecrets) {
-                1 -> list.add(getSecrets(false))
-                2 -> list.add(getSecrets(true))
+                1 -> list.add(getSecrets(minimized = false, missing = false))
+                2 -> list.add(getSecrets(minimized = false, missing = true))
             }
 
             list.add("split")
@@ -118,13 +118,13 @@ class ScoreElement : MovableGuiElement() {
             return list
         }
 
-        private fun getScore(expanded: Boolean): String {
+        private fun getScore(minimized: Boolean = false, expanded: Boolean): String {
             val scoreColor = when {
                 ScoreCalculation.score < 270 -> "§c"
                 ScoreCalculation.score < 300 -> "§e"
                 else -> "§a"
             }
-            var line = if (config.scoreMinimizedName) "" else "§7Score: "
+            var line = if (minimized) "" else "§7Score: "
             if (expanded) {
                 line += "§b${ScoreCalculation.getSkillScore()}§7/" +
                         "§a${ScoreCalculation.getExplorationScore()}§7/" +
@@ -136,8 +136,8 @@ class ScoreElement : MovableGuiElement() {
             return line
         }
 
-        private fun getSecrets(missing: Boolean): String {
-            var line = if (config.scoreMinimizedName) "" else "§7Secrets: "
+        private fun getSecrets(minimized: Boolean = false, missing: Boolean): String {
+            var line = if (minimized) "" else "§7Secrets: "
             line += "§b${RunInformation.secretsFound}§7/"
             if (missing) {
                 val missingSecrets = (RunInformation.minSecrets - RunInformation.secretsFound).coerceAtLeast(0)
@@ -148,27 +148,27 @@ class ScoreElement : MovableGuiElement() {
             return line
         }
 
-        private fun getCrypts(): String {
-            var line = if (config.scoreMinimizedName) "§7C: " else "§7Crypts: "
+        private fun getCrypts(minimized: Boolean = false): String {
+            var line = if (minimized) "§7C: " else "§7Crypts: "
             line += if (RunInformation.cryptsCount >= 5) "§a${RunInformation.cryptsCount}" else "§c${RunInformation.cryptsCount}"
             return line
         }
 
-        private fun getMimic(): String {
-            var line = if (config.scoreMinimizedName) "§7M: " else "§7Mimic: "
+        private fun getMimic(minimized: Boolean = false): String {
+            var line = if (minimized) "§7M: " else "§7Mimic: "
             line += if (RunInformation.mimicKilled) "§a✔" else "§c✘"
             return line
         }
 
-        private fun getDeaths(): String {
-            var line = if (config.scoreMinimizedName) "§7D: " else "§7Deaths: "
+        private fun getDeaths(minimized: Boolean = false): String {
+            var line = if (minimized) "§7D: " else "§7Deaths: "
             line += "§c${RunInformation.deathCount}"
             return line
         }
 
-        private fun getPuzzles(total: Boolean): String {
+        private fun getPuzzles(minimized: Boolean = false, total: Boolean): String {
             val completedPuzzles = RunInformation.totalPuzzles - RunInformation.missingPuzzles
-            var line = if (config.scoreMinimizedName) "§7P: " else "§7Puzzles: "
+            var line = if (minimized) "§7P: " else "§7Puzzles: "
             line += "§c$completedPuzzles"
             if (total) line += "§7/§c${RunInformation.totalPuzzles}"
             return line
