@@ -4,8 +4,6 @@ import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
-import funnymap.utils.Location.inBoss
-import funnymap.utils.Location.inDungeons
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapRoomSize
 import funnymap.utils.RenderUtils
@@ -15,8 +13,6 @@ import gg.essential.elementa.utils.withAlpha
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.ResourceLocation
-import net.minecraftforge.client.event.RenderGameOverlayEvent
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
@@ -31,20 +27,7 @@ object MapRender {
 
     var dynamicRotation = 0f
 
-    @SubscribeEvent
-    fun onOverlay(event: RenderGameOverlayEvent.Pre) {
-        if (event.type != RenderGameOverlayEvent.ElementType.ALL || !inDungeons || !config.mapEnabled) return
-        if (config.mapHideInBoss && inBoss) return
-        if (mc.currentScreen is MoveMapGui) return
-        mc.entityRenderer.setupOverlayRendering()
-        renderMap()
-    }
-
     fun renderMap() {
-        GlStateManager.pushMatrix()
-        GlStateManager.translate(config.mapX.toFloat(), config.mapY.toFloat(), 0f)
-        GlStateManager.scale(config.mapScale, config.mapScale, 1f)
-
         RenderUtils.renderRect(
             0.0, 0.0, 128.0, if (config.mapShowRunInformation) 138.0 else 128.0, config.mapBackground
         )
@@ -83,8 +66,6 @@ object MapRender {
         if (config.mapShowRunInformation) {
             renderRunInformation()
         }
-
-        GlStateManager.popMatrix()
     }
 
     private fun setupRotate() {

@@ -1,7 +1,7 @@
 package funnymap.config
 
 import funnymap.FunnyMap
-import funnymap.features.dungeon.MoveMapGui
+import funnymap.ui.EditLocationGui
 import gg.essential.vigilance.Vigilant
 import gg.essential.vigilance.data.*
 import java.awt.Color
@@ -108,7 +108,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         placeholder = "Edit"
     )
     fun openMoveMapGui() {
-        FunnyMap.display = MoveMapGui()
+        FunnyMap.display = EditLocationGui()
     }
 
     @Property(
