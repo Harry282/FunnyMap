@@ -16,7 +16,6 @@ object GuiRenderer {
     @SubscribeEvent
     fun onOverlay(event: RenderGameOverlayEvent.Pre) {
         if (event.type != RenderGameOverlayEvent.ElementType.ALL || !Location.inDungeons || !FunnyMap.config.mapEnabled) return
-        if (FunnyMap.config.mapHideInBoss && Location.inBoss) return
         if (mc.currentScreen is EditLocationGui) return
         mc.entityRenderer.setupOverlayRendering()
         elements.forEach {
