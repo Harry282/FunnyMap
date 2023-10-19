@@ -111,10 +111,13 @@ object RunInformation {
                 }
             }
 
-            if (event.text.contains("blaze done", true)) {
-                val puzzle = Dungeon.Info.puzzles.keys.find { it.tabName == "Higher Or Lower" } ?: return
-                Dungeon.Info.puzzles[puzzle] = true
-                return
+            listOf("blaze done", "blaze puzzle finished").forEach {
+                if (event.text.contains(it, true)) {
+                    val puzzle =
+                        Dungeon.Info.puzzles.keys.find { puzzle -> puzzle.tabName == "Higher Or Lower" } ?: return
+                    Dungeon.Info.puzzles[puzzle] = true
+                    return
+                }
             }
         }
     }
