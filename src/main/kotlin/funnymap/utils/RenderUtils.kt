@@ -150,7 +150,7 @@ object RenderUtils {
             GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
             GlStateManager.scale(config.playerHeadScale, config.playerHeadScale, 1f)
 
-            if (config.mapVanillaMarker) {
+            if (config.mapVanillaMarker && player.isPlayer) {
                 GlStateManager.rotate(180f, 0f, 0f, 1f)
                 mc.textureManager.bindTexture(mapIcons)
                 worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX)
