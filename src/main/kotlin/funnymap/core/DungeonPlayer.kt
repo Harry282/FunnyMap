@@ -6,6 +6,7 @@ import funnymap.features.dungeon.Dungeon
 import funnymap.utils.APIUtils
 import funnymap.utils.Location
 import funnymap.utils.MapUtils
+import funnymap.utils.Utils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.minecraft.entity.player.EntityPlayer
@@ -47,7 +48,10 @@ data class DungeonPlayer(val skin: ResourceLocation) {
         uuid = player.uniqueID.toString()
         playerLoaded = true
         scope.launch(Dispatchers.IO) {
-            startingSecrets = APIUtils.getSecrets(uuid)
+            val secrets = APIUtils.getSecrets(uuid)
+            Utils.runMinecraftThread {
+                startingSecrets = secrets
+            }
         }
     }
 
