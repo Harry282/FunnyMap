@@ -8,7 +8,6 @@ import funnymap.ui.ScoreElement
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapRoomSize
 import funnymap.utils.RenderUtils
-import funnymap.utils.Utils
 import funnymap.utils.Utils.equalsOneOf
 import gg.essential.elementa.utils.withAlpha
 import net.minecraft.client.gui.ScaledResolution
@@ -262,8 +261,7 @@ object MapRender {
                     }
                 }
             }
-        } catch (e: ConcurrentModificationException) {
-            Utils.modMessage("If you see this, ping me in supporter gen to fix map rendering.")
+        } catch (_: ConcurrentModificationException) {
         }
     }
 
