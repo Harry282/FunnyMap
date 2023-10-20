@@ -1,6 +1,5 @@
 package funnymap.ui
 
-import funnymap.FunnyMap
 import funnymap.FunnyMap.Companion.mc
 import funnymap.utils.Location
 import net.minecraft.client.renderer.GlStateManager
@@ -15,7 +14,7 @@ object GuiRenderer {
 
     @SubscribeEvent
     fun onOverlay(event: RenderGameOverlayEvent.Pre) {
-        if (event.type != RenderGameOverlayEvent.ElementType.ALL || !Location.inDungeons || !FunnyMap.config.mapEnabled) return
+        if (event.type != RenderGameOverlayEvent.ElementType.ALL || !Location.inDungeons) return
         if (mc.currentScreen is EditLocationGui) return
         mc.entityRenderer.setupOverlayRendering()
         elements.forEach {
