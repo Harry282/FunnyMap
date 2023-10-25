@@ -66,7 +66,7 @@ class FunnyMapCommands : CommandBase() {
         sender: ICommandSender,
         args: Array<String>,
         pos: BlockPos,
-    ): MutableList<String> {
+    ): MutableList<String>? {
         if (args.size == 1) {
             return getListOfStringsMatchingLastWord(args, commands)
         }

@@ -47,12 +47,13 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
 
     @Property(
         name = "Hide In Boss",
-        type = PropertyType.SWITCH,
+        type = PropertyType.SELECTOR,
         description = "Hides the map in boss.",
         category = "Map",
-        subcategory = "Toggle"
+        subcategory = "Toggle",
+        options = ["False", "Only show run information", "Hide all"]
     )
-    var mapHideInBoss = false
+    var mapHideInBoss = 0
 
     @Property(
         name = "Show Run Information",
@@ -232,9 +233,37 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         type = PropertyType.SELECTOR,
         description = "Adds room checkmarks based on room state.",
         category = "Rooms",
-        options = ["None", "Default", "NEU"]
+        options = ["None", "Default", "NEU", "Triangle"]
     )
     var mapCheckmark = 1
+
+    @Property(
+        name = "Triangle Checkmark Scale",
+        type = PropertyType.DECIMAL_SLIDER,
+        description = "How large the triangle room state indicator should be.",
+        category = "Rooms",
+        minF = -0.5f,
+        maxF = 2f
+    )
+    var triangleScale = 1f
+
+    @Property(
+        name = "Mimic Head",
+        type = PropertyType.SWITCH,
+        description = "Renders Mimic position on map.",
+        category = "Rooms"
+    )
+    var mimicOnMap = false
+
+    @Property(
+        name = "Mimic Head Scale",
+        type = PropertyType.DECIMAL_SLIDER,
+        description = "How large the mimic head on map should be.",
+        category = "Rooms",
+        minF = -0.5f,
+        maxF = 2f
+    )
+    var mimicHeadScale = 1f
 
     @Property(
         name = "Room Opacity",
@@ -378,12 +407,66 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var colorTrap = Color(216, 127, 51)
 
     @Property(
+        name = "Triangle Discovered Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms"
+    )
+    var colorDiscovered = Color(0, 0, 0)
+
+    @Property(
+        name = "Triangle Failed Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms"
+    )
+    var colorFailed = Color(60, 60, 60)
+
+    @Property(
+        name = "Triangle Scale of Failed Rooms",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Colors",
+        subcategory = "Rooms",
+        minF =  1f,
+        maxF = 2.7f
+    )
+    var triangleFailedScale = 1f
+
+    @Property(
+        name = "Triangle Secret Start Gradient",
+        type = PropertyType.SELECTOR,
+        description = "At what color the secret gradient will start.",
+        category = "Colors",
+        subcategory = "Rooms",
+        options = ["red", "green", "blue"]
+    )
+    var colorTriangleStart = 0
+
+    @Property(
+        name = "Triangle Secret End Gradient",
+        type = PropertyType.SELECTOR,
+        description = "At what color the secrets found gradient will end and the color of completed rooms.",
+        category = "Colors",
+        subcategory = "Rooms",
+        options = ["red", "green", "blue"]
+    )
+    var colorTriangleEnd = 1
+
+    @Property(
         name = "Hypixel API Key",
         type = PropertyType.TEXT,
         category = "Other Features",
         protectedText = true
     )
     var apiKey = ""
+
+    @Property(
+        name = "Small Titles",
+        description = "If e.g. score titles should be small.",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+    )
+    var smallTitles = false
 
     @Property(
         name = "Show Team Info",
@@ -394,38 +477,323 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var teamInfo = false
 
     @Property(
-        name = "Wither Door ESP",
-        description = "Boxes unopened wither doors.",
+        name = "Team Info Terminals",
+        description = "Shows terminal info and rating with run summary.",
         type = PropertyType.SWITCH,
-        category = "Other Features",
-        subcategory = "Wither Door"
+        category = "Other Features"
     )
-    var witherDoorESP = false
+    var teamInfoTerminals = false
 
     @Property(
-        name = "Color",
+        name = "Atrocious Limit",
+        description = "Lowest, 1st Upper Limit",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Other Features",
+        subcategory = "Terminal Team Info",
+        hidden = true,
+        minF = -1f,
+        maxF = 100f
+    )
+    var atrociousThreshold = 7f
+
+    @Property(
+        name = "Bad Limit",
+        description = "2nd Upper Limit",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Other Features",
+        subcategory = "Terminal Team Info",
+        hidden = true,
+        minF = -1f,
+        maxF = 100f
+    )
+    var badThreshold = 10f
+
+    @Property(
+        name = "Alright Limit",
+        description = "3rd Upper Limit",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Other Features",
+        subcategory = "Terminal Team Info",
+        hidden = true,
+        minF = -1f,
+        maxF = 100f
+    )
+    var alrightThreshold = 15f
+
+    @Property(
+        name = "Good Limit",
+        description = "4th Upper Limit, the next one, the highest is excellent",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Other Features",
+        subcategory = "Terminal Team Info",
+        hidden = true,
+        minF = -1f,
+        maxF = 100f
+    )
+    var goodThreshold = 21f
+
+    @Property(
+        name = "Device Value",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Other Features",
+        subcategory = "Terminal Team Info",
+        hidden = true,
+        minF = 0f,
+        maxF = 20f
+    )
+    var deviceValue = 4.4f
+
+    @Property(
+        name = "Terminal Value",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Other Features",
+        subcategory = "Terminal Team Info",
+        hidden = true,
+        minF = 0f,
+        maxF = 20f
+    )
+    var terminalValue = 3.7f
+
+    @Property(
+        name = "Lever Value",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Other Features",
+        subcategory = "Terminal Team Info",
+        hidden = true,
+        minF = 0f,
+        maxF = 20f
+    )
+    var leverValue = 1.05f
+
+    @Property(
+        name = "Show Terminal Info",
+        description = "Shows team member terminal count at the end of terminal phase.",
+        type = PropertyType.SWITCH,
+        category = "Other Features"
+    )
+    var terminalInfo = false
+
+    @Property(
+        name = "Send Mimic Found",
+        description = "Sends a message to party chat when mimic is found.",
+        type = PropertyType.SWITCH,
+        category = "Other Features"
+    )
+    var sendMimicFound = false
+
+    @Property(
+        name = "Mimic Message",
+        description = "Message to be sent when mimic is found.",
+        type = PropertyType.TEXT,
+        category = "Other Features"
+    )
+    var mimicMessage = "Mimic Killed!"
+
+    @Property(
+        name = "Door ESP",
+        description = "Boxes unopened wither/blood doors.",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+        subcategory = "Door ESP"
+    )
+    var doorESP = false
+
+    @Property(
+        name = "Wither Color",
         type = PropertyType.COLOR,
         category = "Other Features",
-        subcategory = "Wither Door",
+        subcategory = "Door ESP",
         allowAlpha = true
     )
     var witherDoorESPColor = Color(0, 0, 0)
 
     @Property(
+        name = "Fairy Color",
+        type = PropertyType.COLOR,
+        category = "Other Features",
+        subcategory = "Door ESP",
+        allowAlpha = true
+    )
+    var fairyDoorESPColor = Color(244, 0, 255)
+
+    @Property(
+        name = "Blood Color",
+        type = PropertyType.COLOR,
+        category = "Other Features",
+        subcategory = "Door ESP",
+        allowAlpha = true
+    )
+    var bloodDoorESPColor = Color(255, 0, 0)
+
+    @Property(
         name = "Outline Opacity",
         type = PropertyType.PERCENT_SLIDER,
         category = "Other Features",
-        subcategory = "Wither Door"
+        subcategory = "Door ESP"
     )
-    var witherDoorOutline = 1f
+    var doorOutline = 1f
+
+    @Property(
+        name = "Outline Thickness",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Other Features",
+        subcategory = "Door ESP",
+        maxF = 10f
+    )
+    var doorOutlineThickness = 1f
 
     @Property(
         name = "Fill Opacity",
         type = PropertyType.PERCENT_SLIDER,
         category = "Other Features",
-        subcategory = "Wither Door"
+        subcategory = "Door ESP"
     )
-    var witherDoorFill = 0.25f
+    var doorFill = 0.25f
+
+    @Property(
+        name = "Secret waypoints",
+        description = "Useful for setting up routes",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+        subcategory = "Secret Waypoints"
+    )
+    var secretWaypoints = false
+
+    @Property(
+        name = "Entrance Waypoints",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+        subcategory = "Secret Waypoints"
+    )
+    var entranceWaypoints = false
+
+    @Property(
+        name = "Lever Waypoints",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+        subcategory = "Secret Waypoints"
+    )
+    var leverWaypoints = false
+
+    @Property(
+        name = "Stonk Waypoints",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+        subcategory = "Secret Waypoints"
+    )
+    var stonkWaypoints = false
+
+    @Property(
+        name = "Superboom Waypoints",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+        subcategory = "Secret Waypoints"
+    )
+    var superboomWaypoints = false
+
+    @Property(
+        name = "Fairy Soul Waypoints",
+        type = PropertyType.SWITCH,
+        category = "Other Features",
+        subcategory = "Secret Waypoints"
+    )
+    var fairySoulWaypoints = false
+
+    @Property(
+        name = "Outline Opacity",
+        type = PropertyType.PERCENT_SLIDER,
+        category = "Other Features",
+        subcategory = "Secret Waypoints"
+    )
+    var secretOutline = 1f
+
+    @Property(
+        name = "Outline Thickness",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Other Features",
+        subcategory = "Secret Waypoints",
+        maxF = 5f
+    )
+    var secretOutlineThickness = 1f
+
+    @Property(
+        name = "Fill Opacity",
+        type = PropertyType.PERCENT_SLIDER,
+        category = "Other Features",
+        subcategory = "Secret Waypoints"
+    )
+    var secretFill = 0.25f
+
+    @Property(
+        name = "Show Score Calculation",
+        description = "Show Score estimate beneath map",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+    )
+    var scoreCalc = true
+
+    @Property(
+        name = "Minimum Secrets Required",
+        description = "Show Minimum amount of Secrets needed for 300 Score.",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+    )
+    var minSecrets = true
+
+    @Property(
+        name = "Score Messages",
+        description = "Display Notifications for 270/300 Score.",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+        subcategory = "Score Messages"
+    )
+    var scoreMessages = true
+
+    @Property(
+        name = "Score Notifications",
+        description = "How you will be notified for 270/300 score.",
+        type = PropertyType.SELECTOR,
+        category = "Score Calculation",
+        subcategory = "Score Messages",
+        options = ["None", "Title", "Chat message", "Both"]
+    )
+    var scoreNotifications = 1
+
+    @Property(
+        name = "Send Score Messages",
+        description = "Send score reached messages to party chat.",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+        subcategory = "Score Messages"
+    )
+    var sendScoreMessages = false
+
+    @Property(
+        name = "270 Score Message",
+        type = PropertyType.TEXT,
+        category = "Score Calculation",
+        subcategory = "Score Messages"
+    )
+    var lowerScoreMessage = "&b270 Score Reached!"
+
+    @Property(
+        name = "300 Score Message",
+        type = PropertyType.TEXT,
+        category = "Score Calculation",
+        subcategory = "Score Messages"
+
+    )
+    var higherScoreMessage = "&b300 Score Reached!"
+
+    @Property(
+        name = "Send Both Messages",
+        description = "By default only the max score of the floor will be sent.",
+        type = PropertyType.SWITCH,
+        category = "Score Calculation",
+        subcategory = "Score Messages"
+
+    )
+    var sendBothScores = false
 
     @Property(
         name = "Force Skyblock",
@@ -439,16 +807,27 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         setCategoryDescription(
             "Map", "&f&l Funny Map\n&7Big thanks to &lIllegalMap&r&7 by UnclaimedBloom"
         )
+        addDependency("teamInfoTerminals", "teamInfo")
+        addDependency("mimicMessage", "sendMimicFound")
+        listOf("witherDoorESPColor", "fairyDoorESPColor", "bloodDoorESPColor", "doorOutline", "doorOutlineThickness", "doorFill").forEach {
+            addDependency(it, "doorESP")
+        }
+        listOf("entranceWaypoints", "leverWaypoints", "stonkWaypoints", "superboomWaypoints", "fairySoulWaypoints", "secretOutline", "secretOutlineThickness", "secretFill").forEach {
+            addDependency(it, "secretWaypoints")
+        }
+        listOf("scoreNotifications", "sendScoreMessages", "lowerScoreMessage", "higherScoreMessage", "sendBothScores").forEach {
+            addDependency(it, "scoreMessages")
+        }
     }
 
     private object CategorySorting : SortingBehavior() {
 
         private val configCategories = listOf(
-            "Map", "Rooms", "Colors", "Other Features", "Debug"
+            "Map", "Rooms", "Colors", "Other Features", "Score Calculation", "Debug"
         )
 
         private val configSubcategories = listOf(
-            "Toggle", "Scanning", "Size", "Render"
+            "Toggle", "Scanning", "Size", "Render", "Score Messages"
         )
 
         override fun getCategoryComparator(): Comparator<in Category> = compareBy { configCategories.indexOf(it.name) }

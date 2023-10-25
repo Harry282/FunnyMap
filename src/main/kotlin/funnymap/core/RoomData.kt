@@ -9,4 +9,8 @@ data class RoomData(
     val crypts: Int,
     val secrets: Int,
     val trappedChests: Int,
+    val dirCores: List<Int>?,
+    val turn: List<Int>?,
+    val distance: Int?,
+    val strict: Boolean,
 )
