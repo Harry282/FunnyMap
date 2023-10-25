@@ -18,13 +18,13 @@ object TabList {
 
     class TabListComparator : Comparator<NetworkPlayerInfo> {
         override fun compare(o1: NetworkPlayerInfo?, o2: NetworkPlayerInfo?): Int {
-            if (o1 == null) return -1
-            else if (o2 == null) return 0
+            if (o1?.gameProfile?.name == null) return -1
+            else if (o2?.gameProfile?.name == null) return 0
 
             return ComparisonChain.start().compareTrueFirst(
                 o1.gameType != GameType.SPECTATOR, o2.gameType != GameType.SPECTATOR
             ).compare(
-                o1.playerTeam?.registeredName ?: "", o2.playerTeam?.registeredName ?: ""
+                o1.safePlayerTeam()?.registeredName ?: "", o2.safePlayerTeam()?.registeredName ?: ""
             ).compare(o1.gameProfile.name, o2.gameProfile.name).result()
         }
     }
@@ -32,6 +32,7 @@ object TabList {
     fun handlePacket(packet: S38PacketPlayerListItem) {
         val updated: ArrayList<NetworkPlayerInfo> = arrayListOf()
         packet.entries.forEach { player ->
+            if (player == null) return@forEach
             if (packet.action == S38PacketPlayerListItem.Action.REMOVE_PLAYER) {
                 TabList.removeIf { it.gameProfile.id == player.profile.id }
             } else {
@@ -66,4 +67,6 @@ object TabList {
     }
 
     fun checkTabList() = TabList.size > 18 && TabList.first()?.displayName?.formattedText?.contains("§r§b§lParty §r§f(") == true
+
+    fun NetworkPlayerInfo.safePlayerTeam() = funnymap.FunnyMap.mc.theWorld?.scoreboard?.getPlayersTeam(this.gameProfile?.name)
 }
