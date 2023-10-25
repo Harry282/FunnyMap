@@ -3,7 +3,6 @@ package funnymap.features.dungeon
 import funnymap.FunnyMap.Companion.config
 import funnymap.features.dungeon.RunInformation.completedRoomsPercentage
 import funnymap.features.dungeon.RunInformation.mimicKilled
-import funnymap.features.dungeon.RunInformation.missingPuzzles
 import funnymap.features.dungeon.RunInformation.secretPercentage
 import funnymap.utils.APIUtils
 import funnymap.utils.Location
@@ -39,7 +38,7 @@ object ScoreCalculation {
 
     fun getSkillScore(): Int {
         val deathDeduction = RunInformation.deathCount * 2 - if (RunInformation.deathCount > 0) 1 else 0
-        val puzzleDeduction = (missingPuzzles) * 10
+        val puzzleDeduction = (RunInformation.totalPuzzles - RunInformation.completedPuzzles) * 10
         val roomPercent = completedRoomsPercentage.coerceAtMost(1f)
         return 20 + ((80 * roomPercent).toInt() - puzzleDeduction - deathDeduction).coerceAtLeast(0)
     }

@@ -21,8 +21,8 @@ import kotlin.math.ceil
 object RunInformation {
 
     var deathCount = 0
-    val missingPuzzles: Int
-        get() = Dungeon.Info.puzzles.count { !it.value }
+    val completedPuzzles: Int
+        get() = Dungeon.Info.puzzles.count { it.value }
     var totalPuzzles = 0
     var cryptsCount = 0
     var secretsFound = 0
