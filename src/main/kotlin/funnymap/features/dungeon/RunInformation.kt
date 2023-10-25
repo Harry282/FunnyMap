@@ -24,16 +24,11 @@ object RunInformation {
     val missingPuzzles: Int
         get() = Dungeon.Info.puzzles.count { !it.value }
     var totalPuzzles = 0
-        get() = if (DungeonScan.hasScanned) Dungeon.Info.puzzles.size else field
     var cryptsCount = 0
     var secretsFound = 0
     var secretPercentage = 0f
     val secretTotal: Int
-        get() = if (DungeonScan.hasScanned) {
-            Dungeon.Info.secretCount
-        } else {
-            (secretsFound / (secretPercentage + 0.0001f) + 0.5).toInt()
-        }
+        get() = (secretsFound / (secretPercentage + 0.0001f) + 0.5).toInt()
     var minSecrets = 0
     var mimicKilled = false
     var completedRooms = 0
@@ -41,11 +36,7 @@ object RunInformation {
         get() = (completedRooms + (if (!Location.inBoss) 1 else 0) + (if (!bloodDone) 1 else 0)) / (if (totalRooms == 0) 36 else totalRooms).toFloat()
     var bloodDone = false
     val totalRooms: Int
-        get() = if (DungeonScan.hasScanned) {
-            Dungeon.Info.roomCount
-        } else {
-            (completedRooms / (clearedPercentage + 0.0001f) + 0.4).toInt()
-        }
+        get() = (completedRooms / (clearedPercentage + 0.0001f) + 0.4).toInt()
     var clearedPercentage = 0f
     var timeElapsed = 0
 
