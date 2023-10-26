@@ -41,7 +41,7 @@ object RunInformation {
     var timeElapsed = 0
 
     private val deathsRegex = Regex("§r§a§lTeam Deaths: §r§f(?<deaths>\\d+)§r")
-    private val missingPuzzleRegex = Regex("§r§b§lPuzzles: §r§f\\((?<count>\\d)\\)§r")
+    private val puzzleCountRegex = Regex("§r§b§lPuzzles: §r§f\\((?<count>\\d)\\)§r")
     private val failedPuzzleRegex = Regex("§r (?<puzzle>.+): §r§7\\[§r§c§l✖§r§7] §.+")
     private val solvedPuzzleRegex = Regex("§r (?<puzzle>.+): §r§7\\[§r§a§l✔§r§7] §.+")
     private val cryptsPattern = Regex("§r Crypts: §r§6(?<crypts>\\d+)§r")
@@ -144,7 +144,7 @@ object RunInformation {
             }
 
             text.contains("Puzzles:") -> {
-                totalPuzzles = missingPuzzleRegex.firstResult(text)?.toIntOrNull() ?: totalPuzzles
+                totalPuzzles = puzzleCountRegex.firstResult(text)?.toIntOrNull() ?: totalPuzzles
             }
 
             text.contains("✔") -> {
