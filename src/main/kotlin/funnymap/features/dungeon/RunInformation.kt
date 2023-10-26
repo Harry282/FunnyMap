@@ -9,6 +9,7 @@ import funnymap.utils.Location
 import funnymap.utils.Location.inDungeons
 import funnymap.utils.Utils.equalsOneOf
 import funnymap.utils.Utils.removeFormatting
+import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.entity.monster.EntityZombie
 import net.minecraft.network.play.server.S38PacketPlayerListItem
 import net.minecraftforge.event.entity.living.LivingDeathEvent
@@ -143,10 +144,6 @@ object RunInformation {
                 deathCount = deathsRegex.firstResult(text)?.toIntOrNull() ?: deathCount
             }
 
-            text.contains("Puzzles:") -> {
-                totalPuzzles = puzzleCountRegex.firstResult(text)?.toIntOrNull() ?: totalPuzzles
-            }
-
             text.contains("✔") -> {
                 val puzzleName = solvedPuzzleRegex.firstResult(text) ?: return
                 if (puzzleName == "???") return
@@ -178,6 +175,12 @@ object RunInformation {
                 completedRooms = roomCompletedPattern.firstResult(text)?.toIntOrNull() ?: completedRooms
             }
         }
+    }
+
+    fun updatePuzzleCount(tabList: List<Pair<NetworkPlayerInfo, String>>) {
+        if (totalPuzzles != 0) return
+        val puzzleCount = tabList.find { it.second.contains("Puzzles:") }?.second ?: return
+        totalPuzzles = puzzleCountRegex.firstResult(puzzleCount)?.toIntOrNull() ?: totalPuzzles
     }
 
     private fun Regex.firstResult(input: CharSequence): String? {

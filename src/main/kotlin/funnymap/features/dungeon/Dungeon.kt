@@ -50,6 +50,7 @@ object Dungeon {
 
         TabList.getDungeonTabList()?.let {
             MapUpdate.updatePlayers(it)
+            RunInformation.updatePuzzleCount(it)
         }
     }
 
