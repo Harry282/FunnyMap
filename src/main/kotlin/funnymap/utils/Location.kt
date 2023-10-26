@@ -17,8 +17,6 @@ object Location {
     var masterMode = false
     var inBoss = false
 
-    private var tickCount = 0
-
     private val entryMessages = listOf(
         "[BOSS] Bonzo: Gratz for making it this far, but I’m basically unbeatable.",
         "[BOSS] Scarf: This is where the journey ends for you, Adventurers.",
@@ -31,8 +29,6 @@ object Location {
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
         if (event.phase != TickEvent.Phase.START || mc.theWorld == null) return
-        tickCount++
-        if (tickCount % 20 != 0) return
         if (config.forceSkyblock) {
             inSkyblock = true
             inDungeons = true
@@ -53,7 +49,6 @@ object Location {
                 }
             }
         }
-        tickCount = 0
     }
 
     @SubscribeEvent
