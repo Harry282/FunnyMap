@@ -131,7 +131,7 @@ class ScoreElement : MovableGuiElement() {
                         "§3${ScoreCalculation.getSpeedScore(RunInformation.timeElapsed)}§7/" +
                         "§d${ScoreCalculation.getBonusScore()} §7: "
             }
-            line += "§7($scoreColor${ScoreCalculation.score}§7)"
+            line += "$scoreColor${ScoreCalculation.score}"
 
             return line
         }
