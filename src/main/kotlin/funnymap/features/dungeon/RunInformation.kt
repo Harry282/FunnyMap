@@ -78,7 +78,7 @@ object RunInformation {
         val maxSecrets = ceil(secretTotal * ScoreCalculation.getSecretPercent())
 
         minSecrets =
-            ceil(maxSecrets * (40 - getBonusScore() + (deathCount * 2) - if (deathCount > 0) 1 else 0) / 40).toInt()
+            ceil(maxSecrets * (40 - getBonusScore() + ScoreCalculation.getDeathDeduction()) / 40).toInt()
 
         val line = event.packet.players.joinToString(
             " ", prefix = event.packet.prefix, postfix = event.packet.suffix

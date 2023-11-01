@@ -398,6 +398,14 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var scoreElementEnabled = false
 
     @Property(
+        name = "Assume Spirit",
+        type = PropertyType.SWITCH,
+        category = "Score",
+        subcategory = "Toggle"
+    )
+    var scoreAssumeSpirit = true
+
+    @Property(
         name = "Minimized Text",
         description = "Shortens description for score elements.",
         type = PropertyType.SWITCH,

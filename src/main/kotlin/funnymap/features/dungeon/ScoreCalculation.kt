@@ -37,10 +37,15 @@ object ScoreCalculation {
     }
 
     fun getSkillScore(): Int {
-        val deathDeduction = RunInformation.deathCount * 2 - if (RunInformation.deathCount > 0) 1 else 0
         val puzzleDeduction = (RunInformation.totalPuzzles - RunInformation.completedPuzzles) * 10
         val roomPercent = completedRoomsPercentage.coerceAtMost(1f)
-        return 20 + ((80 * roomPercent).toInt() - puzzleDeduction - deathDeduction).coerceAtLeast(0)
+        return 20 + ((80 * roomPercent).toInt() - puzzleDeduction - getDeathDeduction()).coerceAtLeast(0)
+    }
+
+    fun getDeathDeduction(): Int {
+        var deathDeduction = RunInformation.deathCount * 2
+        if (config.scoreAssumeSpirit) deathDeduction -= 1
+        return deathDeduction.coerceAtLeast(0)
     }
 
     fun getExplorationScore(): Int {
