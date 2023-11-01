@@ -167,9 +167,10 @@ class ScoreElement : MovableGuiElement() {
         }
 
         private fun getPuzzles(minimized: Boolean = false, total: Boolean): String {
+            val color = if (RunInformation.completedPuzzles == RunInformation.totalPuzzles) "§a" else "§c"
             var line = if (minimized) "§7P: " else "§7Puzzles: "
-            line += "§c${RunInformation.completedPuzzles}"
-            if (total) line += "§7/§c${RunInformation.totalPuzzles}"
+            line += "$color${RunInformation.completedPuzzles}"
+            if (total) line += "§7/$color${RunInformation.totalPuzzles}"
             return line
         }
     }
