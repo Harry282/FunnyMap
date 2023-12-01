@@ -5,27 +5,15 @@ import funnymap.features.dungeon.MapRender
 import funnymap.utils.Location
 
 class MapElement : MovableGuiElement() {
-    override var x: Int
-        get() = config.mapX
-        set(value) {
-            config.mapX = value
-        }
-    override var y: Int
-        get() = config.mapY
-        set(value) {
-            config.mapY = value
-        }
+    override var x: Int by config::mapX
+    override var y: Int by config::mapY
     override val h: Int
         get() = if (config.mapShowRunInformation) 142 else 128
     override val w: Int
         get() = 128
+    override var scale: Float by config::mapScale
     override var x2: Int = (x + w * scale).toInt()
     override var y2: Int = (y + h * scale).toInt()
-    override var scale: Float
-        get() = config.mapScale
-        set(value) {
-            config.mapScale = value
-        }
 
     override fun render() {
         MapRender.renderMap()

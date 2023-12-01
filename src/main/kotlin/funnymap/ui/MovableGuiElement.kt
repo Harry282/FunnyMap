@@ -12,10 +12,10 @@ import kotlin.math.min
 abstract class MovableGuiElement {
 
     val corners = arrayOf(
-        CornerButton(x - 3.0, y - 3.0, CornerButton.Corner.TOP_LEFT),
-        CornerButton(x2 - 3.0, y - 3.0, CornerButton.Corner.TOP_RIGHT),
-        CornerButton(x - 3.0, y2 - 3.0, CornerButton.Corner.BOTTOM_LEFT),
-        CornerButton(x2 - 3.0, y2 - 3.0, CornerButton.Corner.BOTTOM_RIGHT)
+        CornerButton(0.0, 0.0, CornerButton.Corner.TOP_LEFT),
+        CornerButton(0.0, 0.0, CornerButton.Corner.TOP_RIGHT),
+        CornerButton(0.0, 0.0, CornerButton.Corner.BOTTOM_LEFT),
+        CornerButton(0.0, 0.0, CornerButton.Corner.BOTTOM_RIGHT)
     )
     abstract var x: Int
     abstract var y: Int

@@ -8,26 +8,14 @@ import funnymap.utils.Location
 import net.minecraft.client.gui.FontRenderer
 
 class ScoreElement : MovableGuiElement() {
-    override var x: Int
-        get() = config.scoreX
-        set(value) {
-            config.scoreX = value
-        }
-    override var y: Int
-        get() = config.scoreY
-        set(value) {
-            config.scoreY = value
-        }
+    override var x: Int by config::scoreX
+    override var y: Int by config::scoreY
     override val h: Int
         get() = fr.FONT_HEIGHT * elementLines
     override val w: Int = fr.getStringWidth("Score: 100/100/100/7 : (300)")
+    override var scale: Float by config::scoreScale
     override var x2: Int = (x + w * scale).toInt()
     override var y2: Int = (y + h * scale).toInt()
-    override var scale: Float
-        get() = config.scoreScale
-        set(value) {
-            config.scoreScale = value
-        }
 
     private var elementLines = 1
         set(value) {
