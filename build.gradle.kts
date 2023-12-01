@@ -1,10 +1,9 @@
 import dev.architectury.pack200.java.Pack200Adapter
 
 plugins {
-    kotlin("jvm") version "1.9.10"
+    kotlin("jvm") version "1.9.20"
     id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("dev.architectury.architectury-pack200") version "0.1.3"
-    id("gg.essential.loom") version "0.10.0.+"
+    id("gg.essential.loom") version "1.3.12"
     idea
     java
 }
@@ -43,14 +42,12 @@ sourceSets.main {
 
 loom {
     silentMojangMappingsLicense()
-    launchConfigs.getByName("client") {
-        property("mixin.debug", "true")
-        property("asmhelper.verbose", "true")
-        arg("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
-        arg("--mixin", "mixins.${modID}.json")
-    }
     runConfigs {
         getByName("client") {
+            property("mixin.debug", "true")
+            property("asmhelper.verbose", "true")
+            programArgs("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
+            programArgs("--mixin", "mixins.${modID}.json")
             isIdeConfigGenerated = true
         }
         remove(getByName("server"))
