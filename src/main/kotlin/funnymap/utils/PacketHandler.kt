@@ -13,7 +13,9 @@ object PacketHandler {
     fun processPacket(packet: Packet<*>) {
         when (packet) {
             is S02PacketChat -> {
-                MinecraftForge.EVENT_BUS.post(ChatEvent(packet))
+                if (packet.type.toInt() != 2) {
+                    MinecraftForge.EVENT_BUS.post(ChatEvent(packet))
+                }
             }
 
             is S3EPacketTeams -> {
