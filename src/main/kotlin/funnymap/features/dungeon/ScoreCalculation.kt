@@ -4,6 +4,7 @@ import funnymap.FunnyMap.Companion.config
 import funnymap.features.dungeon.RunInformation.completedRoomsPercentage
 import funnymap.features.dungeon.RunInformation.mimicKilled
 import funnymap.features.dungeon.RunInformation.secretPercentage
+import funnymap.ui.GuiRenderer
 import funnymap.utils.APIUtils
 import funnymap.utils.Location
 import funnymap.utils.Utils
@@ -27,12 +28,20 @@ object ScoreCalculation {
             if (config.scoreMessage != 0) {
                 UChat.say("/pc ${config.message300}")
             }
+            if (config.scoreTitle != 0) {
+                GuiRenderer.displayTitle(config.message300, 40)
+            }
             if (config.timeTo300) {
                 Utils.modMessage("§3300 Score§7: §a${RunInformation.timeElapsed.toDuration(DurationUnit.SECONDS)}")
             }
-        } else if (score >= 270 && !message270 && config.scoreMessage == 2) {
+        } else if (score >= 270 && !message270) {
             message270 = true
-            UChat.say("/pc ${config.message270}")
+            if (config.scoreMessage == 2) {
+                UChat.say("/pc ${config.message270}")
+            }
+            if (config.scoreTitle == 2) {
+                GuiRenderer.displayTitle(config.message270, 40)
+            }
         }
     }
 

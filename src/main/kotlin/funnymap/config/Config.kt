@@ -514,6 +514,16 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var scoreMessage = 0
 
     @Property(
+        name = "Score Title",
+        description = "Shows score messages as a title notification.",
+        type = PropertyType.SELECTOR,
+        category = "Score",
+        subcategory = "Message",
+        options = ["Off", "300", "270 and 300"]
+    )
+    var scoreTitle = 0
+
+    @Property(
         name = "270 Message",
         type = PropertyType.TEXT,
         category = "Score",

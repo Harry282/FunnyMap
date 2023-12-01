@@ -211,6 +211,38 @@ object RenderUtils {
         )
     }
 
+    fun drawText(
+        text: String,
+        x: Float,
+        y: Float,
+        scale: Double = 1.0,
+        color: Int = 0xFFFFFF,
+        shadow: Boolean = true,
+        center: Boolean = false
+    ) {
+        GlStateManager.pushMatrix()
+        GlStateManager.enableBlend()
+        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
+        GlStateManager.translate(x, y, 0f)
+        GlStateManager.scale(scale, scale, scale)
+        var yOffset = y - mc.fontRendererObj.FONT_HEIGHT
+        text.split("\n").forEach {
+            yOffset += mc.fontRendererObj.FONT_HEIGHT
+            val xOffset = if (center) {
+                mc.fontRendererObj.getStringWidth(it) / -2f
+            } else 0f
+            mc.fontRendererObj.drawString(
+                it,
+                xOffset,
+                0f,
+                color,
+                shadow
+            )
+        }
+        GlStateManager.disableBlend()
+        GlStateManager.popMatrix()
+    }
+
     fun drawFilledAABB(aabb: AxisAlignedBB, color: Color) {
         color.bind()
 
