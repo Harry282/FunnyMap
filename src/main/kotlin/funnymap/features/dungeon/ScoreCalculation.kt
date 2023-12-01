@@ -1,6 +1,7 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.config
+import funnymap.FunnyMap.Companion.mc
 import funnymap.features.dungeon.RunInformation.completedRoomsPercentage
 import funnymap.features.dungeon.RunInformation.mimicKilled
 import funnymap.features.dungeon.RunInformation.secretPercentage
@@ -29,6 +30,7 @@ object ScoreCalculation {
                 UChat.say("/pc ${config.message300}")
             }
             if (config.scoreTitle != 0) {
+                mc.thePlayer.playSound("random.orb", 1f, 0.5.toFloat())
                 GuiRenderer.displayTitle(config.message300, 40)
             }
             if (config.timeTo300) {
@@ -40,6 +42,7 @@ object ScoreCalculation {
                 UChat.say("/pc ${config.message270}")
             }
             if (config.scoreTitle == 2) {
+                mc.thePlayer.playSound("random.orb", 1f, 0.5.toFloat())
                 GuiRenderer.displayTitle(config.message270, 40)
             }
         }
