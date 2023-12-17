@@ -27,7 +27,7 @@ object MimicDetector {
     fun checkMimicDead() {
         if (RunInformation.mimicKilled) return
         if (mimicOpenTime == 0L) return
-        if (System.currentTimeMillis() - mimicOpenTime < 1500) return
+        if (System.currentTimeMillis() - mimicOpenTime < 750) return
         if (mc.thePlayer.getDistanceSq(mimicPos) < 400) {
             if (mc.theWorld.loadedEntityList.none {
                     it is EntityZombie && it.isChild && it.getCurrentArmor(3)
