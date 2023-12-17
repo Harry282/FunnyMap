@@ -49,7 +49,7 @@ object GuiRenderer {
                 x = sr.scaledWidth / 2f,
                 y = sr.scaledHeight / 4f,
                 scale = 4.0,
-                color = 0xFF0000,
+                color = 0xFF5555,
                 center = true
             )
         }
