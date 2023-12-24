@@ -52,7 +52,9 @@ object DungeonScan {
                 }
 
                 // This room has already been added in a previous scan.
-                if (Dungeon.Info.dungeonList[x + z * 11] !is Unknown) continue
+                if (Dungeon.Info.dungeonList[x + z * 11].run {
+                        this !is Unknown && (this as? Room)?.data?.name != "Unknown"
+                    }) continue
 
                 scanRoom(xPos, zPos, z, x)?.let {
                     Dungeon.Info.dungeonList[z * 11 + x] = it
@@ -106,28 +108,29 @@ object DungeonScan {
                     // Checks if a room with the same name has already been scanned.
                     val duplicateRoom = Dungeon.Info.uniqueRooms.firstOrNull { it.data.name == data.name }
 
-                    if (duplicateRoom == null) {
-                        // Adds room information if no duplicate was found
-                        Dungeon.Info.uniqueRooms.add(this)
-                        Dungeon.Info.cryptCount += data.crypts
-                        Dungeon.Info.secretCount += data.secrets
-                        when (data.type) {
-                            RoomType.ENTRANCE -> MapRender.dynamicRotation = when {
-                                row == 0 -> 180f
-                                column == 0 -> -90f
-                                column > row -> 90f
-                                else -> 0f
-                            }
-                            RoomType.TRAP -> Dungeon.Info.trapType = data.name.split(" ")[0]
-                            RoomType.PUZZLE -> Puzzle.fromName(data.name)
-                                ?.let { Dungeon.Info.puzzles.putIfAbsent(it, false) }
+                    Utils.runMinecraftThread {
+                        if (duplicateRoom == null) {
+                            Dungeon.Info.uniqueRooms.add(this)
+                            Dungeon.Info.cryptCount += data.crypts
+                            Dungeon.Info.secretCount += data.secrets
+                            when (data.type) {
+                                RoomType.ENTRANCE -> MapRender.dynamicRotation = when {
+                                    row == 0 -> 180f
+                                    column == 0 -> -90f
+                                    column > row -> 90f
+                                    else -> 0f
+                                }
 
-                            else -> {}
+                                RoomType.TRAP -> Dungeon.Info.trapType = data.name.split(" ")[0]
+                                RoomType.PUZZLE -> Puzzle.fromName(data.name)
+                                    ?.let { Dungeon.Info.puzzles.putIfAbsent(it, false) }
+
+                                else -> {}
+                            }
+                        } else if (x < duplicateRoom.x || (x == duplicateRoom.x && z < duplicateRoom.z)) {
+                            Dungeon.Info.uniqueRooms.remove(duplicateRoom)
+                            Dungeon.Info.uniqueRooms.add(this)
                         }
-                    } else if (x < duplicateRoom.x || (x == duplicateRoom.x && z < duplicateRoom.z)) {
-                        // Ensures the room stored in uniqueRooms is the furthest south-east.
-                        Dungeon.Info.uniqueRooms.remove(duplicateRoom)
-                        Dungeon.Info.uniqueRooms.add(this)
                     }
                 }
             }
@@ -142,7 +145,8 @@ object DungeonScan {
             // Doorway between rooms
             // Old trap has a single block at 82
             height.equalsOneOf(74, 82) -> {
-                Door(x, z).apply {
+                Door(
+                    x, z,
                     // Finds door type from door block
                     type = when (mc.theWorld.getBlockState(BlockPos(x, 69, z)).block) {
                         Blocks.coal_block -> {
@@ -154,7 +158,7 @@ object DungeonScan {
                         Blocks.stained_hardened_clay -> DoorType.BLOOD
                         else -> DoorType.NORMAL
                     }
-                }
+                )
             }
 
             // Connection between large rooms
@@ -163,7 +167,7 @@ object DungeonScan {
                     if (it !is Room) {
                         null
                     } else if (it.data.type == RoomType.ENTRANCE) {
-                        Door(x, z).apply { type = DoorType.ENTRANCE }
+                        Door(x, z, DoorType.ENTRANCE)
                     } else {
                         Room(x, z, it.data).apply { isSeparator = true }
                     }

@@ -2,7 +2,9 @@ package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.DungeonPlayer
-import funnymap.core.map.*
+import funnymap.core.map.Door
+import funnymap.core.map.DoorType
+import funnymap.core.map.Unknown
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
@@ -97,7 +99,8 @@ object MapUpdate {
     }
 
     fun updateRooms() {
-        val mapColors = MapUtils.getMapData()?.colors ?: return
+        val map = DungeonMap(MapUtils.getMapData()?.colors ?: return)
+        Dungeon.espDoors.clear()
 
         val startX = MapUtils.startCorner.first + (MapUtils.mapRoomSize shr 1)
         val startZ = MapUtils.startCorner.second + (MapUtils.mapRoomSize shr 1)
@@ -112,42 +115,34 @@ object MapUpdate {
                 if (mapX >= 128 || mapZ >= 128) continue
 
                 val room = Dungeon.Info.dungeonList[z * 11 + x]
+                val mapTile = map.getTile(x, z)
 
-                val newState = when (mapColors[(mapZ shl 7) + mapX].toInt()) {
-                    0, 85, 119 -> RoomState.UNDISCOVERED
-                    18 -> if (room is Room) when (room.data.type) {
-                        RoomType.BLOOD -> RoomState.DISCOVERED
-                        RoomType.PUZZLE -> RoomState.FAILED
-                        else -> room.state
-                    } else RoomState.DISCOVERED
-
-                    30 -> if (room is Room) when (room.data.type) {
-                        RoomType.ENTRANCE -> RoomState.DISCOVERED
-                        else -> RoomState.GREEN
-                    } else room.state
-
-                    34 -> RoomState.CLEARED
-                    else -> RoomState.DISCOVERED
+                if (room is Unknown) {
+                    Dungeon.Info.dungeonList[z * 11 + x] = mapTile
+                    continue
                 }
 
-                if (newState != room.state) {
-                    PlayerTracker.roomStateChange(room, room.state, newState)
-                    room.state = newState
+                if (mapTile.state != room.state) {
+                    PlayerTracker.roomStateChange(room, room.state, mapTile.state)
+                    room.state = mapTile.state
                 }
-            }
-        }
-    }
 
-    fun updateDoors() {
-        Dungeon.espDoors.clear()
-        Dungeon.Info.dungeonList.filterIsInstance<Door>().forEach { door ->
-            if (!door.opened && door.type.equalsOneOf(DoorType.WITHER, DoorType.BLOOD) &&
-                mc.theWorld.getChunkFromChunkCoords(door.x shr 4, door.z shr 4).isLoaded
-            ) {
-                if (mc.theWorld.getBlockState(BlockPos(door.x, 69, door.z)).block == Blocks.air) {
-                    door.opened = true
-                } else {
-                    Dungeon.espDoors.add(door)
+                if (room is Door && room.type.equalsOneOf(DoorType.ENTRANCE, DoorType.WITHER, DoorType.BLOOD)) {
+                    if (mapTile is Door && mapTile.type == DoorType.WITHER) {
+                        room.opened = false
+                    } else if (!room.opened && mc.theWorld.getChunkFromChunkCoords(
+                            room.x shr 4,
+                            room.z shr 4
+                        ).isLoaded
+                    ) {
+                        if (mc.theWorld.getBlockState(BlockPos(room.x, 69, room.z)).block == Blocks.air) {
+                            room.opened = true
+                        }
+                    }
+
+                    if (!room.opened) {
+                        Dungeon.espDoors.add(room)
+                    }
                 }
             }
         }

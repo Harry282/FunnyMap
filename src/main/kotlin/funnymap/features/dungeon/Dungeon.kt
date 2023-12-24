@@ -44,7 +44,6 @@ object Dungeon {
         }
 
         MapUpdate.updateRooms()
-        MapUpdate.updateDoors()
         MimicDetector.checkMimicDead()
         ScoreCalculation.updateScore()
 
