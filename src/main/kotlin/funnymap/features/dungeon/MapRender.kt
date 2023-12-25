@@ -28,6 +28,8 @@ object MapRender {
     var dynamicRotation = 0f
 
     fun renderMap() {
+        mc.mcProfiler.startSection("border")
+
         RenderUtils.renderRect(
             0.0, 0.0, 128.0, if (config.mapShowRunInformation) 142.0 else 128.0, config.mapBackground
         )
@@ -41,6 +43,8 @@ object MapRender {
             config.mapBorder
         )
 
+        mc.mcProfiler.endSection()
+
         if (config.mapRotate) {
             GlStateManager.pushMatrix()
             setupRotate()
@@ -50,9 +54,13 @@ object MapRender {
             GlStateManager.translate(-64.0, -64.0, 0.0)
         }
 
+        mc.mcProfiler.startSection("rooms")
         renderRooms()
+        mc.mcProfiler.endStartSection("text")
         renderText()
+        mc.mcProfiler.endStartSection("heads")
         renderPlayerHeads()
+        mc.mcProfiler.endSection()
 
         if (config.mapRotate) {
             GL11.glDisable(GL11.GL_SCISSOR_TEST)
@@ -64,7 +72,9 @@ object MapRender {
         }
 
         if (config.mapShowRunInformation) {
+            mc.mcProfiler.startSection("footer")
             renderRunInformation()
+            mc.mcProfiler.endSection()
         }
     }
 

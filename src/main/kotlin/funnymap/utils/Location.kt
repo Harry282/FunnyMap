@@ -5,7 +5,6 @@ import funnymap.FunnyMap.Companion.mc
 import funnymap.events.ChatEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent
 import net.minecraftforge.fml.common.network.FMLNetworkEvent
 
 object Location {
@@ -26,9 +25,8 @@ object Location {
         "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!"
     )
 
-    @SubscribeEvent
-    fun onTick(event: TickEvent.ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START || mc.theWorld == null) return
+    fun onTick() {
+        if (mc.theWorld == null) return
         if (config.forceSkyblock) {
             inSkyblock = true
             inDungeons = true

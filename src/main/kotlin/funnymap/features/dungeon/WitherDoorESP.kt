@@ -15,6 +15,8 @@ object WitherDoorESP {
     fun onRender(event: RenderWorldLastEvent) {
         if (!inDungeons || config.witherDoorESP == 0) return
 
+        mc.mcProfiler.startSection("funnymap-3d")
+
         val (x, y, z) = mc.renderViewEntity.getInterpolatedPosition(event.partialTicks)
         Dungeon.espDoors.forEach { door ->
             if (config.witherDoorESP == 1 && door.state == RoomState.UNDISCOVERED) return@forEach
@@ -28,5 +30,7 @@ object WitherDoorESP {
                 true
             )
         }
+
+        mc.mcProfiler.endSection()
     }
 }

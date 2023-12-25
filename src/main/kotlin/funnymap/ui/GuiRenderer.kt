@@ -7,7 +7,6 @@ import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraftforge.client.event.RenderGameOverlayEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent
 
 object GuiRenderer {
     val elements = mutableListOf(
@@ -32,7 +31,11 @@ object GuiRenderer {
     fun onOverlay(event: RenderGameOverlayEvent.Pre) {
         if (event.type != RenderGameOverlayEvent.ElementType.ALL || !Location.inDungeons) return
         if (mc.currentScreen is EditLocationGui) return
+
+        mc.mcProfiler.startSection("funnymap-2d")
+
         mc.entityRenderer.setupOverlayRendering()
+
         elements.forEach {
             if (!it.shouldRender()) return@forEach
             GlStateManager.pushMatrix()
@@ -42,8 +45,8 @@ object GuiRenderer {
             GlStateManager.popMatrix()
         }
 
-        val sr = ScaledResolution(mc)
         if (titleTicks > 0) {
+            val sr = ScaledResolution(mc)
             RenderUtils.drawText(
                 text = displayTitle,
                 x = sr.scaledWidth / 2f,
@@ -53,11 +56,11 @@ object GuiRenderer {
                 center = true
             )
         }
+
+        mc.mcProfiler.endSection()
     }
 
-    @SubscribeEvent
-    fun onTick(event: TickEvent.ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START) return
-        titleTicks--
+    fun onTick() {
+        if (titleTicks > 0) titleTicks--
     }
 }

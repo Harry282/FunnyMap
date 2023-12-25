@@ -1,7 +1,6 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.scope
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
 import funnymap.events.ChatEvent
@@ -11,26 +10,17 @@ import funnymap.utils.MapUtils
 import funnymap.utils.TabList
 import funnymap.utils.Utils.equalsOneOf
 import gg.essential.universal.UChat
-import kotlinx.coroutines.launch
 import net.minecraft.event.ClickEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
-import net.minecraftforge.fml.common.gameevent.TickEvent
 
 object Dungeon {
 
     val dungeonTeammates = mutableMapOf<String, DungeonPlayer>()
     val espDoors = mutableListOf<Door>()
 
-    @SubscribeEvent
-    fun onTick(event: TickEvent.ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START || !inDungeons) return
-
-        if (DungeonScan.shouldScan) {
-            scope.launch { DungeonScan.scan() }
-        }
-
-        if (DungeonScan.isScanning) return
+    fun onTick() {
+        if (!inDungeons) return
 
         if (shouldSearchMimic()) {
             MimicDetector.findMimic()?.let {
@@ -50,6 +40,11 @@ object Dungeon {
         TabList.getDungeonTabList()?.let {
             MapUpdate.updatePlayers(it)
             RunInformation.updatePuzzleCount(it)
+        }
+
+        if (DungeonScan.shouldScan) {
+//            scope.launch { DungeonScan.scan() }
+            DungeonScan.scan()
         }
     }
 

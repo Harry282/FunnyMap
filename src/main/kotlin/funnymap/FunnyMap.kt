@@ -3,7 +3,6 @@ package funnymap
 import funnymap.commands.FunnyMapCommands
 import funnymap.config.Config
 import funnymap.features.dungeon.Dungeon
-import funnymap.features.dungeon.MapRender
 import funnymap.features.dungeon.RunInformation
 import funnymap.features.dungeon.WitherDoorESP
 import funnymap.ui.GuiRenderer
@@ -40,7 +39,7 @@ class FunnyMap {
     fun onInit(event: FMLInitializationEvent) {
         ClientCommandHandler.instance.registerCommand((FunnyMapCommands()))
         listOf(
-            this, Dungeon, GuiRenderer, Location, MapRender, RunInformation, WitherDoorESP
+            this, Dungeon, GuiRenderer, Location, RunInformation, WitherDoorESP
         ).forEach(MinecraftForge.EVENT_BUS::register)
     }
 
@@ -60,9 +59,20 @@ class FunnyMap {
 
     @SubscribeEvent
     fun onTick(event: TickEvent.ClientTickEvent) {
-        if (event.phase != TickEvent.Phase.START || display == null) return
-        mc.displayGuiScreen(display)
-        display = null
+        if (event.phase != TickEvent.Phase.START) return
+
+        mc.mcProfiler.startSection("funnymap")
+
+        if (display != null) {
+            mc.displayGuiScreen(display)
+            display = null
+        }
+
+        Dungeon.onTick()
+        GuiRenderer.onTick()
+        Location.onTick()
+
+        mc.mcProfiler.endSection()
     }
 
     companion object {
