@@ -106,11 +106,11 @@ object DungeonScan {
                 Room(x, z, ScanUtils.getRoomData(roomCore) ?: return null).apply {
                     core = roomCore
                     // Checks if a room with the same name has already been scanned.
-                    val duplicateRoom = Dungeon.Info.uniqueRooms.firstOrNull { it.data.name == data.name }
+                    val duplicateRoom = Dungeon.Info.uniqueRooms.firstOrNull { it.first.data.name == data.name }
 
                     Utils.runMinecraftThread {
                         if (duplicateRoom == null) {
-                            Dungeon.Info.uniqueRooms.add(this)
+                            Dungeon.Info.uniqueRooms.add(this to (column to row))
                             Dungeon.Info.cryptCount += data.crypts
                             Dungeon.Info.secretCount += data.secrets
                             when (data.type) {
@@ -127,9 +127,9 @@ object DungeonScan {
 
                                 else -> {}
                             }
-                        } else if (x < duplicateRoom.x || (x == duplicateRoom.x && z < duplicateRoom.z)) {
+                        } else if (x < duplicateRoom.first.x || (x == duplicateRoom.first.x && z < duplicateRoom.first.z)) {
                             Dungeon.Info.uniqueRooms.remove(duplicateRoom)
-                            Dungeon.Info.uniqueRooms.add(this)
+                            Dungeon.Info.uniqueRooms.add(this to (column to row))
                         }
                     }
                 }

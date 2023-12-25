@@ -159,71 +159,63 @@ object MapRender {
             else -> 10.0 // neu
         }
 
-        for (y in 0..10 step 2) {
-            for (x in 0..10 step 2) {
+        Dungeon.Info.uniqueRooms.forEach { (room, pos) ->
+            val xOffset = (pos.first shr 1) * (mapRoomSize + connectorSize)
+            val yOffset = (pos.second shr 1) * (mapRoomSize + connectorSize)
 
-                val tile = Dungeon.Info.dungeonList[y * 11 + x]
+            if (config.mapCheckmark != 0 && config.mapRoomSecrets != 2) {
+                getCheckmark(room.state, config.mapCheckmark)?.let {
+                    GlStateManager.enableAlpha()
+                    GlStateManager.color(255f, 255f, 255f, 255f)
+                    mc.textureManager.bindTexture(it)
 
-                if (tile is Room && tile in Dungeon.Info.uniqueRooms) {
-
-                    val xOffset = (x shr 1) * (mapRoomSize + connectorSize)
-                    val yOffset = (y shr 1) * (mapRoomSize + connectorSize)
-
-                    if (config.mapCheckmark != 0 && config.mapRoomSecrets != 2) {
-                        getCheckmark(tile.state, config.mapCheckmark)?.let {
-                            GlStateManager.enableAlpha()
-                            GlStateManager.color(255f, 255f, 255f, 255f)
-                            mc.textureManager.bindTexture(it)
-
-                            RenderUtils.drawTexturedQuad(
-                                xOffset + (mapRoomSize - checkmarkSize) / 2,
-                                yOffset + (mapRoomSize - checkmarkSize) / 2,
-                                checkmarkSize,
-                                checkmarkSize
-                            )
-                            GlStateManager.disableAlpha()
-                        }
-                    }
-
-                    val color = if (config.mapColorText) when (tile.state) {
-                        RoomState.GREEN -> 0x55ff55
-                        RoomState.CLEARED, RoomState.FAILED -> 0xffffff
-                        else -> 0xaaaaaa
-                    } else 0xffffff
-
-                    if (config.mapRoomSecrets == 2) {
-                        GlStateManager.pushMatrix()
-                        GlStateManager.translate(
-                            xOffset + (mapRoomSize shr 1).toFloat(), yOffset + 2 + (mapRoomSize shr 1).toFloat(), 0f
-                        )
-                        GlStateManager.scale(2f, 2f, 1f)
-                        RenderUtils.renderCenteredText(listOf(tile.data.secrets.toString()), 0, 0, color)
-                        GlStateManager.popMatrix()
-                    }
-
-                    val name = mutableListOf<String>()
-
-                    if (config.mapRoomNames != 0 && tile.data.type.equalsOneOf(
-                            RoomType.PUZZLE,
-                            RoomType.TRAP
-                        ) || config.mapRoomNames == 2 && tile.data.type.equalsOneOf(
-                            RoomType.NORMAL, RoomType.RARE, RoomType.CHAMPION
-                        )
-                    ) {
-                        name.addAll(tile.data.name.split(" "))
-                    }
-                    if (tile.data.type == RoomType.NORMAL && config.mapRoomSecrets == 1) {
-                        name.add(tile.data.secrets.toString())
-                    }
-                    // Offset + half of roomsize
-                    RenderUtils.renderCenteredText(
-                        name,
-                        xOffset + (mapRoomSize shr 1),
-                        yOffset + (mapRoomSize shr 1),
-                        color
+                    RenderUtils.drawTexturedQuad(
+                        xOffset + (mapRoomSize - checkmarkSize) / 2,
+                        yOffset + (mapRoomSize - checkmarkSize) / 2,
+                        checkmarkSize,
+                        checkmarkSize
                     )
+                    GlStateManager.disableAlpha()
                 }
             }
+
+            val color = if (config.mapColorText) when (room.state) {
+                RoomState.GREEN -> 0x55ff55
+                RoomState.CLEARED, RoomState.FAILED -> 0xffffff
+                else -> 0xaaaaaa
+            } else 0xffffff
+
+            if (config.mapRoomSecrets == 2) {
+                GlStateManager.pushMatrix()
+                GlStateManager.translate(
+                    xOffset + (mapRoomSize shr 1).toFloat(), yOffset + 2 + (mapRoomSize shr 1).toFloat(), 0f
+                )
+                GlStateManager.scale(2f, 2f, 1f)
+                RenderUtils.renderCenteredText(listOf(room.data.secrets.toString()), 0, 0, color)
+                GlStateManager.popMatrix()
+            }
+
+            val name = mutableListOf<String>()
+
+            if (config.mapRoomNames != 0 && room.data.type.equalsOneOf(
+                    RoomType.PUZZLE,
+                    RoomType.TRAP
+                ) || config.mapRoomNames == 2 && room.data.type.equalsOneOf(
+                    RoomType.NORMAL, RoomType.RARE, RoomType.CHAMPION
+                )
+            ) {
+                name.addAll(room.data.name.split(" "))
+            }
+            if (room.data.type == RoomType.NORMAL && config.mapRoomSecrets == 1) {
+                name.add(room.data.secrets.toString())
+            }
+            // Offset + half of roomsize
+            RenderUtils.renderCenteredText(
+                name,
+                xOffset + (mapRoomSize shr 1),
+                yOffset + (mapRoomSize shr 1),
+                color
+            )
         }
         GlStateManager.popMatrix()
     }

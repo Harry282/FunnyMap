@@ -95,7 +95,7 @@ object Dungeon {
     object Info {
         // 6 x 6 room grid, 11 x 11 with connections
         val dungeonList = Array<Tile>(121) { Unknown(0, 0) }
-        val uniqueRooms = mutableListOf<Room>()
+        val uniqueRooms = mutableListOf<Pair<Room, Pair<Int, Int>>>()
         var roomCount = 0
         val puzzles = mutableMapOf<Puzzle, Boolean>()
 
