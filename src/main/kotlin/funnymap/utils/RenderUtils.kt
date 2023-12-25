@@ -152,6 +152,7 @@ object RenderUtils {
 
             if (config.mapVanillaMarker && (player.isPlayer || name == mc.thePlayer.name)) {
                 GlStateManager.rotate(180f, 0f, 0f, 1f)
+                GlStateManager.color(1f, 1f, 1f, 1f)
                 mc.textureManager.bindTexture(mapIcons)
                 worldRenderer.begin(7, DefaultVertexFormats.POSITION_TEX)
                 worldRenderer.pos(-6.0, 6.0, 0.0).tex(0.0, 0.0).endVertex()
