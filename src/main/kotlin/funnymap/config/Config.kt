@@ -632,11 +632,12 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     @Property(
         name = "Wither Door ESP",
         description = "Boxes unopened wither doors.",
-        type = PropertyType.SWITCH,
+        type = PropertyType.SELECTOR,
         category = "Other Features",
-        subcategory = "Wither Door"
+        subcategory = "Wither Door",
+        options = ["Off", "First", "All"]
     )
-    var witherDoorESP = false
+    var witherDoorESP = 0
 
     @Property(
         name = "Color",
@@ -646,6 +647,16 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         allowAlpha = true
     )
     var witherDoorESPColor = Color(0, 0, 0)
+
+    @Property(
+        name = "Outline Width",
+        type = PropertyType.DECIMAL_SLIDER,
+        category = "Other Features",
+        subcategory = "Wither Door",
+        minF = 1f,
+        maxF = 10f
+    )
+    var witherDoorOutlineWidth = 3f
 
     @Property(
         name = "Outline Opacity",

@@ -58,11 +58,11 @@ object RenderUtils {
         tessellator.draw()
     }
 
-    fun drawBox(aabb: AxisAlignedBB, color: Color, outline: Float, fill: Float, ignoreDepth: Boolean) {
+    fun drawBox(aabb: AxisAlignedBB, color: Color, width: Float, outline: Float, fill: Float, ignoreDepth: Boolean) {
         GlStateManager.pushMatrix()
         preDraw()
         GlStateManager.depthMask(!ignoreDepth)
-        GL11.glLineWidth(outline)
+        GL11.glLineWidth(width)
 
         drawOutlinedAABB(aabb, color.withAlpha(outline))
 
@@ -119,7 +119,7 @@ object RenderUtils {
             mc.fontRendererObj.drawString(
                 text,
                 mc.fontRendererObj.getStringWidth(text) / -2f,
-                yTextOffset + index * 10,
+                yTextOffset + index * fontHeight,
                 color,
                 true
             )
