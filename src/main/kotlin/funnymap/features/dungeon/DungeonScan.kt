@@ -109,29 +109,27 @@ object DungeonScan {
                     // Checks if a room with the same name has already been scanned.
                     val duplicateRoom = Dungeon.Info.uniqueRooms.firstOrNull { it.first.data.name == data.name }
 
-                    Utils.runMinecraftThread {
-                        if (duplicateRoom == null) {
-                            Dungeon.Info.uniqueRooms.add(this to (column to row))
-                            Dungeon.Info.cryptCount += data.crypts
-                            Dungeon.Info.secretCount += data.secrets
-                            when (data.type) {
-                                RoomType.ENTRANCE -> MapRender.dynamicRotation = when {
-                                    row == 0 -> 180f
-                                    column == 0 -> -90f
-                                    column > row -> 90f
-                                    else -> 0f
-                                }
-
-                                RoomType.TRAP -> Dungeon.Info.trapType = data.name.split(" ")[0]
-                                RoomType.PUZZLE -> Puzzle.fromName(data.name)
-                                    ?.let { Dungeon.Info.puzzles.putIfAbsent(it, false) }
-
-                                else -> {}
+                    if (duplicateRoom == null) {
+                        Dungeon.Info.uniqueRooms.add(this to (column to row))
+                        Dungeon.Info.cryptCount += data.crypts
+                        Dungeon.Info.secretCount += data.secrets
+                        when (data.type) {
+                            RoomType.ENTRANCE -> MapRender.dynamicRotation = when {
+                                row == 0 -> 180f
+                                column == 0 -> -90f
+                                column > row -> 90f
+                                else -> 0f
                             }
-                        } else if (x < duplicateRoom.first.x || (x == duplicateRoom.first.x && z < duplicateRoom.first.z)) {
-                            Dungeon.Info.uniqueRooms.remove(duplicateRoom)
-                            Dungeon.Info.uniqueRooms.add(this to (column to row))
+
+                            RoomType.TRAP -> Dungeon.Info.trapType = data.name.split(" ")[0]
+                            RoomType.PUZZLE -> Puzzle.fromName(data.name)
+                                ?.let { Dungeon.Info.puzzles.putIfAbsent(it, false) }
+
+                            else -> {}
                         }
+                    } else if (x < duplicateRoom.first.x || (x == duplicateRoom.first.x && z < duplicateRoom.first.z)) {
+                        Dungeon.Info.uniqueRooms.remove(duplicateRoom)
+                        Dungeon.Info.uniqueRooms.add(this to (column to row))
                     }
                 }
             }
