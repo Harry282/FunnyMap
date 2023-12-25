@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 
 object GuiRenderer {
     val elements = mutableListOf(
-        EditModeElement(),
         MapElement(),
         ScoreElement()
     )
