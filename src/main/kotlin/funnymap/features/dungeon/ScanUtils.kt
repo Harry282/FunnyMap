@@ -50,13 +50,14 @@ object ScanUtils {
     }
 
     fun getCore(x: Int, z: Int): Int {
-        val blocks = arrayListOf<Int>()
+        val sb = StringBuilder(150)
+        val chunk = mc.theWorld.getChunkFromBlockCoords(BlockPos(x, 0, z))
         for (y in 140 downTo 12) {
-            val id = Block.getIdFromBlock(mc.theWorld.getBlockState(BlockPos(x, y, z)).block)
+            val id = Block.blockRegistry.getIDForObject(chunk.getBlock(BlockPos(x, y, z)))
             if (!id.equalsOneOf(5, 54, 146)) {
-                blocks.add(id)
+                sb.append(id)
             }
         }
-        return blocks.joinToString("").hashCode()
+        return sb.toString().hashCode()
     }
 }
