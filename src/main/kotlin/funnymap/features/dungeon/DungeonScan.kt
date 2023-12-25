@@ -89,6 +89,7 @@ object DungeonScan {
             hasScanned = true
         }
 
+        lastScanTime = System.currentTimeMillis()
         isScanning = false
     }
 
