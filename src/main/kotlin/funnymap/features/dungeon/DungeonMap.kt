@@ -19,6 +19,8 @@ class DungeonMap(mapColors: ByteArray) {
                 val mapX = startX + x * halfTile
                 val mapY = startY + y * halfTile
 
+                if (mapX >= 128 || mapY >= 128) continue
+
                 centerColors[y * 11 + x] = mapColors[mapY * 128 + mapX]
 
                 val sideIndex = if (x % 2 == 0 && y % 2 == 0) {

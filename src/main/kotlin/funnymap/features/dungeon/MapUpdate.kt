@@ -102,18 +102,8 @@ object MapUpdate {
         val map = DungeonMap(MapUtils.getMapData()?.colors ?: return)
         Dungeon.espDoors.clear()
 
-        val startX = MapUtils.startCorner.first + (MapUtils.mapRoomSize shr 1)
-        val startZ = MapUtils.startCorner.second + (MapUtils.mapRoomSize shr 1)
-        val increment = (MapUtils.mapRoomSize shr 1) + 2
-
         for (x in 0..10) {
             for (z in 0..10) {
-
-                val mapX = startX + x * increment
-                val mapZ = startZ + z * increment
-
-                if (mapX >= 128 || mapZ >= 128) continue
-
                 val room = Dungeon.Info.dungeonList[z * 11 + x]
                 val mapTile = map.getTile(x, z)
 
