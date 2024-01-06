@@ -21,7 +21,7 @@ object Location {
         "[BOSS] Scarf: This is where the journey ends for you, Adventurers.",
         "[BOSS] The Professor: I was burdened with terrible news recently...",
         "[BOSS] Thorn: Welcome Adventurers! I am Thorn, the Spirit! And host of the Vegan Trials!",
-        "[BOSS] Livid: Welcome, you arrive right on time. I am Livid, the Master of Shadows.",
+        "[BOSS] Livid: Welcome, you've arrived right on time. I am Livid, the Master of Shadows.",
         "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!"
     )
 
