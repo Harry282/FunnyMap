@@ -1,7 +1,7 @@
 import dev.architectury.pack200.java.Pack200Adapter
 
 plugins {
-    kotlin("jvm") version "1.9.20"
+    kotlin("jvm") version "1.9.22"
     id("com.github.johnrengelman.shadow") version "8.1.1"
     id("gg.essential.loom") version "1.3.12"
     idea
@@ -37,7 +37,7 @@ dependencies {
 }
 
 sourceSets.main {
-    output.resourcesDir = file("${layout.buildDirectory.asFile.get()}/classes/kotlin/main")
+    output.setResourcesDir(file("${layout.buildDirectory.asFile.get()}/classes/kotlin/main"))
 }
 
 loom {
@@ -93,7 +93,7 @@ tasks {
     }
     remapJar {
         archiveBaseName.set(modName)
-        input.set(shadowJar.get().archiveFile)
+        inputFile.set(shadowJar.get().archiveFile)
     }
     shadowJar {
         archiveBaseName.set(modName)
