@@ -9,12 +9,12 @@ import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapRoomSize
 import funnymap.utils.RenderUtils
 import funnymap.utils.Utils.equalsOneOf
-import gg.essential.elementa.utils.withAlpha
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import java.awt.Color
+import kotlin.math.roundToInt
 
 object MapRender {
 
@@ -118,16 +118,24 @@ object MapRender {
                 val xEven = x and 1 == 0
                 val yEven = y and 1 == 0
 
-                val color = if (config.mapDarkenUndiscovered && tile.state == RoomState.UNDISCOVERED) {
-                    tile.color.run {
-                        Color(
-                            (red * (1 - config.mapDarkenPercent)).toInt(),
-                            (green * (1 - config.mapDarkenPercent)).toInt(),
-                            (blue * (1 - config.mapDarkenPercent)).toInt(),
-                            (alpha * config.mapRoomTransparency).toInt()
-                        )
+                var color = tile.color
+
+                if (tile.state == RoomState.UNDISCOVERED) {
+                    if (config.mapDarkenUndiscovered) {
+                        color = color.run {
+                            Color(
+                                (red * (1 - config.mapDarkenPercent)).toInt(),
+                                (green * (1 - config.mapDarkenPercent)).toInt(),
+                                (blue * (1 - config.mapDarkenPercent)).toInt(),
+                                alpha
+                            )
+                        }
                     }
-                } else tile.color.run { withAlpha((alpha * config.mapRoomTransparency).toInt()) }
+                    if (config.mapGrayUndiscovered && Dungeon.Info.startTime != 0L) {
+                        val gray = (color.red * 0.299 + color.green * 0.587 + color.blue * 0.114).roundToInt()
+                        color = Color(gray, gray, gray)
+                    }
+                }
 
                 when {
                     xEven && yEven -> if (tile is Room) {

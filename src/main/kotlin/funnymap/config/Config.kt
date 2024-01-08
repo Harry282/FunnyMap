@@ -214,6 +214,14 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var mapDarkenUndiscovered = true
 
     @Property(
+        name = "Gray Undiscovered Rooms",
+        type = PropertyType.SWITCH,
+        description = "Darkens unentered rooms.",
+        category = "Rooms"
+    )
+    var mapGrayUndiscovered = true
+
+    @Property(
         name = "Room Names",
         type = PropertyType.SELECTOR,
         description = "Shows names of rooms on map.",
@@ -247,13 +255,6 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         options = ["None", "Default", "NEU"]
     )
     var mapCheckmark = 1
-
-    @Property(
-        name = "Room Opacity",
-        type = PropertyType.PERCENT_SLIDER,
-        category = "Colors"
-    )
-    var mapRoomTransparency = 1f
 
     @Property(
         name = "Darken Multiplier",
