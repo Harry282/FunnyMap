@@ -78,7 +78,7 @@ class DungeonMap(mapColors: ByteArray) {
             if (sideColor == 0) {
                 val type = DoorType.fromMapColor(centerColor) ?: return Unknown(worldX, worldZ)
                 Door(worldX, worldZ, type).apply {
-                    state = RoomState.DISCOVERED
+                    if (centerColor != 85) state = RoomState.DISCOVERED
                 }
             } else {
                 val type = RoomType.fromMapColor(sideColor) ?: return Unknown(worldX, worldZ)
