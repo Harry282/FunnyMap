@@ -640,13 +640,22 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var witherDoorESP = 0
 
     @Property(
-        name = "Color",
+        name = "No Key Color",
         type = PropertyType.COLOR,
         category = "Other Features",
         subcategory = "Wither Door",
         allowAlpha = true
     )
-    var witherDoorESPColor = Color(0, 0, 0)
+    var witherDoorNoKeyColor = Color(255, 0, 0)
+
+    @Property(
+        name = "Has Key Color",
+        type = PropertyType.COLOR,
+        category = "Other Features",
+        subcategory = "Wither Door",
+        allowAlpha = true
+    )
+    var witherDoorKeyColor = Color(0, 255, 0)
 
     @Property(
         name = "Outline Width",

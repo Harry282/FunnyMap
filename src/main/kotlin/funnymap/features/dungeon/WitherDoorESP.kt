@@ -23,7 +23,7 @@ object WitherDoorESP {
             val aabb = AxisAlignedBB(door.x - 1.0, 69.0, door.z - 1.0, door.x + 2.0, 73.0, door.z + 2.0)
             RenderUtils.drawBox(
                 aabb.offset(-x, -y, -z),
-                config.witherDoorESPColor,
+                if (Dungeon.Info.keys > 0) config.witherDoorKeyColor else config.witherDoorNoKeyColor,
                 config.witherDoorOutlineWidth,
                 config.witherDoorOutline,
                 config.witherDoorFill,

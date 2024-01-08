@@ -19,6 +19,15 @@ object Dungeon {
     val dungeonTeammates = mutableMapOf<String, DungeonPlayer>()
     val espDoors = mutableListOf<Door>()
 
+    private val keyGainRegex = listOf(
+        Regex(".+ §r§ehas obtained §r§a§r§.+ Key§r§e!§r"),
+        Regex("§r§eA §r§a§r§\\w+ Key§r§e was picked up!§r")
+    )
+    private val keyUseRegex = listOf(
+        Regex("§r§cThe §r§c§lBLOOD DOOR§r§c has been opened!§r"),
+        Regex("§r§a.+§r§a opened a §r§8§lWITHER §r§adoor!§r"),
+    )
+
     fun onTick() {
         if (!inDungeons) return
 
@@ -60,6 +69,15 @@ object Dungeon {
                 PlayerTracker.onDungeonEnd()
             }
         }
+
+        if (keyGainRegex.any { it.matches(event.packet.chatComponent.formattedText) }) {
+            Info.keys++
+        }
+
+        if (keyUseRegex.any { it.matches(event.packet.chatComponent.formattedText) }) {
+            Info.keys--
+        }
+
         when (event.text) {
             "Starting in 4 seconds." -> MapUpdate.preloadHeads()
             "[NPC] Mort: Here, I found this map when I first entered the dungeon." -> {
@@ -101,6 +119,7 @@ object Dungeon {
         var mimicFound = false
 
         var startTime = 0L
+        var keys = 0
         fun reset() {
             dungeonList.fill(Unknown(0, 0))
             roomCount = 0
@@ -114,6 +133,7 @@ object Dungeon {
             mimicFound = false
 
             startTime = 0L
+            keys = 0
         }
     }
 }
