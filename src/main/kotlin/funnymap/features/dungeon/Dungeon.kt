@@ -97,13 +97,15 @@ object Dungeon {
     fun reset() {
         Info.reset()
         dungeonTeammates.clear()
+        espDoors.clear()
         PlayerTracker.roomClears.clear()
         MapUtils.calibrated = false
         DungeonScan.hasScanned = false
         RunInformation.reset()
     }
 
-    fun shouldSearchMimic() = DungeonScan.hasScanned && !Info.mimicFound && Location.dungeonFloor.equalsOneOf(6, 7)
+    private fun shouldSearchMimic() =
+        DungeonScan.hasScanned && !Info.mimicFound && Location.dungeonFloor.equalsOneOf(6, 7)
 
     object Info {
         // 6 x 6 room grid, 11 x 11 with connections
