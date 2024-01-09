@@ -1,5 +1,8 @@
 package funnymap.features.dungeon
 
+import funnymap.core.map.Puzzle
+import funnymap.core.map.Room
+import funnymap.core.map.RoomState
 import funnymap.events.ChatEvent
 import funnymap.events.ScoreboardEvent
 import funnymap.events.TabListEvent
@@ -32,13 +35,13 @@ object RunInformation {
         get() = (secretsFound / (secretPercentage + 0.0001f) + 0.5).toInt()
     var minSecrets = 0
     var mimicKilled = false
-    var completedRooms = 0
+    private var completedRooms = 0
     val completedRoomsPercentage
         get() = (completedRooms + (if (!Location.inBoss) 1 else 0) + (if (!bloodDone) 1 else 0)) / (if (totalRooms == 0) 36 else totalRooms).toFloat()
     var bloodDone = false
-    val totalRooms: Int
+    private val totalRooms: Int
         get() = (completedRooms / (clearedPercentage + 0.0001f) + 0.4).toInt()
-    var clearedPercentage = 0f
+    private var clearedPercentage = 0f
     var timeElapsed = 0
 
     private val deathsRegex = Regex("§r§a§lTeam Deaths: §r§f(?<deaths>\\d+)§r")
@@ -112,7 +115,11 @@ object RunInformation {
                     val puzzle =
                         Dungeon.Info.puzzles.keys.find { puzzle -> puzzle.tabName == "Higher Or Lower" } ?: return
                     Dungeon.Info.puzzles[puzzle] = true
-                    return
+                    val room = Dungeon.Info.dungeonList.firstOrNull { tile ->
+                        tile is Room && tile.data.name.equalsOneOf("Lower Blaze", "Higher Blaze")
+                    } ?: return
+                    PlayerTracker.roomStateChange(room, room.state, RoomState.CLEARED)
+                    room.state = RoomState.CLEARED
                 }
             }
         }
@@ -147,15 +154,27 @@ object RunInformation {
             text.contains("✔") -> {
                 val puzzleName = solvedPuzzleRegex.firstResult(text) ?: return
                 if (puzzleName == "???") return
-                val puzzle = Dungeon.Info.puzzles.keys.find { it.tabName == puzzleName } ?: return
-                Dungeon.Info.puzzles[puzzle] = true
+                val puzzle = Dungeon.Info.puzzles.keys.find { it.tabName == puzzleName }
+                if (puzzle == null) {
+                    if (Dungeon.Info.puzzles.size < totalPuzzles) {
+                        Puzzle.fromName(puzzleName)?.let { Dungeon.Info.puzzles.putIfAbsent(it, true) }
+                    }
+                } else {
+                    Dungeon.Info.puzzles[puzzle] = true
+                }
             }
 
             text.contains("✖") -> {
                 val puzzleName = failedPuzzleRegex.firstResult(text) ?: return
                 if (puzzleName == "???") return
-                val puzzle = Dungeon.Info.puzzles.keys.find { it.tabName == puzzleName } ?: return
-                Dungeon.Info.puzzles[puzzle] = false
+                val puzzle = Dungeon.Info.puzzles.keys.find { it.tabName == puzzleName }
+                if (puzzle == null) {
+                    if (Dungeon.Info.puzzles.size < totalPuzzles) {
+                        Puzzle.fromName(puzzleName)?.let { Dungeon.Info.puzzles.putIfAbsent(it, false) }
+                    }
+                } else {
+                    Dungeon.Info.puzzles[puzzle] = false
+                }
             }
 
             text.contains("Crypts:") -> {
