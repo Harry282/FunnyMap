@@ -112,7 +112,7 @@ object MapUpdate {
                     continue
                 }
 
-                if (mapTile.state != room.state) {
+                if (mapTile.state.ordinal < room.state.ordinal) {
                     PlayerTracker.roomStateChange(room, room.state, mapTile.state)
                     room.state = mapTile.state
                 }
