@@ -17,7 +17,7 @@ object Location {
     var inBoss = false
 
     private val entryMessages = listOf(
-        "[BOSS] Bonzo: Gratz for making it this far, but I’m basically unbeatable.",
+        "[BOSS] Bonzo: Gratz for making it this far, but I'm basically unbeatable.",
         "[BOSS] Scarf: This is where the journey ends for you, Adventurers.",
         "[BOSS] The Professor: I was burdened with terrible news recently...",
         "[BOSS] Thorn: Welcome Adventurers! I am Thorn, the Spirit! And host of the Vegan Trials!",
