@@ -21,7 +21,7 @@ object Dungeon {
 
     private val keyGainRegex = listOf(
         Regex(".+ §r§ehas obtained §r§a§r§.+ Key§r§e!§r"),
-        Regex("§r§eA §r§a§r§\\w+ Key§r§e was picked up!§r")
+        Regex("§r§eA §r§a§r§.+ Key§r§e was picked up!§r")
     )
     private val keyUseRegex = listOf(
         Regex("§r§cThe §r§c§lBLOOD DOOR§r§c has been opened!§r"),
