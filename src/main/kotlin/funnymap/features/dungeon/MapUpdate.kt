@@ -117,6 +117,12 @@ object MapUpdate {
                     room.state = mapTile.state
                 }
 
+                if (mapTile is Door && room is Door) {
+                    if (mapTile.type == DoorType.WITHER && room.type != DoorType.WITHER) {
+                        room.type = mapTile.type
+                    }
+                }
+
                 if (room is Door && room.type.equalsOneOf(DoorType.ENTRANCE, DoorType.WITHER, DoorType.BLOOD)) {
                     if (mapTile is Door && mapTile.type == DoorType.WITHER) {
                         room.opened = false
