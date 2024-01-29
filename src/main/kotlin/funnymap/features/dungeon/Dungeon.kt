@@ -43,7 +43,9 @@ object Dungeon {
         }
 
         MapUpdate.updateRooms()
-        MimicDetector.checkMimicDead()
+        if (Location.dungeonFloor.equalsOneOf(6, 7)) {
+            MimicDetector.checkMimicDead()
+        }
         ScoreCalculation.updateScore()
 
         TabList.getDungeonTabList()?.let {
