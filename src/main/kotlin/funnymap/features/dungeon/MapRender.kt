@@ -5,6 +5,7 @@ import funnymap.FunnyMap.Companion.mc
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
 import funnymap.ui.ScoreElement
+import funnymap.utils.Location.inBoss
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapRoomSize
 import funnymap.utils.RenderUtils
@@ -58,8 +59,10 @@ object MapRender {
         renderRooms()
         mc.mcProfiler.endStartSection("text")
         renderText()
-        mc.mcProfiler.endStartSection("heads")
-        renderPlayerHeads()
+        if (!inBoss) {
+            mc.mcProfiler.endStartSection("heads")
+            renderPlayerHeads()
+        }
         mc.mcProfiler.endSection()
 
         if (config.mapRotate) {
