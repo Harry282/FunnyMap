@@ -699,6 +699,14 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     )
     var paulBonus = false
 
+    @Property(
+        name = "Custom Prefix",
+        type = PropertyType.TEXT,
+        category = "Other Features",
+        hidden = true
+    )
+    var customPrefix = ""
+
     init {
         initialize()
         setCategoryDescription(
