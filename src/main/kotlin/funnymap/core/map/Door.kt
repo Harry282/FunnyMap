@@ -7,7 +7,8 @@ class Door(override val x: Int, override val z: Int, var type: DoorType) : Tile 
     var opened = false
     override var state: RoomState = RoomState.UNDISCOVERED
     override val color: Color
-        get() = when (this.type) {
+        get() = if (config.legitTest && state == RoomState.UNOPENED) config.colorUnopenedDoor
+        else when (type) {
             DoorType.BLOOD -> config.colorBloodDoor
             DoorType.ENTRANCE -> config.colorEntranceDoor
             DoorType.WITHER -> if (opened) config.colorOpenWitherDoor else config.colorWitherDoor

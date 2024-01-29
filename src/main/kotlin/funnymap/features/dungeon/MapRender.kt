@@ -111,6 +111,7 @@ object MapRender {
             for (x in 0..10) {
                 val tile = Dungeon.Info.dungeonList[y * 11 + x]
                 if (tile is Unknown) continue
+                if (config.legitTest && tile.state == RoomState.UNDISCOVERED) continue
 
                 val xOffset = (x shr 1) * (mapRoomSize + connectorSize)
                 val yOffset = (y shr 1) * (mapRoomSize + connectorSize)
@@ -120,7 +121,7 @@ object MapRender {
 
                 var color = tile.color
 
-                if (tile.state == RoomState.UNDISCOVERED) {
+                if (tile.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) {
                     if (config.mapDarkenUndiscovered) {
                         color = color.run {
                             Color(
@@ -178,6 +179,7 @@ object MapRender {
         }
 
         Dungeon.Info.uniqueRooms.forEach { (room, pos) ->
+            if (config.legitTest && room.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) return@forEach
             val xOffset = (pos.first shr 1) * (mapRoomSize + connectorSize)
             val yOffset = (pos.second shr 1) * (mapRoomSize + connectorSize)
 

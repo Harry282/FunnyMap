@@ -10,7 +10,8 @@ class Room(override val x: Int, override val z: Int, var data: RoomData) : Tile 
     var isSeparator = false
     override var state: RoomState = RoomState.UNDISCOVERED
     override val color: Color
-        get() = when (data.type) {
+        get() = if (config.legitTest && state == RoomState.UNOPENED) config.colorUnopened
+        else when (data.type) {
             RoomType.BLOOD -> config.colorBlood
             RoomType.CHAMPION -> config.colorMiniboss
             RoomType.ENTRANCE -> config.colorEntrance

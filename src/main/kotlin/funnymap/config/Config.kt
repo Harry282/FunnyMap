@@ -310,6 +310,15 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var colorOpenWitherDoor = Color(92, 52, 14)
 
     @Property(
+        name = "Unopened Door",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Doors",
+        allowAlpha = true
+    )
+    var colorUnopenedDoor = Color(65, 65, 65)
+
+    @Property(
         name = "Blood Room",
         type = PropertyType.COLOR,
         category = "Colors",
@@ -389,6 +398,15 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         allowAlpha = true
     )
     var colorTrap = Color(216, 127, 51)
+
+    @Property(
+        name = "Unopened Room",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Rooms",
+        allowAlpha = true
+    )
+    var colorUnopened = Color(65, 65, 65)
 
     @Property(
         name = "Show Score",
@@ -698,6 +716,13 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         category = "Debug"
     )
     var paulBonus = false
+
+    @Property(
+        name = "Legit Test",
+        type = PropertyType.SWITCH,
+        category = "Debug"
+    )
+    var legitTest = false
 
     @Property(
         name = "Custom Prefix",
