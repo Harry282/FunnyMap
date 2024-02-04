@@ -3,6 +3,7 @@ package funnymap.features.dungeon
 import funnymap.FunnyMap.Companion.config
 import funnymap.FunnyMap.Companion.mc
 import funnymap.core.map.RoomState
+import funnymap.utils.Location.inBoss
 import funnymap.utils.Location.inDungeons
 import funnymap.utils.RenderUtils
 import funnymap.utils.RenderUtils.getInterpolatedPosition
@@ -13,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
 object WitherDoorESP {
     @SubscribeEvent
     fun onRender(event: RenderWorldLastEvent) {
-        if (!inDungeons || config.witherDoorESP == 0) return
+        if (!inDungeons || inBoss || config.witherDoorESP == 0) return
 
         mc.mcProfiler.startSection("funnymap-3d")
 
