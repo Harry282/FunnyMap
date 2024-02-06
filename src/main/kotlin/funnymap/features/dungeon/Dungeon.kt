@@ -33,7 +33,7 @@ object Dungeon {
 
         if (shouldSearchMimic()) {
             MimicDetector.findMimic()?.let {
-                UChat.chat("&7Mimic Room: &c$it")
+                if (config.scanChatInfo) UChat.chat("&7Mimic Room: &c$it")
                 Info.mimicFound = true
             }
         }
