@@ -1,7 +1,7 @@
 package funnymap.utils
 
-import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
+import funnymap.config.Config
 import funnymap.events.ChatEvent
 import net.minecraftforge.event.world.WorldEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
@@ -27,7 +27,7 @@ object Location {
 
     fun onTick() {
         if (mc.theWorld == null) return
-        if (config.forceSkyblock) {
+        if (Config.forceSkyblock) {
             inSkyblock = true
             inDungeons = true
             dungeonFloor = 7

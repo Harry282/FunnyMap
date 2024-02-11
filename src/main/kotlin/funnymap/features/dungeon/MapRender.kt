@@ -1,7 +1,7 @@
 package funnymap.features.dungeon
 
-import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
+import funnymap.config.Config
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
 import funnymap.ui.ScoreElement
@@ -32,24 +32,24 @@ object MapRender {
         mc.mcProfiler.startSection("border")
 
         RenderUtils.renderRect(
-            0.0, 0.0, 128.0, if (config.mapShowRunInformation) 142.0 else 128.0, config.mapBackground
+            0.0, 0.0, 128.0, if (Config.mapShowRunInformation) 142.0 else 128.0, Config.mapBackground
         )
 
         RenderUtils.renderRectBorder(
             0.0,
             0.0,
             128.0,
-            if (config.mapShowRunInformation) 142.0 else 128.0,
-            config.mapBorderWidth.toDouble(),
-            config.mapBorder
+            if (Config.mapShowRunInformation) 142.0 else 128.0,
+            Config.mapBorderWidth.toDouble(),
+            Config.mapBorder
         )
 
         mc.mcProfiler.endSection()
 
-        if (config.mapRotate) {
+        if (Config.mapRotate) {
             GlStateManager.pushMatrix()
             setupRotate()
-        } else if (config.mapDynamicRotate) {
+        } else if (Config.mapDynamicRotate) {
             GlStateManager.translate(64.0, 64.0, 0.0)
             GlStateManager.rotate(dynamicRotation, 0f, 0f, 1f)
             GlStateManager.translate(-64.0, -64.0, 0.0)
@@ -65,16 +65,16 @@ object MapRender {
         }
         mc.mcProfiler.endSection()
 
-        if (config.mapRotate) {
+        if (Config.mapRotate) {
             GL11.glDisable(GL11.GL_SCISSOR_TEST)
             GlStateManager.popMatrix()
-        } else if (config.mapDynamicRotate) {
+        } else if (Config.mapDynamicRotate) {
             GlStateManager.translate(64.0, 64.0, 0.0)
             GlStateManager.rotate(-dynamicRotation, 0f, 0f, 1f)
             GlStateManager.translate(-64.0, -64.0, 0.0)
         }
 
-        if (config.mapShowRunInformation) {
+        if (Config.mapShowRunInformation) {
             mc.mcProfiler.startSection("footer")
             renderRunInformation()
             mc.mcProfiler.endSection()
@@ -85,15 +85,15 @@ object MapRender {
         val scale = ScaledResolution(mc).scaleFactor
         GL11.glEnable(GL11.GL_SCISSOR_TEST)
         GL11.glScissor(
-            (config.mapX * scale),
-            (mc.displayHeight - config.mapY * scale - 128 * scale * config.mapScale).toInt(),
-            (128 * scale * config.mapScale).toInt(),
-            (128 * scale * config.mapScale).toInt()
+            (Config.mapX * scale),
+            (mc.displayHeight - Config.mapY * scale - 128 * scale * Config.mapScale).toInt(),
+            (128 * scale * Config.mapScale).toInt(),
+            (128 * scale * Config.mapScale).toInt()
         )
         GlStateManager.translate(64.0, 64.0, 0.0)
         GlStateManager.rotate(-mc.thePlayer.rotationYaw + 180f, 0f, 0f, 1f)
 
-        if (config.mapCenter) {
+        if (Config.mapCenter) {
             GlStateManager.translate(
                 -((mc.thePlayer.posX - DungeonScan.startX + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.first - 2),
                 -((mc.thePlayer.posZ - DungeonScan.startZ + 15) * MapUtils.coordMultiplier + MapUtils.startCorner.second - 2),
@@ -114,7 +114,7 @@ object MapRender {
             for (x in 0..10) {
                 val tile = Dungeon.Info.dungeonList[y * 11 + x]
                 if (tile is Unknown) continue
-                if (config.legitTest && tile.state == RoomState.UNDISCOVERED) continue
+                if (Config.legitTest && tile.state == RoomState.UNDISCOVERED) continue
 
                 val xOffset = (x shr 1) * (mapRoomSize + connectorSize)
                 val yOffset = (y shr 1) * (mapRoomSize + connectorSize)
@@ -125,17 +125,17 @@ object MapRender {
                 var color = tile.color
 
                 if (tile.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) {
-                    if (config.mapDarkenUndiscovered) {
+                    if (Config.mapDarkenUndiscovered) {
                         color = color.run {
                             Color(
-                                (red * (1 - config.mapDarkenPercent)).toInt(),
-                                (green * (1 - config.mapDarkenPercent)).toInt(),
-                                (blue * (1 - config.mapDarkenPercent)).toInt(),
+                                (red * (1 - Config.mapDarkenPercent)).toInt(),
+                                (green * (1 - Config.mapDarkenPercent)).toInt(),
+                                (blue * (1 - Config.mapDarkenPercent)).toInt(),
                                 alpha
                             )
                         }
                     }
-                    if (config.mapGrayUndiscovered && Dungeon.Info.startTime != 0L) {
+                    if (Config.mapGrayUndiscovered && Dungeon.Info.startTime != 0L) {
                         val gray = (color.red * 0.299 + color.green * 0.587 + color.blue * 0.114).roundToInt()
                         color = Color(gray, gray, gray)
                     }
@@ -176,18 +176,18 @@ object MapRender {
         GlStateManager.translate(MapUtils.startCorner.first.toFloat(), MapUtils.startCorner.second.toFloat(), 0f)
 
         val connectorSize = mapRoomSize shr 2
-        val checkmarkSize = when (config.mapCheckmark) {
+        val checkmarkSize = when (Config.mapCheckmark) {
             1 -> 8.0 // default
             else -> 10.0 // neu
         }
 
         Dungeon.Info.uniqueRooms.forEach { (room, pos) ->
-            if (config.legitTest && room.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) return@forEach
+            if (Config.legitTest && room.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) return@forEach
             val xOffset = (pos.first shr 1) * (mapRoomSize + connectorSize)
             val yOffset = (pos.second shr 1) * (mapRoomSize + connectorSize)
 
-            if (config.mapCheckmark != 0 && config.mapRoomSecrets != 2) {
-                getCheckmark(room.state, config.mapCheckmark)?.let {
+            if (Config.mapCheckmark != 0 && Config.mapRoomSecrets != 2) {
+                getCheckmark(room.state, Config.mapCheckmark)?.let {
                     GlStateManager.enableAlpha()
                     GlStateManager.color(255f, 255f, 255f, 255f)
                     mc.textureManager.bindTexture(it)
@@ -202,13 +202,13 @@ object MapRender {
                 }
             }
 
-            val color = if (config.mapColorText) when (room.state) {
+            val color = if (Config.mapColorText) when (room.state) {
                 RoomState.GREEN -> 0x55ff55
                 RoomState.CLEARED, RoomState.FAILED -> 0xffffff
                 else -> 0xaaaaaa
             } else 0xffffff
 
-            if (config.mapRoomSecrets == 2) {
+            if (Config.mapRoomSecrets == 2) {
                 GlStateManager.pushMatrix()
                 GlStateManager.translate(
                     xOffset + (mapRoomSize shr 1).toFloat(), yOffset + 2 + (mapRoomSize shr 1).toFloat(), 0f
@@ -220,16 +220,16 @@ object MapRender {
 
             val name = mutableListOf<String>()
 
-            if (config.mapRoomNames != 0 && room.data.type.equalsOneOf(
+            if (Config.mapRoomNames != 0 && room.data.type.equalsOneOf(
                     RoomType.PUZZLE,
                     RoomType.TRAP
-                ) || config.mapRoomNames == 2 && room.data.type.equalsOneOf(
+                ) || Config.mapRoomNames == 2 && room.data.type.equalsOneOf(
                     RoomType.NORMAL, RoomType.RARE, RoomType.CHAMPION
                 )
             ) {
                 name.addAll(room.data.name.split(" "))
             }
-            if (room.data.type == RoomType.NORMAL && config.mapRoomSecrets == 1) {
+            if (room.data.type == RoomType.NORMAL && Config.mapRoomSecrets == 1) {
                 name.add(room.data.secrets.toString())
             }
             // Offset + half of roomsize

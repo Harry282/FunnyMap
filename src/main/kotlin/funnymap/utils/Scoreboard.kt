@@ -1,6 +1,6 @@
 package funnymap.utils
 
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
 import funnymap.utils.Utils.removeFormatting
 import net.minecraft.scoreboard.ScorePlayerTeam
 

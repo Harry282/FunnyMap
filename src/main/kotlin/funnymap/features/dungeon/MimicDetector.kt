@@ -1,7 +1,7 @@
 package funnymap.features.dungeon
 
-import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
+import funnymap.config.Config
 import funnymap.core.map.Room
 import funnymap.features.dungeon.ScanUtils.getRoomFromPos
 import gg.essential.universal.UChat
@@ -41,7 +41,7 @@ object MimicDetector {
 
     fun setMimicKilled() {
         RunInformation.mimicKilled = true
-        if (config.mimicMessageEnabled) UChat.say("/pc ${config.mimicMessage}")
+        if (Config.mimicMessageEnabled) UChat.say("/pc ${Config.mimicMessage}")
     }
 
     fun isMimic(entity: Entity): Boolean {

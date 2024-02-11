@@ -1,7 +1,7 @@
 package funnymap.utils
 
 import com.google.gson.JsonParser
-import funnymap.FunnyMap.Companion.config
+import funnymap.config.Config
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClients
 import org.apache.http.util.EntityUtils
@@ -19,7 +19,7 @@ object APIUtils {
     }
 
     fun getSecrets(uuid: String): Int {
-        val response = fetch("https://api.hypixel.net/player?key=${config.apiKey}&uuid=${uuid}") ?: return 0
+        val response = fetch("https://api.hypixel.net/player?key=${Config.apiKey}&uuid=${uuid}") ?: return 0
         val jsonObject = JsonParser().parse(response).toJsonObject() ?: return 0
         if (jsonObject.getJsonPrimitive("success")?.asBoolean == true) {
             return jsonObject.getJsonObject("player")?.getJsonObject("achievements")

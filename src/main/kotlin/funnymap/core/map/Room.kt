@@ -1,6 +1,6 @@
 package funnymap.core.map
 
-import funnymap.FunnyMap.Companion.config
+import funnymap.config.Config
 import funnymap.core.RoomData
 import java.awt.Color
 
@@ -10,15 +10,15 @@ class Room(override val x: Int, override val z: Int, var data: RoomData) : Tile 
     var isSeparator = false
     override var state: RoomState = RoomState.UNDISCOVERED
     override val color: Color
-        get() = if (config.legitTest && state == RoomState.UNOPENED) config.colorUnopened
+        get() = if (Config.legitTest && state == RoomState.UNOPENED) Config.colorUnopened
         else when (data.type) {
-            RoomType.BLOOD -> config.colorBlood
-            RoomType.CHAMPION -> config.colorMiniboss
-            RoomType.ENTRANCE -> config.colorEntrance
-            RoomType.FAIRY -> config.colorFairy
-            RoomType.PUZZLE -> config.colorPuzzle
-            RoomType.RARE -> config.colorRare
-            RoomType.TRAP -> config.colorTrap
-            else -> if (hasMimic) config.colorRoomMimic else config.colorRoom
+            RoomType.BLOOD -> Config.colorBlood
+            RoomType.CHAMPION -> Config.colorMiniboss
+            RoomType.ENTRANCE -> Config.colorEntrance
+            RoomType.FAIRY -> Config.colorFairy
+            RoomType.PUZZLE -> Config.colorPuzzle
+            RoomType.RARE -> Config.colorRare
+            RoomType.TRAP -> Config.colorTrap
+            else -> if (hasMimic) Config.colorRoomMimic else Config.colorRoom
         }
 }

@@ -1,6 +1,6 @@
 package funnymap.ui
 
-import funnymap.FunnyMap.Companion.config
+import funnymap.config.Config
 import funnymap.ui.GuiRenderer.elements
 import net.minecraft.client.gui.GuiScreen
 import org.lwjgl.input.Keyboard
@@ -80,8 +80,8 @@ class EditLocationGui : GuiScreen() {
 
     override fun onGuiClosed() {
         Keyboard.enableRepeatEvents(false)
-        config.markDirty()
-        config.writeData()
+        Config.markDirty()
+        Config.writeData()
         super.onGuiClosed()
     }
 }

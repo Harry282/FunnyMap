@@ -7,7 +7,7 @@ import gg.essential.vigilance.data.*
 import java.awt.Color
 import java.io.File
 
-object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sortingBehavior = CategorySorting) {
+object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sortingBehavior = CategorySorting) {
 
     @Property(
         name = "Map Enabled",

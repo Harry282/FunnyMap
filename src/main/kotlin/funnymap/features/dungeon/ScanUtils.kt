@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.google.gson.JsonIOException
 import com.google.gson.JsonSyntaxException
 import com.google.gson.reflect.TypeToken
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
 import funnymap.core.RoomData
 import funnymap.core.map.Room
 import funnymap.utils.Utils.equalsOneOf

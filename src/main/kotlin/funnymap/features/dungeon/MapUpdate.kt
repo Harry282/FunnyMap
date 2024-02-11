@@ -1,6 +1,6 @@
 package funnymap.features.dungeon
 
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.Door
 import funnymap.core.map.DoorType

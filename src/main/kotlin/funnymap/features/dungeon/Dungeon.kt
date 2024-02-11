@@ -1,6 +1,6 @@
 package funnymap.features.dungeon
 
-import funnymap.FunnyMap.Companion.config
+import funnymap.config.Config
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
 import funnymap.events.ChatEvent
@@ -33,7 +33,7 @@ object Dungeon {
 
         if (shouldSearchMimic()) {
             MimicDetector.findMimic()?.let {
-                if (config.scanChatInfo) UChat.chat("&7Mimic Room: &c$it")
+                if (Config.scanChatInfo) UChat.chat("&7Mimic Room: &c$it")
                 Info.mimicFound = true
             }
         }
@@ -67,7 +67,7 @@ object Dungeon {
                     action == ClickEvent.Action.RUN_COMMAND && value == "/showextrastats"
                 } == true
             }) {
-            if (config.teamInfo) {
+            if (Config.teamInfo) {
                 PlayerTracker.onDungeonEnd()
             }
         }
@@ -107,7 +107,7 @@ object Dungeon {
     }
 
     private fun shouldSearchMimic() =
-        DungeonScan.hasScanned && !Info.mimicFound && Location.dungeonFloor.equalsOneOf(6, 7) && !config.legitTest
+        DungeonScan.hasScanned && !Info.mimicFound && Location.dungeonFloor.equalsOneOf(6, 7) && !Config.legitTest
 
     object Info {
         // 6 x 6 room grid, 11 x 11 with connections

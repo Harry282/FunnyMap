@@ -1,7 +1,7 @@
 package funnymap.features.dungeon
 
-import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
+import funnymap.config.Config
 import funnymap.features.dungeon.RunInformation.completedRoomsPercentage
 import funnymap.features.dungeon.RunInformation.mimicKilled
 import funnymap.features.dungeon.RunInformation.secretPercentage
@@ -16,7 +16,7 @@ import kotlin.time.toDuration
 
 object ScoreCalculation {
     val paul = APIUtils.hasBonusPaulScore()
-        get() = field || config.paulBonus
+        get() = field || Config.paulBonus
     var score = 0
     var message300 = false
     var message270 = false
@@ -26,24 +26,24 @@ object ScoreCalculation {
         if (score >= 300 && !message300) {
             message300 = true
             message270 = true
-            if (config.scoreMessage != 0) {
-                UChat.say("/pc ${config.message300}")
+            if (Config.scoreMessage != 0) {
+                UChat.say("/pc ${Config.message300}")
             }
-            if (config.scoreTitle != 0) {
+            if (Config.scoreTitle != 0) {
                 mc.thePlayer.playSound("random.orb", 1f, 0.5.toFloat())
-                GuiRenderer.displayTitle(config.message300, 40)
+                GuiRenderer.displayTitle(Config.message300, 40)
             }
-            if (config.timeTo300) {
+            if (Config.timeTo300) {
                 Utils.modMessage("§3300 Score§7: §a${RunInformation.timeElapsed.toDuration(DurationUnit.SECONDS)}")
             }
         } else if (score >= 270 && !message270) {
             message270 = true
-            if (config.scoreMessage == 2) {
-                UChat.say("/pc ${config.message270}")
+            if (Config.scoreMessage == 2) {
+                UChat.say("/pc ${Config.message270}")
             }
-            if (config.scoreTitle == 2) {
+            if (Config.scoreTitle == 2) {
                 mc.thePlayer.playSound("random.orb", 1f, 0.5.toFloat())
-                GuiRenderer.displayTitle(config.message270, 40)
+                GuiRenderer.displayTitle(Config.message270, 40)
             }
         }
     }
@@ -56,7 +56,7 @@ object ScoreCalculation {
 
     fun getDeathDeduction(): Int {
         var deathDeduction = RunInformation.deathCount * 2
-        if (config.scoreAssumeSpirit) deathDeduction -= 1
+        if (Config.scoreAssumeSpirit) deathDeduction -= 1
         return deathDeduction.coerceAtLeast(0)
     }
 

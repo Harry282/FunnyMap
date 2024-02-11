@@ -1,6 +1,6 @@
 package funnymap.utils
 
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
 import funnymap.features.dungeon.DungeonScan
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.item.ItemMap

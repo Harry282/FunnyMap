@@ -1,6 +1,6 @@
 package funnymap.core
 
-import funnymap.FunnyMap.Companion.scope
+import funnymap.FunnyMap.scope
 import funnymap.core.map.Room
 import funnymap.features.dungeon.Dungeon
 import funnymap.utils.APIUtils

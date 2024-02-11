@@ -2,7 +2,7 @@ package funnymap.utils
 
 import com.google.common.collect.ComparisonChain
 import com.google.common.collect.Ordering
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
 import net.minecraft.client.network.NetworkPlayerInfo
 import net.minecraft.world.WorldSettings
 

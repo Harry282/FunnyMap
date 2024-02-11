@@ -1,7 +1,8 @@
 package funnymap.features.dungeon
 
-import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap
+import funnymap.FunnyMap.mc
+import funnymap.config.Config
 import funnymap.core.map.*
 import funnymap.features.dungeon.DungeonScan.scan
 import funnymap.utils.Location.dungeonFloor
@@ -32,7 +33,7 @@ object DungeonScan {
     var hasScanned = false
 
     val shouldScan: Boolean
-        get() = config.autoScan && !isScanning && !hasScanned && System.currentTimeMillis() - lastScanTime >= 250 && dungeonFloor != -1
+        get() = Config.autoScan && !isScanning && !hasScanned && System.currentTimeMillis() - lastScanTime >= 250 && dungeonFloor != -1
 
     fun scan() {
         isScanning = true
@@ -63,7 +64,7 @@ object DungeonScan {
         }
 
         if (allChunksLoaded) {
-            if (config.scanChatInfo) {
+            if (Config.scanChatInfo) {
                 val maxSecrets = ceil(Dungeon.Info.secretCount * ScoreCalculation.getSecretPercent())
                 var maxBonus = 5
                 if (dungeonFloor.equalsOneOf(6, 7)) maxBonus += 2

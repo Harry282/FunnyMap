@@ -1,7 +1,7 @@
 package funnymap.utils
 
-import funnymap.FunnyMap
-import funnymap.FunnyMap.Companion.CHAT_PREFIX
+import funnymap.FunnyMap.CHAT_PREFIX
+import funnymap.FunnyMap.mc
 import gg.essential.universal.UChat
 import net.minecraft.item.ItemStack
 import net.minecraft.util.StringUtils
@@ -11,8 +11,8 @@ object Utils {
     fun Any?.equalsOneOf(vararg other: Any): Boolean = other.any { this == it }
 
     fun runMinecraftThread(run: () -> Unit) {
-        if (!FunnyMap.mc.isCallingFromMinecraftThread) {
-            FunnyMap.mc.addScheduledTask(run)
+        if (!mc.isCallingFromMinecraftThread) {
+            mc.addScheduledTask(run)
         } else run()
     }
 

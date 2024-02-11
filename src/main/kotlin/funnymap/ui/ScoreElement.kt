@@ -1,19 +1,19 @@
 package funnymap.ui
 
-import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
+import funnymap.config.Config
 import funnymap.features.dungeon.RunInformation
 import funnymap.features.dungeon.ScoreCalculation
 import funnymap.utils.Location
 import net.minecraft.client.gui.FontRenderer
 
 class ScoreElement : MovableGuiElement() {
-    override var x: Int by config::scoreX
-    override var y: Int by config::scoreY
+    override var x: Int by Config::scoreX
+    override var y: Int by Config::scoreY
     override val h: Int
         get() = fr.FONT_HEIGHT * elementLines
     override val w: Int = fr.getStringWidth("Score: 100/100/100/7 : (300)")
-    override var scale: Float by config::scoreScale
+    override var scale: Float by Config::scoreScale
     override var x2: Int = (x + w * scale).toInt()
     override var y2: Int = (y + h * scale).toInt()
 
@@ -36,8 +36,8 @@ class ScoreElement : MovableGuiElement() {
     }
 
     override fun shouldRender(): Boolean {
-        if (!config.scoreElementEnabled) return false
-        if (config.scoreHideInBoss && Location.inBoss) return false
+        if (!Config.scoreElementEnabled) return false
+        if (Config.scoreHideInBoss && Location.inBoss) return false
         return super.shouldRender()
     }
 
@@ -47,31 +47,31 @@ class ScoreElement : MovableGuiElement() {
         fun getScoreLines(): List<String> {
             val list: MutableList<String> = mutableListOf()
 
-            when (config.scoreTotalScore) {
-                1 -> list.add(getScore(config.scoreMinimizedName, false))
-                2 -> list.add(getScore(config.scoreMinimizedName, true))
+            when (Config.scoreTotalScore) {
+                1 -> list.add(getScore(Config.scoreMinimizedName, false))
+                2 -> list.add(getScore(Config.scoreMinimizedName, true))
             }
 
-            when (config.scoreSecrets) {
-                1 -> list.add(getSecrets(config.scoreMinimizedName, false))
-                2 -> list.add(getSecrets(config.scoreMinimizedName, true))
+            when (Config.scoreSecrets) {
+                1 -> list.add(getSecrets(Config.scoreMinimizedName, false))
+                2 -> list.add(getSecrets(Config.scoreMinimizedName, true))
             }
 
-            if (config.scoreCrypts) {
-                list.add(getCrypts(config.scoreMinimizedName))
+            if (Config.scoreCrypts) {
+                list.add(getCrypts(Config.scoreMinimizedName))
             }
 
-            if (config.scoreMimic) {
-                list.add(getMimic(config.scoreMinimizedName))
+            if (Config.scoreMimic) {
+                list.add(getMimic(Config.scoreMinimizedName))
             }
 
-            if (config.scoreDeaths) {
-                list.add(getDeaths(config.scoreMinimizedName))
+            if (Config.scoreDeaths) {
+                list.add(getDeaths(Config.scoreMinimizedName))
             }
 
-            when (config.scorePuzzles) {
-                1 -> list.add(getPuzzles(config.scoreMinimizedName, false))
-                2 -> list.add(getPuzzles(config.scoreMinimizedName, true))
+            when (Config.scorePuzzles) {
+                1 -> list.add(getPuzzles(Config.scoreMinimizedName, false))
+                2 -> list.add(getPuzzles(Config.scoreMinimizedName, true))
             }
 
             return list
@@ -80,26 +80,26 @@ class ScoreElement : MovableGuiElement() {
         fun runInformationLines(): List<String> {
             val list: MutableList<String> = mutableListOf()
 
-            if (config.runInformationScore) {
+            if (Config.runInformationScore) {
                 list.add(getScore(minimized = false, expanded = false))
             }
 
-            when (config.runInformationSecrets) {
+            when (Config.runInformationSecrets) {
                 1 -> list.add(getSecrets(minimized = false, missing = false))
                 2 -> list.add(getSecrets(minimized = false, missing = true))
             }
 
             list.add("split")
 
-            if (config.runInformationCrypts) {
+            if (Config.runInformationCrypts) {
                 list.add(getCrypts())
             }
 
-            if (config.runInformationMimic) {
+            if (Config.runInformationMimic) {
                 list.add(getMimic())
             }
 
-            if (config.runInformationDeaths) {
+            if (Config.runInformationDeaths) {
                 list.add(getDeaths())
             }
 

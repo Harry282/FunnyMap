@@ -1,8 +1,8 @@
 package funnymap.features.dungeon
 
 import funnymap.FunnyMap
-import funnymap.FunnyMap.Companion.mc
-import funnymap.FunnyMap.Companion.scope
+import funnymap.FunnyMap.mc
+import funnymap.FunnyMap.scope
 import funnymap.core.DungeonPlayer
 import funnymap.core.RoomData
 import funnymap.core.map.Room

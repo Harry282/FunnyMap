@@ -1,7 +1,7 @@
 package funnymap.utils
 
-import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
+import funnymap.config.Config
 import funnymap.core.DungeonPlayer
 import funnymap.features.dungeon.DungeonScan
 import funnymap.features.dungeon.MapRender
@@ -104,11 +104,11 @@ object RenderUtils {
         if (text.isEmpty()) return
         GlStateManager.pushMatrix()
         GlStateManager.translate(x.toFloat(), y.toFloat(), 0f)
-        GlStateManager.scale(config.textScale, config.textScale, 1f)
+        GlStateManager.scale(Config.textScale, Config.textScale, 1f)
 
-        if (config.mapRotate) {
+        if (Config.mapRotate) {
             GlStateManager.rotate(mc.thePlayer.rotationYaw + 180f, 0f, 0f, 1f)
-        } else if (config.mapDynamicRotate) {
+        } else if (Config.mapDynamicRotate) {
             GlStateManager.rotate(-MapRender.dynamicRotation, 0f, 0f, 1f)
         }
 
@@ -125,7 +125,7 @@ object RenderUtils {
             )
         }
 
-        if (config.mapDynamicRotate) {
+        if (Config.mapDynamicRotate) {
             GlStateManager.rotate(MapRender.dynamicRotation, 0f, 0f, 1f)
         }
 
@@ -148,9 +148,9 @@ object RenderUtils {
 
             // Apply head rotation and scaling
             GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
-            GlStateManager.scale(config.playerHeadScale, config.playerHeadScale, 1f)
+            GlStateManager.scale(Config.playerHeadScale, Config.playerHeadScale, 1f)
 
-            if (config.mapVanillaMarker && (player.isPlayer || name == mc.thePlayer.name)) {
+            if (Config.mapVanillaMarker && (player.isPlayer || name == mc.thePlayer.name)) {
                 GlStateManager.rotate(180f, 0f, 0f, 1f)
                 GlStateManager.color(1f, 1f, 1f, 1f)
                 mc.textureManager.bindTexture(mapIcons)
@@ -180,15 +180,15 @@ object RenderUtils {
             }
 
             // Handle player names
-            if (config.playerHeads == 2 || config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
+            if (Config.playerHeads == 2 || Config.playerHeads == 1 && mc.thePlayer.heldItem?.itemID.equalsOneOf(
                     "SPIRIT_LEAP", "INFINITE_SPIRIT_LEAP", "HAUNT_ABILITY"
                 )
             ) {
-                if (!config.mapRotate) {
+                if (!Config.mapRotate) {
                     GlStateManager.rotate(-player.yaw + 180f, 0f, 0f, 1f)
                 }
                 GlStateManager.translate(0f, 10f, 0f)
-                GlStateManager.scale(config.playerNameScale, config.playerNameScale, 1f)
+                GlStateManager.scale(Config.playerNameScale, Config.playerNameScale, 1f)
                 mc.fontRendererObj.drawString(
                     name, -mc.fontRendererObj.getStringWidth(name) / 2f, 0f, 0xffffff, true
                 )

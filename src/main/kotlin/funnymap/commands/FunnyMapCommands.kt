@@ -1,8 +1,8 @@
 package funnymap.commands
 
-import funnymap.FunnyMap.Companion.config
-import funnymap.FunnyMap.Companion.display
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.display
+import funnymap.FunnyMap.mc
+import funnymap.config.Config
 import funnymap.features.dungeon.Dungeon
 import funnymap.features.dungeon.DungeonScan
 import funnymap.features.dungeon.ScanUtils
@@ -27,7 +27,7 @@ class FunnyMapCommands : CommandBase() {
 
     override fun processCommand(sender: ICommandSender, args: Array<String>) {
         if (args.isEmpty()) {
-            display = config.gui()
+            display = Config.gui()
             return
         }
         when (args[0]) {

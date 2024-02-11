@@ -1,6 +1,6 @@
 package funnymap.ui
 
-import funnymap.FunnyMap.Companion.mc
+import funnymap.FunnyMap.mc
 import funnymap.utils.RenderUtils
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.renderer.GlStateManager

@@ -27,9 +27,22 @@ import java.net.URI
 import kotlin.coroutines.EmptyCoroutineContext
 
 @Mod(
-    modid = FunnyMap.MOD_ID, name = FunnyMap.MOD_NAME, version = FunnyMap.MOD_VERSION
+    modid = FunnyMap.MOD_ID,
+    name = FunnyMap.MOD_NAME,
+    version = FunnyMap.MOD_VERSION,
+    modLanguageAdapter = "funnymap.utils.KotlinAdapter"
 )
-class FunnyMap {
+object FunnyMap {
+    const val MOD_ID = "funnymap"
+    const val MOD_NAME = "Funny Map"
+    const val MOD_VERSION = "0.7.4"
+    val CHAT_PREFIX: String
+        get() = "§b§l<§f${Config.customPrefix.ifBlank { MOD_NAME }}§b§l>§r"
+
+    val mc: Minecraft = Minecraft.getMinecraft()
+    var display: GuiScreen? = null
+    val scope = CoroutineScope(EmptyCoroutineContext)
+
     @Mod.EventHandler
     fun preInit(event: FMLPreInitializationEvent) {
         File(event.modConfigurationDirectory, "funnymap").mkdirs()
@@ -73,18 +86,5 @@ class FunnyMap {
         Location.onTick()
 
         mc.mcProfiler.endSection()
-    }
-
-    companion object {
-        const val MOD_ID = "funnymap"
-        const val MOD_NAME = "Funny Map"
-        const val MOD_VERSION = "0.7.4"
-        val CHAT_PREFIX: String
-            get() = "§b§l<§f${config.customPrefix.ifBlank { MOD_NAME }}§b§l>§r"
-
-        val mc: Minecraft = Minecraft.getMinecraft()
-        val config = Config
-        var display: GuiScreen? = null
-        val scope = CoroutineScope(EmptyCoroutineContext)
     }
 }
