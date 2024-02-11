@@ -91,7 +91,7 @@ object PlayerTracker {
 
         var lastTime = 0L
 
-        val splitsComponent = ChatComponentText("§3Room Splits").apply {
+        val splitsComponent = ChatComponentText("§3Splits").apply {
             chatStyle = ChatStyle().setChatHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, ChatComponentText(
                 player.roomVisits.joinToString(
                     separator = "\n",
@@ -105,7 +105,7 @@ object PlayerTracker {
             )))
         }
 
-        val roomTimeComponent = ChatComponentText("§3Room Times").apply {
+        val roomTimeComponent = ChatComponentText("§3Times").apply {
             chatStyle = ChatStyle().setChatHoverEvent(HoverEvent(HoverEvent.Action.SHOW_TEXT, ChatComponentText(
                 player.roomVisits.groupBy { it.second }.entries.joinToString(
                     separator = "\n",
