@@ -181,20 +181,26 @@ object MapRender {
             else -> 10.0 // neu
         }
 
-        Dungeon.Info.uniqueRooms.forEach { (room, pos) ->
+        Dungeon.Info.uniqueRooms.forEach { unique ->
+            val room = unique.mainRoom
             if (Config.legitTest && room.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) return@forEach
-            val xOffset = (pos.first shr 1) * (mapRoomSize + connectorSize)
-            val yOffset = (pos.second shr 1) * (mapRoomSize + connectorSize)
+            val checkPos = unique.getCheckmarkPosition()
+            val namePos = unique.getNamePosition()
+            val xOffsetCheck = (checkPos.first / 2f) * (mapRoomSize + connectorSize)
+            val yOffsetCheck = (checkPos.second / 2f) * (mapRoomSize + connectorSize)
+            val xOffsetName = (namePos.first / 2f) * (mapRoomSize + connectorSize)
+            val yOffsetName = (namePos.second / 2f) * (mapRoomSize + connectorSize)
 
             if (Config.mapCheckmark != 0 && Config.mapRoomSecrets != 2) {
                 getCheckmark(room.state, Config.mapCheckmark)?.let {
+
                     GlStateManager.enableAlpha()
                     GlStateManager.color(255f, 255f, 255f, 255f)
                     mc.textureManager.bindTexture(it)
 
                     RenderUtils.drawTexturedQuad(
-                        xOffset + (mapRoomSize - checkmarkSize) / 2,
-                        yOffset + (mapRoomSize - checkmarkSize) / 2,
+                        xOffsetCheck + (mapRoomSize - checkmarkSize) / 2,
+                        yOffsetCheck + (mapRoomSize - checkmarkSize) / 2,
                         checkmarkSize,
                         checkmarkSize
                     )
@@ -211,7 +217,7 @@ object MapRender {
             if (Config.mapRoomSecrets == 2) {
                 GlStateManager.pushMatrix()
                 GlStateManager.translate(
-                    xOffset + (mapRoomSize shr 1).toFloat(), yOffset + 2 + (mapRoomSize shr 1).toFloat(), 0f
+                    xOffsetCheck + (mapRoomSize shr 1), yOffsetCheck + 2 + (mapRoomSize shr 1), 0f
                 )
                 GlStateManager.scale(2f, 2f, 1f)
                 RenderUtils.renderCenteredText(listOf(room.data.secrets.toString()), 0, 0, color)
@@ -235,8 +241,8 @@ object MapRender {
             // Offset + half of roomsize
             RenderUtils.renderCenteredText(
                 name,
-                xOffset + (mapRoomSize shr 1),
-                yOffset + (mapRoomSize shr 1),
+                xOffsetName.toInt() + (mapRoomSize shr 1),
+                yOffsetName.toInt() + (mapRoomSize shr 1),
                 color
             )
         }

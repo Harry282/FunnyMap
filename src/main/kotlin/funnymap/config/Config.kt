@@ -240,6 +240,15 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     var mapRoomSecrets = 0
 
     @Property(
+        name = "Center Room Names",
+        type = PropertyType.SWITCH,
+        description = "Center room names.",
+        subcategory = "Text",
+        category = "Rooms"
+    )
+    var mapCenterRoomName = true
+
+    @Property(
         name = "Color Text",
         type = PropertyType.SWITCH,
         description = "Colors name and secret count based on room state.",
@@ -255,6 +264,15 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
         options = ["None", "Default", "NEU"]
     )
     var mapCheckmark = 1
+
+    @Property(
+        name = "Center Room Checkmarks",
+        type = PropertyType.SWITCH,
+        description = "Center room checkmarks.",
+        subcategory = "Checkmarks",
+        category = "Rooms"
+    )
+    var mapCenterCheckmark = true
 
     @Property(
         name = "Darken Multiplier",

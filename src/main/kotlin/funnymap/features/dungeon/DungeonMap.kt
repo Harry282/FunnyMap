@@ -7,6 +7,7 @@ import funnymap.utils.MapUtils
 class DungeonMap(mapColors: ByteArray) {
     private var centerColors: ByteArray = ByteArray(121)
     private var sideColors: ByteArray = ByteArray(121)
+    private val cacheTiles: Array<Tile?> = Array(121) { null }
 
     init {
         val halfRoom = MapUtils.mapRoomSize / 2
@@ -43,10 +44,34 @@ class DungeonMap(mapColors: ByteArray) {
 
     fun getTile(arrayX: Int, arrayY: Int): Tile {
         val index = arrayY * 11 + arrayX
-        if (index >= 121) return Unknown(0, 0)
-        val xPos = DungeonScan.startX + arrayX * (DungeonScan.roomSize shr 1)
-        val zPos = DungeonScan.startZ + arrayY * (DungeonScan.roomSize shr 1)
-        return scanTile(arrayX, arrayY, xPos, zPos)
+        if (index !in cacheTiles.indices) return Unknown(0, 0)
+        if (cacheTiles[index] == null) {
+            val xPos = DungeonScan.startX + arrayX * (DungeonScan.roomSize shr 1)
+            val zPos = DungeonScan.startZ + arrayY * (DungeonScan.roomSize shr 1)
+            cacheTiles[index] = scanTile(arrayX, arrayY, xPos, zPos)
+        }
+        return cacheTiles[index] ?: Unknown(0, 0)
+    }
+
+    fun getConnected(arrayX: Int, arrayY: Int): List<Room> {
+        val tile = getTile(arrayX, arrayY)
+        if (tile !is Room) return emptyList()
+        val directions = listOf(
+            Pair(0, 1),
+            Pair(1, 0),
+            Pair(0, -1),
+            Pair(-1, 0)
+        )
+        val connected = mutableListOf<Room>()
+        val queue = mutableListOf(tile)
+        while (queue.isNotEmpty()) {
+            val current = queue.removeFirst()
+            connected.add(current)
+            queue.addAll(directions.mapNotNull {
+                getTile(current.x + it.first, current.z + it.second) as? Room
+            })
+        }
+        return connected
     }
 
     private fun scanTile(arrayX: Int, arrayY: Int, worldX: Int, worldZ: Int): Tile {

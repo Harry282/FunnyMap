@@ -68,8 +68,8 @@ object MimicDetector {
     private fun getMimicRoom(): String {
         mc.theWorld.loadedTileEntityList.filter { it is TileEntityChest && it.chestType == 1 }
             .groupingBy { getRoomFromPos(it.pos)?.data?.name }.eachCount().forEach { (room, trappedChests) ->
-                Dungeon.Info.uniqueRooms.find { it.first.data.name == room && it.first.data.trappedChests < trappedChests }
-                    ?.let { return it.first.data.name }
+                Dungeon.Info.uniqueRooms.find { it.name == room && it.mainRoom.data.trappedChests < trappedChests }
+                    ?.let { return it.name }
             }
         return ""
     }

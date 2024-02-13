@@ -112,7 +112,7 @@ object Dungeon {
     object Info {
         // 6 x 6 room grid, 11 x 11 with connections
         val dungeonList = Array<Tile>(121) { Unknown(0, 0) }
-        val uniqueRooms = mutableListOf<Pair<Room, Pair<Int, Int>>>()
+        val uniqueRooms = mutableSetOf<UniqueRoom>()
         var roomCount = 0
         val puzzles = mutableMapOf<Puzzle, Boolean>()
 
@@ -126,8 +126,8 @@ object Dungeon {
         var keys = 0
         fun reset() {
             dungeonList.fill(Unknown(0, 0))
-            roomCount = 0
             uniqueRooms.clear()
+            roomCount = 0
             puzzles.clear()
 
             trapType = ""

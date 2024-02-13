@@ -107,38 +107,19 @@ object DungeonScan {
                 val roomCore = ScanUtils.getCore(x, z)
                 Room(x, z, ScanUtils.getRoomData(roomCore) ?: return null).apply {
                     core = roomCore
-                    // Checks if a room with the same name has already been scanned.
-                    val duplicateRoom = Dungeon.Info.uniqueRooms.firstOrNull { it.first.data.name == data.name }
-
-                    if (duplicateRoom == null) {
-                        Dungeon.Info.uniqueRooms.add(this to (column to row))
-                        Dungeon.Info.cryptCount += data.crypts
-                        Dungeon.Info.secretCount += data.secrets
-                        when (data.type) {
-                            RoomType.ENTRANCE -> MapRender.dynamicRotation = when {
-                                row == 0 -> 180f
-                                column == 0 -> -90f
-                                column > row -> 90f
-                                else -> 0f
-                            }
-
-                            RoomType.TRAP -> Dungeon.Info.trapType = data.name.split(" ")[0]
-                            RoomType.PUZZLE -> Puzzle.fromName(data.name)
-                                ?.let { Dungeon.Info.puzzles.putIfAbsent(it, false) }
-
-                            else -> {}
-                        }
-                    } else if (x < duplicateRoom.first.x || (x == duplicateRoom.first.x && z < duplicateRoom.first.z)) {
-                        Dungeon.Info.uniqueRooms.remove(duplicateRoom)
-                        Dungeon.Info.uniqueRooms.add(this to (column to row))
-                    }
+                    addToUnique(row, column)
                 }
             }
 
             // Can only be the center "block" of a 2x2 room.
             !rowEven && !columnEven -> {
                 Dungeon.Info.dungeonList[column - 1 + (row - 1) * 11].let {
-                    if (it is Room) Room(x, z, it.data).apply { isSeparator = true } else null
+                    if (it is Room) {
+                        Room(x, z, it.data).apply {
+                            isSeparator = true
+                            addToUnique(row, column)
+                        }
+                    } else null
                 }
             }
 
