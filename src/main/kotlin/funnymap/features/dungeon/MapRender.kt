@@ -27,6 +27,10 @@ object MapRender {
     private val defaultCross = ResourceLocation("funnymap", "default/cross.png")
 
     var dynamicRotation = 0f
+    var legitPeek = false
+
+    val legitRender: Boolean
+        get() = Config.legitMode && !legitPeek
 
     fun renderMap() {
         mc.mcProfiler.startSection("border")
@@ -114,7 +118,7 @@ object MapRender {
             for (x in 0..10) {
                 val tile = Dungeon.Info.dungeonList[y * 11 + x]
                 if (tile is Unknown) continue
-                if (Config.legitTest && tile.state == RoomState.UNDISCOVERED) continue
+                if (legitRender && tile.state == RoomState.UNDISCOVERED) continue
 
                 val xOffset = (x shr 1) * (mapRoomSize + connectorSize)
                 val yOffset = (y shr 1) * (mapRoomSize + connectorSize)
@@ -183,7 +187,7 @@ object MapRender {
 
         Dungeon.Info.uniqueRooms.forEach { unique ->
             val room = unique.mainRoom
-            if (Config.legitTest && room.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) return@forEach
+            if (legitRender && room.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) return@forEach
             val checkPos = unique.getCheckmarkPosition()
             val namePos = unique.getNamePosition()
             val xOffsetCheck = (checkPos.first / 2f) * (mapRoomSize + connectorSize)

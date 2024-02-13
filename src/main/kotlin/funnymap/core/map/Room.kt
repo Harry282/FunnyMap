@@ -4,6 +4,7 @@ import funnymap.config.Config
 import funnymap.core.RoomData
 import funnymap.features.dungeon.Dungeon
 import funnymap.features.dungeon.DungeonScan
+import funnymap.features.dungeon.MapRender
 import java.awt.Color
 
 class Room(override val x: Int, override val z: Int, var data: RoomData) : Tile {
@@ -12,7 +13,7 @@ class Room(override val x: Int, override val z: Int, var data: RoomData) : Tile 
     var isSeparator = false
     override var state: RoomState = RoomState.UNDISCOVERED
     override val color: Color
-        get() = if (Config.legitTest && state == RoomState.UNOPENED) Config.colorUnopened
+        get() = if (MapRender.legitRender && state == RoomState.UNOPENED) Config.colorUnopened
         else when (data.type) {
             RoomType.BLOOD -> Config.colorBlood
             RoomType.CHAMPION -> Config.colorMiniboss

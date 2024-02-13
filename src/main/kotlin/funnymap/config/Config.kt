@@ -10,6 +10,25 @@ import java.io.File
 object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sortingBehavior = CategorySorting) {
 
     @Property(
+        name = "Legit Mode",
+        type = PropertyType.SWITCH,
+        description = "Hides unopened rooms. Still uses scanning to identify all rooms.",
+        category = "General",
+        subcategory = "Legit Mode"
+    )
+    var legitMode = false
+
+    @Property(
+        name = "Peek Mode",
+        type = PropertyType.SELECTOR,
+        description = "Shows cheater map while in legit mode.",
+        options = ["Toggle", "Hold"],
+        category = "General",
+        subcategory = "Legit Mode"
+    )
+    var peekMode = 0
+
+    @Property(
         name = "Map Enabled",
         type = PropertyType.SWITCH,
         description = "Render the map!",
@@ -734,13 +753,6 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
         category = "Debug"
     )
     var paulBonus = false
-
-    @Property(
-        name = "Legit Test",
-        type = PropertyType.SWITCH,
-        category = "Debug"
-    )
-    var legitTest = false
 
     @Property(
         name = "Custom Prefix",

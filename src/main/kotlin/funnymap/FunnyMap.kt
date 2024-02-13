@@ -3,6 +3,7 @@ package funnymap
 import funnymap.commands.FunnyMapCommands
 import funnymap.config.Config
 import funnymap.features.dungeon.Dungeon
+import funnymap.features.dungeon.MapRender
 import funnymap.features.dungeon.RunInformation
 import funnymap.features.dungeon.WitherDoorESP
 import funnymap.ui.GuiRenderer
@@ -13,14 +14,18 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
+import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.client.ClientCommandHandler
 import net.minecraftforge.common.MinecraftForge
+import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.event.FMLInitializationEvent
 import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent
+import net.minecraftforge.fml.common.gameevent.InputEvent
 import net.minecraftforge.fml.common.gameevent.TickEvent
+import org.lwjgl.input.Keyboard
 import java.awt.Desktop
 import java.io.File
 import java.net.URI
@@ -41,6 +46,7 @@ object FunnyMap {
 
     val mc: Minecraft = Minecraft.getMinecraft()
     var display: GuiScreen? = null
+    val toggleLegitKey = KeyBinding("Legit Peek", Keyboard.KEY_NONE, "Funny Map")
     val scope = CoroutineScope(EmptyCoroutineContext)
 
     @Mod.EventHandler
@@ -54,6 +60,7 @@ object FunnyMap {
         listOf(
             this, Dungeon, GuiRenderer, Location, RunInformation, WitherDoorESP
         ).forEach(MinecraftForge.EVENT_BUS::register)
+        ClientRegistry.registerKeyBinding(toggleLegitKey)
     }
 
     @Mod.EventHandler
@@ -81,10 +88,21 @@ object FunnyMap {
             display = null
         }
 
+        if (Config.peekMode == 1) {
+            MapRender.legitPeek = toggleLegitKey.isKeyDown
+        }
+
         Dungeon.onTick()
         GuiRenderer.onTick()
         Location.onTick()
 
         mc.mcProfiler.endSection()
+    }
+
+    @SubscribeEvent
+    fun onKey(event: InputEvent.KeyInputEvent) {
+        if (Config.peekMode == 0 && toggleLegitKey.isPressed) {
+            MapRender.legitPeek = !MapRender.legitPeek
+        }
     }
 }

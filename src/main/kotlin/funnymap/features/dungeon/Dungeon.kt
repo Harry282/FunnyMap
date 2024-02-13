@@ -107,7 +107,7 @@ object Dungeon {
     }
 
     private fun shouldSearchMimic() =
-        DungeonScan.hasScanned && !Info.mimicFound && Location.dungeonFloor.equalsOneOf(6, 7) && !Config.legitTest
+        DungeonScan.hasScanned && !Info.mimicFound && Location.dungeonFloor.equalsOneOf(6, 7) && !Config.legitMode
 
     object Info {
         // 6 x 6 room grid, 11 x 11 with connections
