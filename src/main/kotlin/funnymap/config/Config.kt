@@ -7,7 +7,48 @@ import gg.essential.vigilance.data.*
 import java.awt.Color
 import java.io.File
 
-object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sortingBehavior = CategorySorting) {
+object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sortingBehavior = CategorySorting) {
+
+    @Property(
+        name = "Auto Scan",
+        type = PropertyType.SWITCH,
+        description = "Automatically scans when entering dungeon. Manual scan can be done with /fmap scan.",
+        category = "General",
+        subcategory = "Scanning"
+    )
+    var autoScan = true
+
+    @Property(
+        name = "Chat Info",
+        type = PropertyType.SWITCH,
+        description = "Show dungeon overview information after scanning.",
+        category = "General",
+        subcategory = "Scanning"
+    )
+    var scanChatInfo = true
+
+    @Property(
+        name = "Map Position",
+        type = PropertyType.BUTTON,
+        category = "General",
+        subcategory = "Size",
+        placeholder = "Edit"
+    )
+    fun openMoveMapGui() {
+        FunnyMap.display = EditLocationGui()
+    }
+
+    @Property(
+        name = "Reset Map Position",
+        type = PropertyType.BUTTON,
+        category = "General",
+        subcategory = "Size",
+        placeholder = "Reset"
+    )
+    fun resetMapLocation() {
+        mapX = 10
+        mapY = 10
+    }
 
     @Property(
         name = "Legit Mode",
@@ -93,47 +134,6 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     var mapVanillaMarker = false
 
     @Property(
-        name = "Auto Scan",
-        type = PropertyType.SWITCH,
-        description = "Automatically scans when entering dungeon. Manual scan can be done with \"/fmap scan\"",
-        category = "Map",
-        subcategory = "Scanning"
-    )
-    var autoScan = true
-
-    @Property(
-        name = "Chat Info",
-        type = PropertyType.SWITCH,
-        description = "Show dungeon overview information after scanning.",
-        category = "Map",
-        subcategory = "Scanning"
-    )
-    var scanChatInfo = true
-
-    @Property(
-        name = "Map Position",
-        type = PropertyType.BUTTON,
-        category = "Map",
-        subcategory = "Size",
-        placeholder = "Edit"
-    )
-    fun openMoveMapGui() {
-        FunnyMap.display = EditLocationGui()
-    }
-
-    @Property(
-        name = "Reset Map Position",
-        type = PropertyType.BUTTON,
-        category = "Map",
-        subcategory = "Size",
-        placeholder = "Reset"
-    )
-    fun resetMapLocation() {
-        mapX = 10
-        mapY = 10
-    }
-
-    @Property(
         name = "Map X",
         type = PropertyType.NUMBER,
         category = "Map",
@@ -154,7 +154,6 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     @Property(
         name = "Map Size",
         type = PropertyType.DECIMAL_SLIDER,
-        description = "Scale of entire map.",
         category = "Map",
         subcategory = "Size",
         minF = 0.1f,
@@ -228,32 +227,45 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
         name = "Dark Undiscovered Rooms",
         type = PropertyType.SWITCH,
         description = "Darkens unentered rooms.",
-        category = "Rooms"
+        category = "Rooms",
+        subcategory = "Render"
     )
     var mapDarkenUndiscovered = true
 
     @Property(
+        name = "Darken Multiplier",
+        type = PropertyType.PERCENT_SLIDER,
+        description = "How much to darken undiscovered rooms.",
+        category = "Rooms",
+        subcategory = "Render"
+    )
+    var mapDarkenPercent = 0.4f
+
+    @Property(
         name = "Gray Undiscovered Rooms",
         type = PropertyType.SWITCH,
-        description = "Darkens unentered rooms.",
-        category = "Rooms"
+        description = "Grayscale unentered rooms.",
+        category = "Rooms",
+        subcategory = "Render"
     )
-    var mapGrayUndiscovered = true
+    var mapGrayUndiscovered = false
 
     @Property(
         name = "Room Names",
         type = PropertyType.SELECTOR,
         description = "Shows names of rooms on map.",
         category = "Rooms",
+        subcategory = "Text",
         options = ["None", "Puzzles / Trap", "All"]
     )
-    var mapRoomNames = 1
+    var mapRoomNames = 2
 
     @Property(
         name = "Room Secrets",
         type = PropertyType.SELECTOR,
         description = "Shows total secrets of rooms on map.",
         category = "Rooms",
+        subcategory = "Text",
         options = ["Off", "On", "Replace Checkmark"]
     )
     var mapRoomSecrets = 0
@@ -271,6 +283,7 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
         name = "Color Text",
         type = PropertyType.SWITCH,
         description = "Colors name and secret count based on room state.",
+        subcategory = "Text",
         category = "Rooms"
     )
     var mapColorText = false
@@ -280,6 +293,7 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
         type = PropertyType.SELECTOR,
         description = "Adds room checkmarks based on room state.",
         category = "Rooms",
+        subcategory = "Checkmarks",
         options = ["None", "Default", "NEU"]
     )
     var mapCheckmark = 1
@@ -292,14 +306,6 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
         category = "Rooms"
     )
     var mapCenterCheckmark = true
-
-    @Property(
-        name = "Darken Multiplier",
-        type = PropertyType.PERCENT_SLIDER,
-        description = "How much to darken undiscovered rooms",
-        category = "Colors"
-    )
-    var mapDarkenPercent = 0.4f
 
     @Property(
         name = "Blood Door",
@@ -448,6 +454,7 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     @Property(
         name = "Show Score",
         type = PropertyType.SWITCH,
+        description = "Shows separate score element.",
         category = "Score",
         subcategory = "Toggle"
     )
@@ -456,6 +463,7 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     @Property(
         name = "Assume Spirit",
         type = PropertyType.SWITCH,
+        description = "Assume everyone has a legendary spirit pet.",
         category = "Score",
         subcategory = "Toggle"
     )
@@ -499,7 +507,6 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     @Property(
         name = "Score Calc Size",
         type = PropertyType.DECIMAL_SLIDER,
-        description = "Scale of score calc.",
         category = "Score",
         subcategory = "Size",
         minF = 0.1f,
@@ -571,8 +578,8 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
 
     @Property(
         name = "Score Title",
-        description = "Shows score messages as a title notification.",
         type = PropertyType.SELECTOR,
+        description = "Shows score messages as a title notification.",
         category = "Score",
         subcategory = "Message",
         options = ["Off", "300", "270 and 300"]
@@ -598,6 +605,7 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     @Property(
         name = "300 Time",
         type = PropertyType.SWITCH,
+        description = "Shows time to reach 300 score.",
         category = "Score",
         subcategory = "Message"
     )
@@ -663,8 +671,8 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
 
     @Property(
         name = "Show Team Info",
-        description = "Shows team member secrets and room times at end of run. Requires a valid API key.",
         type = PropertyType.SWITCH,
+        description = "Shows team member secrets and room times at end of run. Requires a valid API key.",
         category = "Other Features"
     )
     var teamInfo = false
@@ -672,6 +680,7 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     @Property(
         name = "Mimic Message",
         type = PropertyType.SWITCH,
+        description = "Sends party message when a mimic is killed. Detects most instant kills.",
         category = "Other Features",
         subcategory = "Mimic Message"
     )
@@ -714,7 +723,7 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     var witherDoorKeyColor = Color(0, 255, 0)
 
     @Property(
-        name = "Outline Width",
+        name = "Door Outline Width",
         type = PropertyType.DECIMAL_SLIDER,
         category = "Other Features",
         subcategory = "Wither Door",
@@ -724,7 +733,7 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     var witherDoorOutlineWidth = 3f
 
     @Property(
-        name = "Outline Opacity",
+        name = "Door Outline Opacity",
         type = PropertyType.PERCENT_SLIDER,
         category = "Other Features",
         subcategory = "Wither Door"
@@ -732,7 +741,7 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     var witherDoorOutline = 1f
 
     @Property(
-        name = "Fill Opacity",
+        name = "Door Fill Opacity",
         type = PropertyType.PERCENT_SLIDER,
         category = "Other Features",
         subcategory = "Wither Door"
@@ -742,14 +751,15 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     @Property(
         name = "Force Skyblock",
         type = PropertyType.SWITCH,
+        description = "Disables in skyblock and dungeon checks. Don't enable unless you know what you're doing.",
         category = "Debug"
     )
     var forceSkyblock = false
 
     @Property(
         name = "Paul Score",
-        description = "Assumes paul perk is active to give 10 bonus score.",
         type = PropertyType.SWITCH,
+        description = "Assumes paul perk is active to give 10 bonus score.",
         category = "Debug"
     )
     var paulBonus = false
@@ -765,18 +775,18 @@ object Config : Vigilant(File("./config/funnymap/Config.toml"), "Funny Map", sor
     init {
         initialize()
         setCategoryDescription(
-            "Map", "&f&l Funny Map\n&7Big thanks to &lIllegalMap&r&7 by UnclaimedBloom"
+            "General", "&f&l Funny Map\n&7Big thanks to &lIllegalMap&r&7 by UnclaimedBloom"
         )
     }
 
     private object CategorySorting : SortingBehavior() {
 
         private val configCategories = listOf(
-            "Map", "Rooms", "Run Information", "Score", "Colors", "Other Features", "Debug"
+            "General", "Map", "Rooms", "Run Information", "Score", "Colors", "Other Features", "Debug"
         )
 
         private val configSubcategories = listOf(
-            "Toggle", "Elements", "Scanning", "Size", "Render"
+            "Toggle", "Message", "Elements", "Scanning", "Size", "Legit Mode", "Render"
         )
 
         override fun getCategoryComparator(): Comparator<in Category> = compareBy { configCategories.indexOf(it.name) }
