@@ -11,10 +11,14 @@ object Location {
 
     private var onHypixel = false
     var inSkyblock = false
-    var inDungeons = false
+    var island = Island.Unknown
+    val inDungeons
+        get() = island == Island.Dungeon
     var dungeonFloor = -1
     var masterMode = false
     var inBoss = false
+
+    private var islandRegex = Regex("^§r§b§l(?:Area|Dungeon): §r§7(.+)§r\$")
 
     private val entryMessages = listOf(
         "[BOSS] Bonzo: Gratz for making it this far, but I'm basically unbeatable.",
@@ -25,26 +29,37 @@ object Location {
         "[BOSS] Sadan: So you made it all the way here... Now you wish to defy me? Sadan?!"
     )
 
+    private var tickCount = 0
+
     fun onTick() {
         if (mc.theWorld == null) return
+        tickCount++
+        if (tickCount % 20 != 0) return
         if (Config.forceSkyblock) {
             inSkyblock = true
-            inDungeons = true
+            island = Island.Dungeon
             dungeonFloor = 7
-        } else {
-            inSkyblock = onHypixel && mc.theWorld.scoreboard?.getObjectiveInDisplaySlot(1)?.name == "SBScoreboard"
+            return
+        }
 
-            if (!inDungeons) {
-                Scoreboard.getLines().find {
-                    Scoreboard.cleanLine(it).run {
-                        contains("The Catacombs (") && !contains("Queue")
-                    }
-                }?.let {
-                    inDungeons = true
-                    val line = it.substringBefore(")")
-                    dungeonFloor = line.lastOrNull()?.digitToIntOrNull() ?: 0
-                    masterMode = line[line.length - 2] == 'M'
+        inSkyblock = onHypixel && mc.theWorld.scoreboard?.getObjectiveInDisplaySlot(1)?.name == "SBScoreboard"
+
+        if (island == Island.Unknown) {
+            TabList.getTabList().firstNotNullOfOrNull { islandRegex.find(it.second) }
+                ?.groupValues?.getOrNull(1)?.let { areaName ->
+                    Island.entries.find { it.displayName == areaName }?.let { island = it }
                 }
+        }
+
+        if (island == Island.Dungeon && dungeonFloor == -1) {
+            Scoreboard.getLines().find {
+                Scoreboard.cleanLine(it).run {
+                    contains("The Catacombs (") && !contains("Queue")
+                }
+            }?.let {
+                val line = it.substringBefore(")")
+                dungeonFloor = line.lastOrNull()?.digitToIntOrNull() ?: 0
+                masterMode = line[line.length - 2] == 'M'
             }
         }
     }
@@ -66,7 +81,7 @@ object Location {
 
     @SubscribeEvent
     fun onWorldUnload(event: WorldEvent.Unload) {
-        inDungeons = false
+        island = Island.Unknown
         dungeonFloor = -1
         inBoss = false
     }
@@ -75,8 +90,29 @@ object Location {
     fun onDisconnect(event: FMLNetworkEvent.ClientDisconnectionFromServerEvent) {
         onHypixel = false
         inSkyblock = false
-        inDungeons = false
+        island = Island.Unknown
         dungeonFloor = -1
         inBoss = false
+    }
+
+    enum class Island(val displayName: String) {
+        PrivateIsland("Private Island"),
+        Garden("Garden"),
+        SpiderDen("Spider's Den"),
+        CrimsonIsle("Crimson Isle"),
+        TheEnd("The End"),
+        GoldMine("Gold Mine"),
+        DeepCaverns("Deep Caverns"),
+        DwarvenMines("Dwarven Mines"),
+        CrystalHollows("Crystal Hollows"),
+        FarmingIsland("The Farming Islands"),
+        ThePark("The Park"),
+        Dungeon("Catacombs"),
+        DungeonHub("Dungeon Hub"),
+        Hub("Hub"),
+        DarkAuction("Dark Auction"),
+        JerryWorkshop("Jerry's Workshop"),
+        Kuudra("Kuudra"),
+        Unknown("(Unknown)");
     }
 }
