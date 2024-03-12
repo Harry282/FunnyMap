@@ -681,15 +681,6 @@
     "secrets": 10
   },
   {
-    "name": "Mini Rails",
-    "type": "RARE",
-    "cores": [
-      256380076
-    ],
-    "crypts": 3,
-    "secrets": 4
-  },
-  {
     "name": "Mirror",
     "type": "NORMAL",
     "cores": [
@@ -1229,6 +1220,15 @@
     ]
   },
   {
+    "name": "Trinity",
+    "type": "RARE",
+    "cores": [
+      256380076
+    ],
+    "crypts": 3,
+    "secrets": 4
+  },
+  {
     "name": "Vinny 8 Ball",
     "type": "RARE",
     "cores": [
@@ -1296,5 +1296,14 @@
     ],
     "crypts": 8,
     "secrets": 4
+  },
+  {
+    "name": "Zodd",
+    "type": "NORMAL",
+    "cores": [
+      105458531
+    ],
+    "crypts": 1,
+    "secrets": 1
   }
 ]
