@@ -44,7 +44,7 @@ loom {
     silentMojangMappingsLicense()
     runConfigs {
         getByName("client") {
-            property("mixin.debug", "true")
+            property("mixin.debug.verbose", "true")
             property("asmhelper.verbose", "true")
             programArgs("--tweakClass", "gg.essential.loader.stage0.EssentialSetupTweaker")
             programArgs("--mixin", "mixins.${modID}.json")
@@ -80,9 +80,6 @@ tasks {
     }
     jar {
         manifest.attributes(
-            "FMLCorePluginContainsFMLMod" to true,
-            "FMLCorePlugin" to "${modID}.forge.FMLLoadingPlugin",
-            "ForceLoadAsMod" to true,
             "MixinConfigs" to "mixins.${modID}.json",
             "ModSide" to "CLIENT",
             "TweakClass" to "gg.essential.loader.stage0.EssentialSetupTweaker",
