@@ -102,6 +102,7 @@ object Dungeon {
         espDoors.clear()
         PlayerTracker.roomClears.clear()
         MapUtils.calibrated = false
+        MapUtils.mapData = null
         DungeonScan.hasScanned = false
         RunInformation.reset()
     }

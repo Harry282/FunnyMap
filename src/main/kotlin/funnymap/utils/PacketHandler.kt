@@ -4,9 +4,7 @@ import funnymap.events.ChatEvent
 import funnymap.events.ScoreboardEvent
 import funnymap.events.TabListEvent
 import net.minecraft.network.Packet
-import net.minecraft.network.play.server.S02PacketChat
-import net.minecraft.network.play.server.S38PacketPlayerListItem
-import net.minecraft.network.play.server.S3EPacketTeams
+import net.minecraft.network.play.server.*
 import net.minecraftforge.common.MinecraftForge
 
 object PacketHandler {
@@ -24,6 +22,10 @@ object PacketHandler {
 
             is S38PacketPlayerListItem -> {
                 MinecraftForge.EVENT_BUS.post(TabListEvent(packet))
+            }
+
+            is S34PacketMaps -> {
+                MapUtils.updateMapData(packet)
             }
         }
     }

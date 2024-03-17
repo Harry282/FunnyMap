@@ -2,13 +2,15 @@ package funnymap.utils
 
 import funnymap.FunnyMap.mc
 import funnymap.features.dungeon.DungeonScan
+import funnymap.utils.Location.inDungeons
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.item.ItemMap
+import net.minecraft.item.ItemStack
+import net.minecraft.network.play.server.S34PacketMaps
 import net.minecraft.util.Vec4b
 import net.minecraft.world.storage.MapData
 
 object MapUtils {
-
     val Vec4b.mapX
         get() = (this.func_176112_b() + 128) shr 1
 
@@ -18,15 +20,28 @@ object MapUtils {
     val Vec4b.yaw
         get() = this.func_176111_d() * 22.5f
 
+    var mapData: MapData? = null
     var startCorner = Pair(5, 5)
     var mapRoomSize = 16
     var coordMultiplier = 0.625
     var calibrated = false
 
-    fun getMapData(): MapData? {
+    private fun getMapItem(): ItemStack? {
         val map = mc.thePlayer?.inventory?.getStackInSlot(8) ?: return null
         if (map.item !is ItemMap || !map.displayName.contains("Magical Map")) return null
-        return (map.item as ItemMap).getMapData(map, mc.theWorld)
+        return map
+    }
+
+    fun updateMapData(packet: S34PacketMaps) {
+        if (!inDungeons) return
+        val map = getMapItem()
+        if (map != null) {
+            mapData = (map.item as ItemMap).getMapData(map, mc.theWorld)
+        }
+        if (mapData == null) {
+            mapData = MapData("map_${packet.mapId}")
+        }
+        packet.setMapdataTo(mapData)
     }
 
     /**
@@ -58,7 +73,7 @@ object MapUtils {
     private fun findEntranceCorner(): Pair<Int, Int> {
         var start = 0
         var currLength = 0
-        getMapData()?.colors?.forEachIndexed { index, byte ->
+        mapData?.colors?.forEachIndexed { index, byte ->
             if (byte.toInt() == 30) {
                 if (currLength == 0) start = index
                 currLength++

@@ -81,7 +81,7 @@ object MapUpdate {
             }
         }
 
-        val decor = MapUtils.getMapData()?.mapDecorations ?: return
+        val decor = MapUtils.mapData?.mapDecorations ?: return
         Dungeon.dungeonTeammates.forEach { (name, player) ->
             decor.entries.find { (icon, _) -> icon == player.icon }?.let { (_, vec4b) ->
                 player.isPlayer = vec4b.func_176110_a().toInt() == 1
@@ -100,7 +100,7 @@ object MapUpdate {
     }
 
     fun updateRooms() {
-        val map = DungeonMap(MapUtils.getMapData()?.colors ?: return)
+        val map = DungeonMap(MapUtils.mapData?.colors ?: return)
         Dungeon.espDoors.clear()
 
         for (x in 0..10) {
