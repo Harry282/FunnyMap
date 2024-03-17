@@ -14,19 +14,10 @@ import funnymap.utils.RenderUtils.grayScale
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
-import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import java.awt.Color
 
 object MapRender {
-
-    private val neuGreen = ResourceLocation("funnymap", "neu/green_check.png")
-    private val neuWhite = ResourceLocation("funnymap", "neu/white_check.png")
-    private val neuCross = ResourceLocation("funnymap", "neu/cross.png")
-    private val defaultGreen = ResourceLocation("funnymap", "default/green_check.png")
-    private val defaultWhite = ResourceLocation("funnymap", "default/white_check.png")
-    private val defaultCross = ResourceLocation("funnymap", "default/cross.png")
-
     var dynamicRotation = 0f
     var legitPeek = false
 
@@ -129,7 +120,7 @@ object MapRender {
 
                 var color = tile.color
 
-                if (tile.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) {
+                if (tile.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED) && !legitRender) {
                     if (Config.mapDarkenUndiscovered) {
                         color = color.darken(1 - Config.mapDarkenPercent)
                     }
@@ -147,6 +138,10 @@ object MapRender {
                             mapRoomSize,
                             color
                         )
+
+                        if (legitRender && tile.state == RoomState.UNOPENED) {
+                            RenderUtils.drawCheckmark(xOffset.toFloat(), yOffset.toFloat(), tile.state)
+                        }
                     }
 
                     !xEven && !yEven -> {
@@ -173,10 +168,6 @@ object MapRender {
         GlStateManager.translate(MapUtils.startCorner.first.toFloat(), MapUtils.startCorner.second.toFloat(), 0f)
 
         val connectorSize = mapRoomSize shr 2
-        val checkmarkSize = when (Config.mapCheckmark) {
-            1 -> 8.0 // default
-            else -> 10.0 // neu
-        }
 
         Dungeon.Info.uniqueRooms.forEach { unique ->
             val room = unique.mainRoom
@@ -189,20 +180,7 @@ object MapRender {
             val yOffsetName = (namePos.second / 2f) * (mapRoomSize + connectorSize)
 
             if (Config.mapCheckmark != 0 && Config.mapRoomSecrets != 2) {
-                getCheckmark(room.state, Config.mapCheckmark)?.let {
-
-                    GlStateManager.enableAlpha()
-                    GlStateManager.color(255f, 255f, 255f, 255f)
-                    mc.textureManager.bindTexture(it)
-
-                    RenderUtils.drawTexturedQuad(
-                        xOffsetCheck + (mapRoomSize - checkmarkSize) / 2,
-                        yOffsetCheck + (mapRoomSize - checkmarkSize) / 2,
-                        checkmarkSize,
-                        checkmarkSize
-                    )
-                    GlStateManager.disableAlpha()
-                }
+                RenderUtils.drawCheckmark(xOffsetCheck, yOffsetCheck, room.state)
             }
 
             val color = if (Config.mapColorText) when (room.state) {
@@ -244,26 +222,6 @@ object MapRender {
             )
         }
         GlStateManager.popMatrix()
-    }
-
-    private fun getCheckmark(state: RoomState, type: Int): ResourceLocation? {
-        return when (type) {
-            1 -> when (state) {
-                RoomState.CLEARED -> defaultWhite
-                RoomState.GREEN -> defaultGreen
-                RoomState.FAILED -> defaultCross
-                else -> null
-            }
-
-            2 -> when (state) {
-                RoomState.CLEARED -> neuWhite
-                RoomState.GREEN -> neuGreen
-                RoomState.FAILED -> neuCross
-                else -> null
-            }
-
-            else -> null
-        }
     }
 
     private fun renderPlayerHeads() {

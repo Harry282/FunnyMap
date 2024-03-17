@@ -3,6 +3,7 @@ package funnymap.utils
 import funnymap.FunnyMap.mc
 import funnymap.config.Config
 import funnymap.core.DungeonPlayer
+import funnymap.core.map.RoomState
 import funnymap.features.dungeon.DungeonScan
 import funnymap.features.dungeon.MapRender
 import funnymap.utils.Utils.equalsOneOf
@@ -26,6 +27,9 @@ object RenderUtils {
 
     private val tessellator: Tessellator = Tessellator.getInstance()
     private val worldRenderer: WorldRenderer = tessellator.worldRenderer
+    private val neuCheckmarks = CheckmarkSet(10, "neu")
+    private val defaultCheckmarks = CheckmarkSet(16, "default")
+    private val legacyCheckmarks = CheckmarkSet(8, "legacy")
     private val mapIcons = ResourceLocation("funnymap", "marker.png")
 
     private fun preDraw() {
@@ -50,7 +54,7 @@ object RenderUtils {
         worldRenderer.pos(x, y, 0.0).endVertex()
     }
 
-    fun drawTexturedQuad(x: Double, y: Double, width: Double, height: Double) {
+    private fun drawTexturedQuad(x: Double, y: Double, width: Double, height: Double) {
         worldRenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX)
         worldRenderer.pos(x, y + height, 0.0).tex(0.0, 1.0).endVertex()
         worldRenderer.pos(x + width, y + height, 0.0).tex(1.0, 1.0).endVertex()
@@ -131,6 +135,28 @@ object RenderUtils {
         }
 
         GlStateManager.popMatrix()
+    }
+
+    fun drawCheckmark(x: Float, y: Float, state: RoomState) {
+        val (checkmark, size) = when (Config.mapCheckmark) {
+            1 -> defaultCheckmarks.getCheckmark(state) to defaultCheckmarks.size.toDouble()
+            2 -> neuCheckmarks.getCheckmark(state) to neuCheckmarks.size.toDouble()
+            3 -> legacyCheckmarks.getCheckmark(state) to legacyCheckmarks.size.toDouble()
+            else -> return
+        }
+        if (checkmark != null) {
+            GlStateManager.enableAlpha()
+            GlStateManager.color(1f, 1f, 1f, 1f)
+            mc.textureManager.bindTexture(checkmark)
+
+            drawTexturedQuad(
+                x + (MapUtils.mapRoomSize - size) / 2,
+                y + (MapUtils.mapRoomSize - size) / 2,
+                size,
+                size
+            )
+            GlStateManager.disableAlpha()
+        }
     }
 
     fun drawPlayerHead(name: String, player: DungeonPlayer) {

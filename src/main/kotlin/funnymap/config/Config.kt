@@ -294,7 +294,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         description = "Adds room checkmarks based on room state.",
         category = "Rooms",
         subcategory = "Checkmarks",
-        options = ["None", "Default", "NEU"]
+        options = ["None", "Default", "NEU", "Legacy"]
     )
     var mapCheckmark = 1
 
