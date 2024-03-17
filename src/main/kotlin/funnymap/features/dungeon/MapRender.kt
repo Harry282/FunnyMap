@@ -9,13 +9,14 @@ import funnymap.utils.Location.inBoss
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapRoomSize
 import funnymap.utils.RenderUtils
+import funnymap.utils.RenderUtils.darken
+import funnymap.utils.RenderUtils.grayScale
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.client.gui.ScaledResolution
 import net.minecraft.client.renderer.GlStateManager
 import net.minecraft.util.ResourceLocation
 import org.lwjgl.opengl.GL11
 import java.awt.Color
-import kotlin.math.roundToInt
 
 object MapRender {
 
@@ -130,38 +131,30 @@ object MapRender {
 
                 if (tile.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) {
                     if (Config.mapDarkenUndiscovered) {
-                        color = color.run {
-                            Color(
-                                (red * (1 - Config.mapDarkenPercent)).toInt(),
-                                (green * (1 - Config.mapDarkenPercent)).toInt(),
-                                (blue * (1 - Config.mapDarkenPercent)).toInt(),
-                                alpha
-                            )
-                        }
+                        color = color.darken(1 - Config.mapDarkenPercent)
                     }
                     if (Config.mapGrayUndiscovered && Dungeon.Info.startTime != 0L) {
-                        val gray = (color.red * 0.299 + color.green * 0.587 + color.blue * 0.114).roundToInt()
-                        color = Color(gray, gray, gray)
+                        color = color.grayScale()
                     }
                 }
 
                 when {
                     xEven && yEven -> if (tile is Room) {
                         RenderUtils.renderRect(
-                            xOffset.toDouble(),
-                            yOffset.toDouble(),
-                            mapRoomSize.toDouble(),
-                            mapRoomSize.toDouble(),
+                            xOffset,
+                            yOffset,
+                            mapRoomSize,
+                            mapRoomSize,
                             color
                         )
                     }
 
                     !xEven && !yEven -> {
                         RenderUtils.renderRect(
-                            xOffset.toDouble(),
-                            yOffset.toDouble(),
-                            (mapRoomSize + connectorSize).toDouble(),
-                            (mapRoomSize + connectorSize).toDouble(),
+                            xOffset,
+                            yOffset,
+                            (mapRoomSize + connectorSize),
+                            (mapRoomSize + connectorSize),
                             color
                         )
                     }
@@ -306,10 +299,10 @@ object MapRender {
             if (vertical) y1 += doorwayOffset else x1 += doorwayOffset
         }
         RenderUtils.renderRect(
-            x1.toDouble(),
-            y1.toDouble(),
-            (if (vertical) doorWidth else width).toDouble(),
-            (if (vertical) width else doorWidth).toDouble(),
+            x1,
+            y1,
+            if (vertical) doorWidth else width,
+            if (vertical) width else doorWidth,
             color
         )
     }

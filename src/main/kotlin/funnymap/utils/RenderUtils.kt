@@ -20,6 +20,7 @@ import org.lwjgl.opengl.GL11
 import org.lwjgl.opengl.GL11.GL_LINE_STRIP
 import org.lwjgl.opengl.GL11.GL_QUADS
 import java.awt.Color
+import kotlin.math.roundToInt
 
 object RenderUtils {
 
@@ -73,13 +74,13 @@ object RenderUtils {
         GlStateManager.popMatrix()
     }
 
-    fun renderRect(x: Double, y: Double, w: Double, h: Double, color: Color) {
+    fun renderRect(x: Number, y: Number, w: Number, h: Number, color: Color) {
         if (color.alpha == 0) return
         preDraw()
         color.bind()
 
         worldRenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION)
-        addQuadVertices(x, y, w, h)
+        addQuadVertices(x.toDouble(), y.toDouble(), w.toDouble(), h.toDouble())
         tessellator.draw()
 
         postDraw()
@@ -202,6 +203,15 @@ object RenderUtils {
 
     fun Color.bind() {
         GlStateManager.color(this.red / 255f, this.green / 255f, this.blue / 255f, this.alpha / 255f)
+    }
+
+    fun Color.grayScale(): Color {
+        val gray = (red * 0.299 + green * 0.587 + blue * 0.114).roundToInt()
+        return Color(gray, gray, gray, alpha)
+    }
+
+    fun Color.darken(factor: Float): Color {
+        return Color((red * factor).roundToInt(), (green * factor).roundToInt(), (blue * factor).roundToInt(), alpha)
     }
 
     fun Entity.getInterpolatedPosition(partialTicks: Float): Triple<Double, Double, Double> {
