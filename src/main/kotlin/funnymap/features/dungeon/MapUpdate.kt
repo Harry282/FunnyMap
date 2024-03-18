@@ -100,6 +100,7 @@ object MapUpdate {
     }
 
     fun updateRooms() {
+        if (Dungeon.Info.ended) return
         val map = DungeonMap(MapUtils.mapData?.colors ?: return)
         Dungeon.espDoors.clear()
 

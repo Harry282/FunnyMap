@@ -4,6 +4,7 @@ import funnymap.config.Config
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.*
 import funnymap.events.ChatEvent
+import funnymap.features.dungeon.Dungeon.Info.ended
 import funnymap.utils.Location
 import funnymap.utils.Location.inDungeons
 import funnymap.utils.MapUtils
@@ -61,12 +62,13 @@ object Dungeon {
 
     @SubscribeEvent
     fun onChatPacket(event: ChatEvent) {
-        if (event.packet.type.toInt() == 2 || !inDungeons) return
+        if (!inDungeons) return
         if (event.packet.chatComponent.siblings.any {
                 it.chatStyle?.chatClickEvent?.run {
                     action == ClickEvent.Action.RUN_COMMAND && value == "/showextrastats"
                 } == true
             }) {
+            ended = true
             if (Config.teamInfo) {
                 PlayerTracker.onDungeonEnd()
             }
@@ -124,6 +126,7 @@ object Dungeon {
         var mimicFound = false
 
         var startTime = 0L
+        var ended = false
         var keys = 0
         fun reset() {
             dungeonList.fill(Unknown(0, 0))
@@ -138,6 +141,7 @@ object Dungeon {
             mimicFound = false
 
             startTime = 0L
+            ended = false
             keys = 0
         }
     }
