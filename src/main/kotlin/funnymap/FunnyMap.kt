@@ -46,7 +46,7 @@ object FunnyMap {
 
     val mc: Minecraft = Minecraft.getMinecraft()
     var display: GuiScreen? = null
-    val toggleLegitKey = KeyBinding("Legit Peek", Keyboard.KEY_NONE, "Funny Map")
+    private val toggleLegitKey = KeyBinding("Legit Peek", Keyboard.KEY_NONE, "Funny Map")
     val scope = CoroutineScope(EmptyCoroutineContext)
 
     @Mod.EventHandler
