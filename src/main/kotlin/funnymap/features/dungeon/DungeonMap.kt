@@ -53,27 +53,6 @@ class DungeonMap(mapColors: ByteArray) {
         return cacheTiles[index] ?: Unknown(0, 0)
     }
 
-    fun getConnected(arrayX: Int, arrayY: Int): List<Room> {
-        val tile = getTile(arrayX, arrayY)
-        if (tile !is Room) return emptyList()
-        val directions = listOf(
-            Pair(0, 1),
-            Pair(1, 0),
-            Pair(0, -1),
-            Pair(-1, 0)
-        )
-        val connected = mutableListOf<Room>()
-        val queue = mutableListOf(tile)
-        while (queue.isNotEmpty()) {
-            val current = queue.removeFirst()
-            connected.add(current)
-            queue.addAll(directions.mapNotNull {
-                getTile(current.x + it.first, current.z + it.second) as? Room
-            })
-        }
-        return connected
-    }
-
     private fun scanTile(arrayX: Int, arrayY: Int, worldX: Int, worldZ: Int): Tile {
         val centerColor = centerColors[arrayY * 11 + arrayX].toInt()
         val sideColor = sideColors[arrayY * 11 + arrayX].toInt()

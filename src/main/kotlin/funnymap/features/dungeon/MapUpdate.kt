@@ -4,7 +4,6 @@ import funnymap.FunnyMap.mc
 import funnymap.core.DungeonPlayer
 import funnymap.core.map.Door
 import funnymap.core.map.DoorType
-import funnymap.core.map.Room
 import funnymap.core.map.Unknown
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
@@ -111,12 +110,6 @@ object MapUpdate {
 
                 if (room is Unknown) {
                     Dungeon.Info.dungeonList[z * 11 + x] = mapTile
-                    if (mapTile is Room) {
-                        val connected = map.getConnected(x, z)
-                        connected.firstOrNull { it.data.name != "Unknown" }?.let {
-                            mapTile.addToUnique(z, x, it.data.name)
-                        }
-                    }
                     continue
                 }
 
