@@ -120,11 +120,15 @@ object MapRender {
 
                 var color = tile.color
 
-                if (tile.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED) && !legitRender) {
+                if (tile.state.equalsOneOf(
+                        RoomState.UNDISCOVERED,
+                        RoomState.UNOPENED
+                    ) && !legitRender && Dungeon.Info.startTime != 0L
+                ) {
                     if (Config.mapDarkenUndiscovered) {
                         color = color.darken(1 - Config.mapDarkenPercent)
                     }
-                    if (Config.mapGrayUndiscovered && Dungeon.Info.startTime != 0L) {
+                    if (Config.mapGrayUndiscovered) {
                         color = color.grayScale()
                     }
                 }
