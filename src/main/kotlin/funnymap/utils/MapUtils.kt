@@ -34,14 +34,16 @@ object MapUtils {
 
     fun updateMapData(packet: S34PacketMaps) {
         if (!inDungeons) return
-        val map = getMapItem()
-        if (map != null) {
-            mapData = (map.item as ItemMap).getMapData(map, mc.theWorld)
+        Utils.runMinecraftThread {
+            val map = getMapItem()
+            if (map != null) {
+                mapData = (map.item as ItemMap).getMapData(map, mc.theWorld)
+            }
+            if (mapData == null) {
+                mapData = MapData("map_${packet.mapId}")
+            }
+            packet.setMapdataTo(mapData)
         }
-        if (mapData == null) {
-            mapData = MapData("map_${packet.mapId}")
-        }
-        packet.setMapdataTo(mapData)
     }
 
     /**
