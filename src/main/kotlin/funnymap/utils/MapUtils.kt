@@ -27,6 +27,7 @@ object MapUtils {
     var halfRoomSize = roomSize / 2
     val connectorSize = 4
     var calibrated = false
+    var mapDataUpdated = false
 
     private fun getMapItem(): ItemStack? {
         val map = mc.thePlayer?.inventory?.getStackInSlot(8) ?: return null
@@ -45,6 +46,7 @@ object MapUtils {
                 mapData = MapData("map_${packet.mapId}")
             }
             packet.setMapdataTo(mapData)
+            mapDataUpdated = true
         }
     }
 

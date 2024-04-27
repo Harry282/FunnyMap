@@ -43,7 +43,11 @@ object Dungeon {
             MapUtils.calibrated = MapUtils.calibrateMap()
         }
 
-        MapUpdate.updateRooms()
+        if (MapUtils.mapDataUpdated) {
+            MapUpdate.updateRooms()
+            MapUtils.mapDataUpdated = false
+        }
+
         if (Location.dungeonFloor.equalsOneOf(6, 7)) {
             MimicDetector.checkMimicDead()
         }
