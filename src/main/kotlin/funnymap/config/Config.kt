@@ -765,6 +765,13 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var paulBonus = false
 
     @Property(
+        name = "Beta Rendering",
+        type = PropertyType.SWITCH,
+        category = "Debug"
+    )
+    var renderBeta = true
+
+    @Property(
         name = "Custom Prefix",
         type = PropertyType.TEXT,
         category = "Other Features",

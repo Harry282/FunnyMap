@@ -2,20 +2,19 @@ package funnymap
 
 import funnymap.commands.FunnyMapCommands
 import funnymap.config.Config
-import funnymap.features.dungeon.Dungeon
-import funnymap.features.dungeon.MapRender
-import funnymap.features.dungeon.RunInformation
-import funnymap.features.dungeon.WitherDoorESP
+import funnymap.features.dungeon.*
 import funnymap.ui.GuiRenderer
 import funnymap.utils.Location
 import funnymap.utils.UpdateChecker
 import gg.essential.api.EssentialAPI
+import gg.essential.vigilance.gui.SettingsGui
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiScreen
 import net.minecraft.client.settings.KeyBinding
 import net.minecraftforge.client.ClientCommandHandler
+import net.minecraftforge.client.event.GuiOpenEvent
 import net.minecraftforge.common.MinecraftForge
 import net.minecraftforge.fml.client.registry.ClientRegistry
 import net.minecraftforge.fml.common.Mod
@@ -103,6 +102,13 @@ object FunnyMap {
     fun onKey(event: InputEvent.KeyInputEvent) {
         if (Config.peekMode == 0 && toggleLegitKey.isPressed) {
             MapRender.legitPeek = !MapRender.legitPeek
+        }
+    }
+
+    @SubscribeEvent
+    fun onGuiClose(event: GuiOpenEvent) {
+        if (event.gui == null && mc.currentScreen is SettingsGui) {
+            MapRenderList.renderUpdated = true
         }
     }
 }

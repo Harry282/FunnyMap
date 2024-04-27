@@ -2,6 +2,7 @@ package funnymap.ui
 
 import funnymap.config.Config
 import funnymap.features.dungeon.MapRender
+import funnymap.features.dungeon.MapRenderList
 import funnymap.utils.Location
 
 class MapElement : MovableGuiElement() {
@@ -16,7 +17,11 @@ class MapElement : MovableGuiElement() {
     override var y2: Int = (y + h * scale).toInt()
 
     override fun render() {
-        MapRender.renderMap()
+        if (Config.renderBeta) {
+            MapRenderList.renderMap()
+        } else {
+            MapRender.renderMap()
+        }
     }
 
     override fun shouldRender(): Boolean {

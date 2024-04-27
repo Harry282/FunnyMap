@@ -27,9 +27,9 @@ object RenderUtils {
 
     private val tessellator: Tessellator = Tessellator.getInstance()
     private val worldRenderer: WorldRenderer = tessellator.worldRenderer
-    private val neuCheckmarks = CheckmarkSet(10, "neu")
-    private val defaultCheckmarks = CheckmarkSet(16, "default")
-    private val legacyCheckmarks = CheckmarkSet(8, "legacy")
+    val neuCheckmarks = CheckmarkSet(10, "neu")
+    val defaultCheckmarks = CheckmarkSet(16, "default")
+    val legacyCheckmarks = CheckmarkSet(8, "legacy")
     private val mapIcons = ResourceLocation("funnymap", "marker.png")
 
     private fun preDraw() {
@@ -47,14 +47,14 @@ object RenderUtils {
         GlStateManager.enableTexture2D()
     }
 
-    private fun addQuadVertices(x: Double, y: Double, w: Double, h: Double) {
+    fun addQuadVertices(x: Double, y: Double, w: Double, h: Double) {
         worldRenderer.pos(x, y + h, 0.0).endVertex()
         worldRenderer.pos(x + w, y + h, 0.0).endVertex()
         worldRenderer.pos(x + w, y, 0.0).endVertex()
         worldRenderer.pos(x, y, 0.0).endVertex()
     }
 
-    private fun drawTexturedQuad(x: Double, y: Double, width: Double, height: Double) {
+    fun drawTexturedQuad(x: Double, y: Double, width: Double, height: Double) {
         worldRenderer.begin(GL_QUADS, DefaultVertexFormats.POSITION_TEX)
         worldRenderer.pos(x, y + height, 0.0).tex(0.0, 1.0).endVertex()
         worldRenderer.pos(x + width, y + height, 0.0).tex(1.0, 1.0).endVertex()

@@ -68,6 +68,7 @@ object DungeonScan {
                         MapUpdate.roomAdded = true
                     }
                     Dungeon.Info.dungeonList[z * 11 + x] = it
+                    MapRenderList.renderUpdated = true
                 }
             }
         }

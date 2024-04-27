@@ -22,6 +22,12 @@ import java.awt.Color
 object MapRender {
     var dynamicRotation = 0f
     var legitPeek = false
+        set(value) {
+            if (field != value && Config.legitMode) {
+                MapRenderList.renderUpdated = true
+            }
+            field = value
+        }
 
     val legitRender: Boolean
         get() = Config.legitMode && !legitPeek
@@ -79,7 +85,7 @@ object MapRender {
         }
     }
 
-    private fun setupRotate() {
+    fun setupRotate() {
         val scale = ScaledResolution(mc).scaleFactor
         GL11.glEnable(GL11.GL_SCISSOR_TEST)
         GL11.glScissor(
@@ -226,7 +232,7 @@ object MapRender {
         GlStateManager.popMatrix()
     }
 
-    private fun renderPlayerHeads() {
+    fun renderPlayerHeads() {
         try {
             if (Dungeon.dungeonTeammates.isEmpty()) {
                 RenderUtils.drawPlayerHead(mc.thePlayer.name, DungeonPlayer(mc.thePlayer.locationSkin).apply {
@@ -267,7 +273,7 @@ object MapRender {
         )
     }
 
-    private fun renderRunInformation() {
+    fun renderRunInformation() {
         GlStateManager.pushMatrix()
         GlStateManager.translate(64f, 128f, 0f)
         GlStateManager.scale(2.0 / 3.0, 2.0 / 3.0, 1.0)
