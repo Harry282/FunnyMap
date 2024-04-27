@@ -4,7 +4,7 @@ import funnymap.core.map.RoomType
 
 data class RoomData(
     val name: String,
-    val type: RoomType,
+    var type: RoomType,
     val cores: List<Int>,
     val crypts: Int,
     val secrets: Int,

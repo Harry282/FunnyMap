@@ -58,9 +58,22 @@ object DungeonScan {
                     }) continue
 
                 scanRoom(xPos, zPos, z, x)?.let {
+                    val prev = Dungeon.Info.dungeonList[z * 11 + x]
+                    if (it is Room) {
+                        if ((prev as? Room)?.uniqueRoom != null) {
+                            prev.uniqueRoom?.addTile(x, z, it)
+                        } else {
+                            UniqueRoom(x, z, it)
+                        }
+                        MapUpdate.roomAdded = true
+                    }
                     Dungeon.Info.dungeonList[z * 11 + x] = it
                 }
             }
+        }
+
+        if (MapUpdate.roomAdded) {
+            MapUpdate.updateUniques()
         }
 
         if (allChunksLoaded) {
@@ -107,7 +120,6 @@ object DungeonScan {
                 val roomCore = ScanUtils.getCore(x, z)
                 Room(x, z, ScanUtils.getRoomData(roomCore) ?: return null).apply {
                     core = roomCore
-                    addToUnique(row, column)
                 }
             }
 
@@ -117,7 +129,6 @@ object DungeonScan {
                     if (it is Room) {
                         Room(x, z, it.data).apply {
                             isSeparator = true
-                            addToUnique(row, column)
                         }
                     } else null
                 }
