@@ -88,8 +88,6 @@ object Dungeon {
                 MapUpdate.getPlayers()
                 Info.startTime = System.currentTimeMillis()
             }
-
-            "[BOSS] The Watcher: You have proven yourself. You may pass." -> RunInformation.bloodDone = true
         }
     }
 

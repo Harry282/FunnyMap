@@ -2,9 +2,7 @@ package funnymap.features.dungeon
 
 import funnymap.FunnyMap.mc
 import funnymap.core.DungeonPlayer
-import funnymap.core.map.Door
-import funnymap.core.map.DoorType
-import funnymap.core.map.Unknown
+import funnymap.core.map.*
 import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.mapX
 import funnymap.utils.MapUtils.mapZ
@@ -115,6 +113,9 @@ object MapUpdate {
 
                 if (mapTile.state.ordinal < room.state.ordinal) {
                     PlayerTracker.roomStateChange(room, room.state, mapTile.state)
+                    if (room is Room && room.data.type == RoomType.BLOOD && mapTile.state == RoomState.GREEN) {
+                        RunInformation.bloodDone = true
+                    }
                     room.state = mapTile.state
                 }
 
