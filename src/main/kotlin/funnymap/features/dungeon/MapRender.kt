@@ -7,7 +7,9 @@ import funnymap.core.map.*
 import funnymap.ui.ScoreElement
 import funnymap.utils.Location.inBoss
 import funnymap.utils.MapUtils
-import funnymap.utils.MapUtils.mapRoomSize
+import funnymap.utils.MapUtils.connectorSize
+import funnymap.utils.MapUtils.halfRoomSize
+import funnymap.utils.MapUtils.roomSize
 import funnymap.utils.RenderUtils
 import funnymap.utils.RenderUtils.darken
 import funnymap.utils.RenderUtils.grayScale
@@ -104,16 +106,14 @@ object MapRender {
         GlStateManager.pushMatrix()
         GlStateManager.translate(MapUtils.startCorner.first.toFloat(), MapUtils.startCorner.second.toFloat(), 0f)
 
-        val connectorSize = mapRoomSize shr 2
-
         for (y in 0..10) {
             for (x in 0..10) {
                 val tile = Dungeon.Info.dungeonList[y * 11 + x]
                 if (tile is Unknown) continue
                 if (legitRender && tile.state == RoomState.UNDISCOVERED) continue
 
-                val xOffset = (x shr 1) * (mapRoomSize + connectorSize)
-                val yOffset = (y shr 1) * (mapRoomSize + connectorSize)
+                val xOffset = (x shr 1) * (roomSize + connectorSize)
+                val yOffset = (y shr 1) * (roomSize + connectorSize)
 
                 val xEven = x and 1 == 0
                 val yEven = y and 1 == 0
@@ -138,8 +138,8 @@ object MapRender {
                         RenderUtils.renderRect(
                             xOffset,
                             yOffset,
-                            mapRoomSize,
-                            mapRoomSize,
+                            roomSize,
+                            roomSize,
                             color
                         )
 
@@ -152,8 +152,8 @@ object MapRender {
                         RenderUtils.renderRect(
                             xOffset,
                             yOffset,
-                            (mapRoomSize + connectorSize),
-                            (mapRoomSize + connectorSize),
+                            (roomSize + connectorSize),
+                            (roomSize + connectorSize),
                             color
                         )
                     }
@@ -171,17 +171,15 @@ object MapRender {
         GlStateManager.pushMatrix()
         GlStateManager.translate(MapUtils.startCorner.first.toFloat(), MapUtils.startCorner.second.toFloat(), 0f)
 
-        val connectorSize = mapRoomSize shr 2
-
         Dungeon.Info.uniqueRooms.forEach { unique ->
             val room = unique.mainRoom
             if (legitRender && room.state.equalsOneOf(RoomState.UNDISCOVERED, RoomState.UNOPENED)) return@forEach
             val checkPos = unique.getCheckmarkPosition()
             val namePos = unique.getNamePosition()
-            val xOffsetCheck = (checkPos.first / 2f) * (mapRoomSize + connectorSize)
-            val yOffsetCheck = (checkPos.second / 2f) * (mapRoomSize + connectorSize)
-            val xOffsetName = (namePos.first / 2f) * (mapRoomSize + connectorSize)
-            val yOffsetName = (namePos.second / 2f) * (mapRoomSize + connectorSize)
+            val xOffsetCheck = (checkPos.first / 2f) * (roomSize + connectorSize)
+            val yOffsetCheck = (checkPos.second / 2f) * (roomSize + connectorSize)
+            val xOffsetName = (namePos.first / 2f) * (roomSize + connectorSize)
+            val yOffsetName = (namePos.second / 2f) * (roomSize + connectorSize)
 
             if (Config.mapCheckmark != 0 && Config.mapRoomSecrets != 2) {
                 RenderUtils.drawCheckmark(xOffsetCheck, yOffsetCheck, room.state)
@@ -196,7 +194,7 @@ object MapRender {
             if (Config.mapRoomSecrets == 2) {
                 GlStateManager.pushMatrix()
                 GlStateManager.translate(
-                    xOffsetCheck + (mapRoomSize shr 1), yOffsetCheck + 2 + (mapRoomSize shr 1), 0f
+                    xOffsetCheck + halfRoomSize, yOffsetCheck + 2 + halfRoomSize, 0f
                 )
                 GlStateManager.scale(2f, 2f, 1f)
                 RenderUtils.renderCenteredText(listOf(room.data.secrets.toString()), 0, 0, color)
@@ -220,8 +218,8 @@ object MapRender {
             // Offset + half of roomsize
             RenderUtils.renderCenteredText(
                 name,
-                xOffsetName.toInt() + (mapRoomSize shr 1),
-                yOffsetName.toInt() + (mapRoomSize shr 1),
+                xOffsetName.toInt() + halfRoomSize,
+                yOffsetName.toInt() + halfRoomSize,
                 color
             )
         }
@@ -253,10 +251,10 @@ object MapRender {
         vertical: Boolean,
         color: Color,
     ) {
-        val doorwayOffset = if (mapRoomSize == 16) 5 else 6
-        val width = if (doorway) 6 else mapRoomSize
-        var x1 = if (vertical) x + mapRoomSize else x
-        var y1 = if (vertical) y else y + mapRoomSize
+        val doorwayOffset = if (roomSize == 16) 5 else 6
+        val width = if (doorway) 6 else roomSize
+        var x1 = if (vertical) x + roomSize else x
+        var y1 = if (vertical) y else y + roomSize
         if (doorway) {
             if (vertical) y1 += doorwayOffset else x1 += doorwayOffset
         }

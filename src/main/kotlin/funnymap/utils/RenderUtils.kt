@@ -150,8 +150,8 @@ object RenderUtils {
             mc.textureManager.bindTexture(checkmark)
 
             drawTexturedQuad(
-                x + (MapUtils.mapRoomSize - size) / 2,
-                y + (MapUtils.mapRoomSize - size) / 2,
+                x + (MapUtils.roomSize - size) / 2,
+                y + (MapUtils.roomSize - size) / 2,
                 size,
                 size
             )

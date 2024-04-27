@@ -59,8 +59,8 @@ data class DungeonPlayer(val skin: ResourceLocation) {
     fun getCurrentRoom(): String {
         if (dead) return "Dead"
         if (Location.inBoss) return "Boss"
-        val x = (mapX - MapUtils.startCorner.first) / (MapUtils.mapRoomSize + 4)
-        val z = (mapZ - MapUtils.startCorner.second) / (MapUtils.mapRoomSize + 4)
+        val x = (mapX - MapUtils.startCorner.first) / (MapUtils.roomSize + MapUtils.connectorSize)
+        val z = (mapZ - MapUtils.startCorner.second) / (MapUtils.roomSize + MapUtils.connectorSize)
         return (Dungeon.Info.dungeonList.getOrNull(x * 2 + z * 22) as? Room)?.data?.name ?: "Error"
     }
 }

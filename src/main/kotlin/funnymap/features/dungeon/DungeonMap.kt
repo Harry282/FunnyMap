@@ -10,7 +10,7 @@ class DungeonMap(mapColors: ByteArray) {
     private val cacheTiles: Array<Tile?> = Array(121) { null }
 
     init {
-        val halfRoom = MapUtils.mapRoomSize / 2
+        val halfRoom = MapUtils.roomSize / 2
         val halfTile = halfRoom + 2
         val startX = MapUtils.startCorner.first + halfRoom
         val startY = MapUtils.startCorner.second + halfRoom

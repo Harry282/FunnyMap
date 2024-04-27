@@ -22,8 +22,10 @@ object MapUtils {
 
     var mapData: MapData? = null
     var startCorner = Pair(5, 5)
-    var mapRoomSize = 16
     var coordMultiplier = 0.625
+    var roomSize = 16
+    var halfRoomSize = roomSize / 2
+    val connectorSize = 4
     var calibrated = false
 
     private fun getMapItem(): ItemStack? {
@@ -52,7 +54,8 @@ object MapUtils {
     fun calibrateMap(): Boolean {
         val (start, size) = findEntranceCorner()
         if (size.equalsOneOf(16, 18)) {
-            mapRoomSize = size
+            roomSize = size
+            halfRoomSize = roomSize / 2
             startCorner = when (Location.dungeonFloor) {
                 0 -> Pair(22, 22)
                 1 -> Pair(22, 11)
@@ -60,10 +63,10 @@ object MapUtils {
                 else -> {
                     val startX = start and 127
                     val startZ = start shr 7
-                    Pair(startX % (mapRoomSize + 4), startZ % (mapRoomSize + 4))
+                    Pair(startX % (roomSize + 4), startZ % (roomSize + 4))
                 }
             }
-            coordMultiplier = (mapRoomSize + 4.0) / DungeonScan.roomSize
+            coordMultiplier = (roomSize + connectorSize).toDouble() / DungeonScan.roomSize
             return true
         }
         return false
