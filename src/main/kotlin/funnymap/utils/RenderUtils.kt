@@ -176,6 +176,7 @@ object RenderUtils {
             // Apply head rotation and scaling
             GlStateManager.rotate(player.yaw + 180f, 0f, 0f, 1f)
             GlStateManager.scale(Config.playerHeadScale, Config.playerHeadScale, 1f)
+            GlStateManager.enableAlpha()
 
             if (Config.mapVanillaMarker && (player.isPlayer || name == mc.thePlayer.name)) {
                 GlStateManager.rotate(180f, 0f, 0f, 1f)
