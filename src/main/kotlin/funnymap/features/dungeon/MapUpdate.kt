@@ -107,7 +107,6 @@ object MapUpdate {
             for (z in 0..10) {
                 val room = Dungeon.Info.dungeonList[z * 11 + x]
                 val mapTile = map.getTile(x, z)
-                if (mapTile is Unknown) continue
 
                 if (room is Unknown) {
                     MapRenderList.renderUpdated = true
