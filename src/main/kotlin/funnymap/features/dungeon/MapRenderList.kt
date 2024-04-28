@@ -81,6 +81,8 @@ object MapRenderList {
 
         if (roomGlList != -1) GL11.glCallList(roomGlList)
 
+        RenderUtilsGL.unbindTexture()
+
         if (!inBoss) {
             mc.mcProfiler.endStartSection("heads")
             MapRender.renderPlayerHeads()

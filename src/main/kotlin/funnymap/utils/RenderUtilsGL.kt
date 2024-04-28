@@ -18,6 +18,7 @@ object RenderUtilsGL {
 
     private val tessellator: Tessellator = Tessellator.getInstance()
     private val worldRenderer: WorldRenderer = tessellator.worldRenderer
+    private var currentTexture = 0
 
     fun preDraw() {
         GL11.glEnable(GL11.GL_ALPHA_TEST)
@@ -121,6 +122,14 @@ object RenderUtilsGL {
             tex = SimpleTexture(this)
             mc.textureManager.loadTexture(this, tex)
         }
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.glTextureId)
+        if (tex.glTextureId != currentTexture) {
+            GL11.glBindTexture(GL11.GL_TEXTURE_2D, tex.glTextureId)
+            currentTexture = tex.glTextureId
+        }
+    }
+
+    fun unbindTexture() {
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0)
+        currentTexture = 0
     }
 }
