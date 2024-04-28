@@ -11,6 +11,7 @@ class UniqueRoom(arrX: Int, arrY: Int, room: Room) {
     var mainRoom = room
         get() = Dungeon.Info.dungeonList[topLeft.second * 11 + topLeft.first] as? Room ?: field
     val tiles = mutableListOf(room to Pair(arrX, arrY))
+    var hasMimic = false
 
     init {
         if (room.data.name == "Unknown") {

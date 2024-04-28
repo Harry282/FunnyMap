@@ -7,7 +7,6 @@ import java.awt.Color
 
 class Room(override val x: Int, override val z: Int, var data: RoomData) : Tile {
     var core = 0
-    var hasMimic = false
     var isSeparator = false
     var uniqueRoom: UniqueRoom? = null
     override var state: RoomState = RoomState.UNDISCOVERED
@@ -21,6 +20,6 @@ class Room(override val x: Int, override val z: Int, var data: RoomData) : Tile 
             RoomType.PUZZLE -> Config.colorPuzzle
             RoomType.RARE -> Config.colorRare
             RoomType.TRAP -> Config.colorTrap
-            else -> if (hasMimic) Config.colorRoomMimic else Config.colorRoom
+            else -> if (uniqueRoom?.hasMimic == true) Config.colorRoomMimic else Config.colorRoom
         }
 }
