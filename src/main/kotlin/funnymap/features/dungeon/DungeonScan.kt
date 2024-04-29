@@ -62,7 +62,7 @@ object DungeonScan {
                     if (it is Room) {
                         if ((prev as? Room)?.uniqueRoom != null) {
                             prev.uniqueRoom?.addTile(x, z, it)
-                        } else {
+                        } else if (Dungeon.Info.uniqueRooms.none { unique -> unique.name == it.data.name }) {
                             UniqueRoom(x, z, it)
                         }
                         MapUpdate.roomAdded = true
