@@ -16,7 +16,6 @@ import funnymap.utils.RenderUtilsGL
 import funnymap.utils.Utils.equalsOneOf
 import net.minecraft.client.renderer.GlStateManager
 import org.lwjgl.opengl.GL11
-import java.awt.Color
 
 object MapRenderList {
     var renderUpdated = false
@@ -180,10 +179,11 @@ object MapRenderList {
             }
 
             val color = if (Config.mapColorText) when (room.state) {
-                RoomState.GREEN -> Color(0x55ff55)
-                RoomState.CLEARED, RoomState.FAILED -> Color(0xffffff)
-                else -> Color(0xaaaaaa)
-            } else Color(0xffffff)
+                RoomState.GREEN -> Config.colorTextGreen
+                RoomState.CLEARED -> Config.colorTextCleared
+                RoomState.FAILED -> Config.colorTextFailed
+                else -> Config.colorTextUncleared
+            } else Config.colorTextCleared
 
             if (Config.mapRoomSecrets == 2) {
                 GlStateManager.pushMatrix()

@@ -452,6 +452,42 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
     var colorUnopened = Color(65, 65, 65)
 
     @Property(
+        name = "Cleared Room Text",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Text",
+        allowAlpha = true
+    )
+    var colorTextCleared = Color(255, 255, 255)
+
+    @Property(
+        name = "Uncleared Room Text",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Text",
+        allowAlpha = true
+    )
+    var colorTextUncleared = Color(170, 170, 170)
+
+    @Property(
+        name = "Green Room Text",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Text",
+        allowAlpha = true
+    )
+    var colorTextGreen = Color(85, 255, 85)
+
+    @Property(
+        name = "Failed Room Text",
+        type = PropertyType.COLOR,
+        category = "Colors",
+        subcategory = "Text",
+        allowAlpha = true
+    )
+    var colorTextFailed = Color(255, 255, 255)
+
+    @Property(
         name = "Show Score",
         type = PropertyType.SWITCH,
         description = "Shows separate score element.",

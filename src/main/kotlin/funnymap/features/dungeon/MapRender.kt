@@ -191,11 +191,12 @@ object MapRender {
                 RenderUtils.drawCheckmark(xOffsetCheck, yOffsetCheck, room.state)
             }
 
-            val color = if (Config.mapColorText) when (room.state) {
-                RoomState.GREEN -> 0x55ff55
-                RoomState.CLEARED, RoomState.FAILED -> 0xffffff
-                else -> 0xaaaaaa
-            } else 0xffffff
+            val color = (if (Config.mapColorText) when (room.state) {
+                RoomState.GREEN -> Config.colorTextGreen
+                RoomState.CLEARED -> Config.colorTextCleared
+                RoomState.FAILED -> Config.colorTextFailed
+                else -> Config.colorTextUncleared
+            } else Config.colorTextCleared).rgb
 
             if (Config.mapRoomSecrets == 2) {
                 GlStateManager.pushMatrix()
