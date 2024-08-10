@@ -32,7 +32,7 @@ object RenderUtils {
     val legacyCheckmarks = CheckmarkSet(8, "legacy")
     private val mapIcons = ResourceLocation("funnymap", "marker.png")
 
-    private fun preDraw() {
+    fun preDraw() {
         GlStateManager.enableAlpha()
         GlStateManager.enableBlend()
         GlStateManager.disableDepth()
@@ -41,7 +41,7 @@ object RenderUtils {
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0)
     }
 
-    private fun postDraw() {
+    fun postDraw() {
         GlStateManager.disableBlend()
         GlStateManager.enableDepth()
         GlStateManager.enableTexture2D()

@@ -10,6 +10,7 @@ import funnymap.utils.MapUtils
 import funnymap.utils.MapUtils.connectorSize
 import funnymap.utils.MapUtils.halfRoomSize
 import funnymap.utils.MapUtils.roomSize
+import funnymap.utils.RenderUtils
 import funnymap.utils.RenderUtils.darken
 import funnymap.utils.RenderUtils.grayScale
 import funnymap.utils.RenderUtilsGL
@@ -61,6 +62,10 @@ object MapRenderList {
             updateRenderMap()
         }
 
+        GlStateManager.pushMatrix()
+        RenderUtils.preDraw()
+        RenderUtilsGL.preDraw()
+
         mc.mcProfiler.startSection("border")
 
         if (borderGlList != -1) GL11.glCallList(borderGlList)
@@ -81,6 +86,9 @@ object MapRenderList {
         if (roomGlList != -1) GL11.glCallList(roomGlList)
 
         RenderUtilsGL.unbindTexture()
+        RenderUtils.postDraw()
+        RenderUtilsGL.postDraw()
+        GlStateManager.popMatrix()
 
         if (!inBoss) {
             mc.mcProfiler.endStartSection("heads")
