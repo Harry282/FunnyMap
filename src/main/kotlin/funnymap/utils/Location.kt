@@ -104,6 +104,7 @@ object Location {
         GoldMine("Gold Mine"),
         DeepCaverns("Deep Caverns"),
         DwarvenMines("Dwarven Mines"),
+        GlaciteMineshaft("Mineshaft"),
         CrystalHollows("Crystal Hollows"),
         FarmingIsland("The Farming Islands"),
         ThePark("The Park"),
