@@ -40,7 +40,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 object FunnyMap {
     const val MOD_ID = "funnymap"
     const val MOD_NAME = "Funny Map"
-    const val MOD_VERSION = "0.7.4"
+    const val MOD_VERSION = "0.7.5"
     val CHAT_PREFIX: String
         get() = "§b§l<§f${Config.customPrefix.ifBlank { MOD_NAME }}§b§l>§r"
 
