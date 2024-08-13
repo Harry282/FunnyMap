@@ -53,12 +53,14 @@ class FunnyMapCommands : CommandBase() {
                 val data = ScanUtils.getRoomData(pos.first, pos.second)
                 if (data != null) {
                     GuiScreen.setClipboardString(data.toString())
-                    Utils.modMessage("Copied room data to clipboard.")
+                    Utils.modMessage("§aCopied room data to clipboard.")
                 } else {
                     GuiScreen.setClipboardString(ScanUtils.getCore(pos.first, pos.second).toString())
-                    Utils.modMessage("Existing room data not found. Copied room core to clipboard.")
+                    Utils.modMessage("§cExisting room data not found. §aCopied room core to clipboard.")
                 }
             }
+            // Unknown command help message
+            else -> Utils.modMessage("§cUnknown command. Use §b/§ffunnymap help §cfor a list of commands.")
         }
     }
 
