@@ -286,7 +286,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         subcategory = "Text",
         category = "Rooms"
     )
-    var mapColorText = false
+    var mapColorText = true
 
     @Property(
         name = "Room Checkmarks",
@@ -805,7 +805,7 @@ object Config : Vigilant(File("./config/funnymap/config.toml"), "Funny Map", sor
         type = PropertyType.SWITCH,
         category = "Debug"
     )
-    var renderBeta = true
+    var renderBeta = false
 
     @Property(
         name = "Custom Prefix",
